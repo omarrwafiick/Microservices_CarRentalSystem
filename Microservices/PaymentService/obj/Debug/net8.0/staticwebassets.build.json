@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "zusoxS/U7ENHxyfZgvxR1W+g0HzVvQAs15YzbwBTVS0=",
+  "Source": "PaymentServiceApi",
+  "BasePath": "_content/PaymentServiceApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

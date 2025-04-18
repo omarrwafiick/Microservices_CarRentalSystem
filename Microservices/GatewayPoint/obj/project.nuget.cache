@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "1TCuCDskVnI=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\GatewayPoint\\GatewayPoint.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sphinx\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\ipaddressrange\\6.1.0\\ipaddressrange.6.1.0.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\8.0.12\\microsoft.aspnetcore.jsonpatch.8.0.12.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.aspnetcore.middlewareanalysis\\8.0.12\\microsoft.aspnetcore.middlewareanalysis.8.0.12.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\8.0.12\\microsoft.aspnetcore.mvc.newtonsoftjson.8.0.12.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\microsoft.extensions.diagnosticadapter\\3.1.32\\microsoft.extensions.diagnosticadapter.3.1.32.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\ocelot\\23.4.3\\ocelot.23.4.3.nupkg.sha512",
+    "C:\\Users\\sphinx\\.nuget\\packages\\system.diagnostics.diagnosticsource\\4.7.1\\system.diagnostics.diagnosticsource.4.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}

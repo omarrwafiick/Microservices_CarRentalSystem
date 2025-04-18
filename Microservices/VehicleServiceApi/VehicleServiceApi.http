@@ -1,0 +1,6 @@
+@VehicleServiceApi_HostAddress = http://localhost:5092
+
+GET {{VehicleServiceApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

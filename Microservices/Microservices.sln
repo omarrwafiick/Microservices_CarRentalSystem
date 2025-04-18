@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleServiceApi", "VehicleServiceApi\VehicleServiceApi.csproj", "{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServiceApi", "IdentityService\IdentityServiceApi.csproj", "{DEC1FD5A-F93C-4F79-86ED-5DCD7F6B7541}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingServiceApi", "BookingServiceApi\BookingServiceApi.csproj", "{22A482CB-007A-4A72-ADAE-4D6815D1FE37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentServiceApi", "PaymentService\PaymentServiceApi.csproj", "{7CADA8AA-46D8-468D-BA66-A0BA2D4445CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayPoint", "GatewayPoint\GatewayPoint.csproj", "{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{5A92867E-93F6-41A9-AB1D-BF1A83204DD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationApi", "AuthenticationApi\AuthenticationApi.csproj", "{407EAB39-0D51-474B-A851-8EB38E460EC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC1FD5A-F93C-4F79-86ED-5DCD7F6B7541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC1FD5A-F93C-4F79-86ED-5DCD7F6B7541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC1FD5A-F93C-4F79-86ED-5DCD7F6B7541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC1FD5A-F93C-4F79-86ED-5DCD7F6B7541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22A482CB-007A-4A72-ADAE-4D6815D1FE37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A482CB-007A-4A72-ADAE-4D6815D1FE37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A482CB-007A-4A72-ADAE-4D6815D1FE37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A482CB-007A-4A72-ADAE-4D6815D1FE37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CADA8AA-46D8-468D-BA66-A0BA2D4445CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CADA8AA-46D8-468D-BA66-A0BA2D4445CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CADA8AA-46D8-468D-BA66-A0BA2D4445CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CADA8AA-46D8-468D-BA66-A0BA2D4445CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A92867E-93F6-41A9-AB1D-BF1A83204DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A92867E-93F6-41A9-AB1D-BF1A83204DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A92867E-93F6-41A9-AB1D-BF1A83204DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A92867E-93F6-41A9-AB1D-BF1A83204DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{407EAB39-0D51-474B-A851-8EB38E460EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{407EAB39-0D51-474B-A851-8EB38E460EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{407EAB39-0D51-474B-A851-8EB38E460EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{407EAB39-0D51-474B-A851-8EB38E460EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B3645B4-8EE7-41F7-8374-C230AE09E99A}
+	EndGlobalSection
+EndGlobal
