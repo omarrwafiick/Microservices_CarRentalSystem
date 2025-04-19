@@ -1,6 +1,7 @@
 using GatewayPoint.Middleware;
 using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
+using Ocelot.Middleware; 
+using Ocelot.Cache.CacheManager; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("ocelot.json", false, true);
 
-builder.Services.AddOcelot();
+builder.Services.AddOcelot().AddCacheManager(options =>
+{
+    options.WithDictionaryHandle();
+});
 
 builder.Services.AddCors(options =>
 {
