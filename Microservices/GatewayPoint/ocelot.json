@@ -20,14 +20,14 @@
     },
     {
       "DownstreamPathTemplate": "/api/users",
-      "DownstreamScheme": "http",
+      "DownstreamSchema": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/users",
+      "UpstreamPathTemplate": "/api/bookings",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "FileCacheOptions": {
         "TtlSeconds": 30,
@@ -35,7 +35,8 @@
         "Header": "OC-Caching-Control",
         "EnableContentHashing": false
       }
-    },
+    }
+    ,
     {
       "DownstreamPathTemplate": "/api/payment",
       "DownstreamSchema": "http",

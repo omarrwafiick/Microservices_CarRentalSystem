@@ -1,8 +1,3 @@
- 
-//DownstreamPathTemplate = The path the request will be forwarded to inside the microservice.
-
-//UpstreamPathTemplate = This is the path the client sends requests to (through the gateway).
-
 {
   "Routes": [
     {
@@ -15,20 +10,33 @@
         }
       ],
       "UpstreamPathTemplate": "/api/bookings",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
     },
     {
       "DownstreamPathTemplate": "/api/users",
-      "DownstreamScheme": "http",
+      "DownstreamSchema": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/users",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-    },
+      "UpstreamPathTemplate": "/api/bookings",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
+    }
+    ,
     {
       "DownstreamPathTemplate": "/api/payment",
       "DownstreamSchema": "http",
@@ -39,7 +47,13 @@
         }
       ],
       "UpstreamPathTemplate": "/api/payment",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
     },
     {
       "DownstreamPathTemplate": "/api/vehicles",
@@ -51,7 +65,13 @@
         }
       ],
       "UpstreamPathTemplate": "/api/vehicles",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 300,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
     },
     {
       "DownstreamPathTemplate": "/api/auth",
@@ -63,10 +83,68 @@
         }
       ],
       "UpstreamPathTemplate": "/api/auth",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
     }
   ],
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7000"
+
+  "RateLimitOptions": {
+    "ClientWhitelist": [ "internal-client" ],
+    "EnableRateLimiting": true,
+    "Period": "60s",
+    "PeriodTimespan": 1,
+    "Limit": 20,
+
+    "GlobalConfiguration": {
+      "BaseUrl": "https://localhost:7000"
+    }
   }
 }
+//REQUEST AGGREGATION
+//multiple request with only one response
+//make sure to add keys as - "Key": "AUTHSRV"
+//"Aggregates": [
+//      {
+//        "RouteKeys": [
+//          "BOOKINGSRV",
+//          "USERSRV",
+//          "PAYMENTSRV",
+//          "VEHICLESRV",
+//          "AUTHSRV"
+//        ],
+//        "UpstreamPathTemplate": "/api/aggregate"
+//      }
+//    ]
+
+//LOAD BALANCING
+//for each instance if we send 3 requests each will have one it's like a circle "LeastConnection"
+//in order each request ignore last instance used
+//{
+//         "Host": "localhost",
+//         "Port": 7001
+//       },
+//       {
+//         "Host": "localhost",
+//         "Port": 7006
+//       },
+//       {
+//         "Host": "localhost",
+//         "Port": 7007
+//       }
+//     ],
+//     "UpstreamPathTemplate": "/api/bookings",
+//     "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+//     "FileCacheOptions": {
+//       "TtlSeconds": 30,
+//       "Region": "default",
+//       "Header": "OC-Caching-Control",
+//       "EnableContentHashing": false
+//     },
+//     "LoadBalancerOptions": {
+//       "Type": "LeastConnection"
+//     }

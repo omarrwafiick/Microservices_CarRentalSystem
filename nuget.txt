@@ -3,3 +3,5 @@ dotnet pack -o "C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microse
 dotnet nuget add source "C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\packages" -n Common
 
 dotnet add package Common
+
+dotnet add package Common --version 2.0.0

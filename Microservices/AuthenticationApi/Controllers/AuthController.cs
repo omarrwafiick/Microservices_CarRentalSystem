@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AuthenticationApi.Dtos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,12 +12,17 @@ namespace AuthenticationApi.Controllers
     [ApiController]
     public class AuthController(IConfiguration configuration): ControllerBase
     {
+        //todos
+        //service layer with interface
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] RegisterDto registerDto) {
+            return Ok();
+        }
 
-        //[HttpPost("register")]
-        //public IActionResult Register([FromBody] RegisterDto registerDto) { }
-
-        //[HttpPost("login")]
-        //public IActionResult Login([FromBody] LoginDto loginDto) { }
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginDto loginDto) {
+            return Ok();
+        }
 
         private string GenerateJwt(string email)
         {
@@ -28,12 +34,12 @@ namespace AuthenticationApi.Controllers
                 new Claim(ClaimTypes.Email, email)
             };
             var token = new JwtSecurityToken(
-                issuer: configuration["AuthSection:Issuer"], 
+                issuer: configuration["AuthSection:Issuer"],
                 audience: configuration["AuthSection:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: credential
-            ); 
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

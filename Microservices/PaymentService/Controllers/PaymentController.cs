@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Common.Interfaces;
 
 namespace PaymentService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
-    {
+    { 
         //[HttpGet]
         //public IActionResult GetAllPayments() { }
 
