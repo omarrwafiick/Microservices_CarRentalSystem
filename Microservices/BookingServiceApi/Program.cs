@@ -1,5 +1,7 @@
 using BookingServiceApi.Data;
+using BookingServiceApi.Interfaces;
 using BookingServiceApi.Models;
+using BookingServiceApi.Services;
 using Common.Interfaces;
 using Common.Middleware;
 using Common.Repositories;
@@ -19,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<Booking>>();
 builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<Booking>>();
 builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<Booking>>();

@@ -4,4 +4,4 @@ dotnet nuget add source "C:\Users\sphinx\Documents\My Projects\Apis\Microservice
 
 dotnet add package Common
 
-dotnet add package Common --version 2.0.0
+dotnet add package Common --version 2.0.1

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Common.Repositories;
 using Common.Interfaces;
 using PaymentService.Models;
+using PaymentServiceApi.Interfaces;
+;
 
 var builder = WebApplication.CreateBuilder(args);
  
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IPaymentService, PaymentServiceApi.Services.PaymentService>();
 builder.Services.AddScoped<IGetRepository<Payment>, GetRepository<Payment>>();
 builder.Services.AddScoped<IGetAllRepository<Payment>, GetAllRepository<Payment>>();
 builder.Services.AddScoped<IDeleteRepository<Payment>, DeleteRepository<Payment>>();
