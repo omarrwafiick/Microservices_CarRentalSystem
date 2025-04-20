@@ -10,3 +10,4 @@ C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\ob
 C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\obj\Release\net8.0\refint\Common.dll
 C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\obj\Release\net8.0\Common.pdb
 C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\obj\Release\net8.0\ref\Common.dll
+C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\obj\Release\net8.0\Common.csproj.AssemblyReference.cache

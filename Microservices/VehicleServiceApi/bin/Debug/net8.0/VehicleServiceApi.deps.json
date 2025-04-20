@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v8.0": {
       "VehicleServiceApi/1.0.0": {
         "dependencies": {
-          "Common": "2.0.0",
+          "Common": "2.0.1",
           "Microsoft.EntityFrameworkCore": "8.0.11",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.11",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.11",
@@ -53,11 +53,14 @@
           }
         }
       },
-      "Common/2.0.0": {
+      "Common/2.0.1": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.11"
+        },
         "runtime": {
           "lib/net8.0/Common.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.0.0"
+            "assemblyVersion": "2.0.1.0",
+            "fileVersion": "2.0.1.0"
           }
         }
       },
@@ -977,12 +980,12 @@
       "path": "azure.identity/1.11.4",
       "hashPath": "azure.identity.1.11.4.nupkg.sha512"
     },
-    "Common/2.0.0": {
+    "Common/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xgNOcBxSp1zMsqaI5o34Z6Uo5lpi6BlF6AipKzXqZ4HHEos0+E72L+Yitxo31NKCQWGa8pNzuk3qizcPOny3dQ==",
-      "path": "common/2.0.0",
-      "hashPath": "common.2.0.0.nupkg.sha512"
+      "sha512": "sha512-x8YVv9SQ+mhmqg2RHS7wuEwi9RlMus1Vg1cR79vPhc3WxzhJ8LhOGxsZ1SG3bGmnGINDRCu793CYZ52JIfZcaw==",
+      "path": "common/2.0.1",
+      "hashPath": "common.2.0.1.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

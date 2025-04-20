@@ -1,6 +1,8 @@
-﻿namespace VehicleServiceApi.Models
+﻿using Common.Interfaces;
+
+namespace VehicleServiceApi.Models
 {
-    public class Vehicle
+    public class Vehicle: IBaseEntity
     {
         public Guid Id { get; set; }
         public string LicensePlate { get; set; }

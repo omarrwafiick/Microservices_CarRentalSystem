@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\Common\\Common.csproj": {
-      "version": "2.0.0",
+      "version": "2.0.1",
       "restore": {
         "projectUniqueName": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\Common\\Common.csproj",
         "projectName": "Common",
@@ -50,6 +50,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

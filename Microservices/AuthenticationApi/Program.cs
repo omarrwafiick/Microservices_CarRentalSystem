@@ -1,8 +1,10 @@
 using AuthenticationApi.Data;
+using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
-using AuthenticationApi.Repositories;
+using AuthenticationApi.Services;
 using Common.Interfaces;
 using Common.Middleware;
+using Common.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -40,12 +42,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IGetRepository<User>, GetRepository>();
-//todos
-//builder.Services.AddScoped<IGetAllRepository<User>, GetRepository>();
-//builder.Services.AddScoped<IDeleteRepository<User>, GetRepository>();
-//builder.Services.AddScoped<ICreateRepository<User>, GetRepository>();
-//builder.Services.AddScoped<IUpdateRepository<User>, GetRepository>();
+builder.Services.AddScoped<IGetRepository<User>, GetRepository<User>>();
+builder.Services.AddScoped<IGetAllRepository<User>, GetAllRepository<User>>();
+builder.Services.AddScoped<IDeleteRepository<User>, DeleteRepository<User>>();
+builder.Services.AddScoped<ICreateRepository<User>, CreateRepository<User>>();
+builder.Services.AddScoped<IUpdateRepository<User>, UpdateRepository<User>>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
  

@@ -1,5 +1,5 @@
-﻿using AuthenticationApi.Dtos;
-using Microsoft.AspNetCore.Http;
+﻿using AuthenticationApi.Dtos;  
+using AuthenticationApi.Interfaces; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,18 +10,18 @@ namespace AuthenticationApi.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthController(IConfiguration configuration): ControllerBase
-    {
-        //todos
-        //service layer with interface
+    public class AuthController(IConfiguration configuration, IUserService userService) : ControllerBase
+    { 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterDto registerDto) {
-            return Ok();
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto) {
+            var register = await userService.RegisterAsync(registerDto);
+            return register ? Ok("New account was created successfully") : BadRequest("Failed to create new account");
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDto loginDto) {
-            return Ok();
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto) {
+            var login = await userService.LoginAsync(loginDto);
+            return login ? Ok(GenerateJwt(loginDto.Email)) : BadRequest("User email or password is incorrect");
         }
 
         private string GenerateJwt(string email)

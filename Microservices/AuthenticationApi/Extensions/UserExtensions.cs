@@ -1,5 +1,6 @@
 ﻿using AuthenticationApi.Dtos;
 using AuthenticationApi.Models;
+using AuthenticationApi.Utilities;
 
 namespace AuthenticationApi.Extensions
 {
@@ -23,6 +24,18 @@ namespace AuthenticationApi.Extensions
             domain.PhoneNumber = dto.PhoneNumber;
             domain.RoleId = dto.RoleId;
             return domain;
+        }
+
+        public static User RegisterMapFromDtoToDomain(this RegisterDto dto)
+        {
+            return new User
+            {
+               FullName = dto.FullName,
+               Email = dto.Email,
+               PhoneNumber = dto.PhoneNumber,
+               Password = UserSecurityService.HashPassword(dto.Password),
+               RoleId = dto.RoleId
+            };
         }
     }
 }

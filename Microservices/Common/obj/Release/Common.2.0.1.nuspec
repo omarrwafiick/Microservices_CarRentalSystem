@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Common</id>
+    <version>2.0.1</version>
+    <authors>Common</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="bcd93a4c633fb96f034e8773ec26fbff2e7aa8c9" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.EntityFrameworkCore" version="8.0.11" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="C:\Users\sphinx\Documents\My Projects\Apis\Microservices\Microservices\Common\bin\Release\net8.0\Common.dll" target="lib\net8.0\Common.dll" />
+  </files>
+</package>
