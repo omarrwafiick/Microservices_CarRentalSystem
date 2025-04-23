@@ -9,7 +9,7 @@ namespace VehicleServiceApi.Controllers
     [ApiController] 
     public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet] 
         public async Task<IActionResult> GetAllVehicles() {
             var vehicles = await vehicleService.GetAllVehiclesAsync();
             return vehicles.Any() ? Ok(vehicles.Select(x=>x.MapFromDomainToDto())) : NotFound("No vehicle was found");

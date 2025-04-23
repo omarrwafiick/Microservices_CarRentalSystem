@@ -5,10 +5,13 @@ using System.Linq.Expressions;
 
 namespace Common.Repositories
 {
-    public class GetRepository<T> : IGetRepository<T> where T : class, IBaseEntity
+    public class GetRepository<TDbContext, T> : IGetRepository<T>
+    where TDbContext : DbContext
+    where T : class, IBaseEntity
     {
-        private readonly DbContext _context;
-        public GetRepository(DbContext context)
+        private readonly TDbContext _context;
+
+        public GetRepository(TDbContext context)
         {
             _context = context;
         }

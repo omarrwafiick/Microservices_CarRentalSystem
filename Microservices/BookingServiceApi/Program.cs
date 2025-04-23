@@ -21,12 +21,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IBookingService, BookingService>();
-builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<Booking>>();
-builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<Booking>>();
-builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<Booking>>();
-builder.Services.AddScoped<ICreateRepository<Booking>, CreateRepository<Booking>>();
-builder.Services.AddScoped<IUpdateRepository<Booking>, UpdateRepository<Booking>>();
+builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<ApplicationDbContext, Booking>>();
+builder.Services.AddScoped<IGetRepository<BookingStatus>, GetRepository<ApplicationDbContext, BookingStatus>>();
+builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<ApplicationDbContext, Booking>>();
+builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<ApplicationDbContext, Booking>>();
+builder.Services.AddScoped<ICreateRepository<Booking>, CreateRepository<ApplicationDbContext, Booking>>();
+builder.Services.AddScoped<IUpdateRepository<Booking>, UpdateRepository<ApplicationDbContext, Booking>>();
+builder.Services.AddScoped<IBookingService, BookingService>(); 
 
 var app = builder.Build();
  

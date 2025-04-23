@@ -27,7 +27,7 @@
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/bookings",
+      "UpstreamPathTemplate": "/api/users",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "FileCacheOptions": {
         "TtlSeconds": 30,

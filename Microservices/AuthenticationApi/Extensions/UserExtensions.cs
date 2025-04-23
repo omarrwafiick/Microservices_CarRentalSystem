@@ -18,8 +18,7 @@ namespace AuthenticationApi.Extensions
         }
 
         public static User UpdateMapFromDtoToDomain(this User domain, UpdateUserDto dto)
-        {
-            domain.Email = dto.Email;
+        { 
             domain.FullName = dto.FullName;
             domain.PhoneNumber = dto.PhoneNumber;
             domain.RoleId = dto.RoleId;

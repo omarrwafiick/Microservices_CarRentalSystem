@@ -1,19 +1,21 @@
-﻿
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 namespace Common.Repositories
 {
-    public class UpdateRepository<T> : IUpdateRepository<T> where T : class
+    public class UpdateRepository<TDbContext, T> : IUpdateRepository<T>
+    where TDbContext : DbContext
+    where T : class, IBaseEntity
     {
-        private readonly DbContext _dbContext;
-        public UpdateRepository(DbContext dbContext)
+        private readonly TDbContext _context;
+
+        public UpdateRepository(TDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
         public async Task<bool> UpdateAsync(T entity)
         {
-            await Task.Run(() => _dbContext.Set<T>().Update(entity));
-            var result = await _dbContext.SaveChangesAsync();
+            await Task.Run(() => _context.Set<T>().Update(entity));
+            var result = await _context.SaveChangesAsync();
             if (result > 0) return true;
             return false;
         }

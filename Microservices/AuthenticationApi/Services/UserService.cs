@@ -46,7 +46,7 @@ namespace AuthenticationApi.Services
 
         public async Task<bool> UpdateUserAsync(UpdateUserDto dto)
         {
-            var exists = await _getRepository.Get(x => x.Email == dto.Email);
+            var exists = await _getRepository.Get(x => x.Id == dto.Id);
             if (exists is null) return false;
             var updateUser = exists.UpdateMapFromDtoToDomain(dto);
             var result = await _updateRepository.UpdateAsync(updateUser);

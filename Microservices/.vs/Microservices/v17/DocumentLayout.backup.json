@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}|GatewayPoint\\GatewayPoint.csproj|c:\\users\\sphinx\\documents\\my projects\\apis\\microservices\\microservices\\gatewaypoint\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}|GatewayPoint\\GatewayPoint.csproj|solutionrelative:gatewaypoint\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}|GatewayPoint\\GatewayPoint.csproj|c:\\users\\sphinx\\documents\\my projects\\apis\\microservices\\microservices\\gatewaypoint\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{827EC133-8CE2-4C5D-8B2E-78B0549AAC46}|GatewayPoint\\GatewayPoint.csproj|solutionrelative:gatewaypoint\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +31,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:119168537:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ocelot.json",
+              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\GatewayPoint\\ocelot.json",
+              "RelativeDocumentMoniker": "GatewayPoint\\ocelot.json",
+              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\GatewayPoint\\ocelot.json",
+              "RelativeToolTip": "GatewayPoint\\ocelot.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-23T12:41:56.989Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\GatewayPoint\\Program.cs",
+              "RelativeDocumentMoniker": "GatewayPoint\\Program.cs",
+              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\GatewayPoint\\Program.cs",
+              "RelativeToolTip": "GatewayPoint\\Program.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAkwB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-23T12:05:51.724Z",
+              "EditorCaption": ""
             }
           ]
         }

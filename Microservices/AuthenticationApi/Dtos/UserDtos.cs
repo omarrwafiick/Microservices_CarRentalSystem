@@ -12,8 +12,7 @@ namespace AuthenticationApi.Dtos
     public record GetUserDto(Guid Id, string FullName, string Email, string PhoneNumber, Guid RoleId);
     public record UpdateUserDto(
         [Required] Guid Id, 
-        [Required] string FullName, 
-        [Required] string Email, 
+        [Required] string FullName,  
         [Required] string PhoneNumber, 
         Guid RoleId);
 }

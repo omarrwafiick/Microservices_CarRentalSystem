@@ -47,7 +47,7 @@
           }
         }
       },
-      "Common/2.0.1": {
+      "Common/2.0.3": {
         "type": "package",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "8.0.11"
@@ -1600,13 +1600,13 @@
         "lib/netstandard2.0/Azure.Identity.xml"
       ]
     },
-    "Common/2.0.1": {
-      "sha512": "x8YVv9SQ+mhmqg2RHS7wuEwi9RlMus1Vg1cR79vPhc3WxzhJ8LhOGxsZ1SG3bGmnGINDRCu793CYZ52JIfZcaw==",
+    "Common/2.0.3": {
+      "sha512": "FB2cGyS+bL9d0/Ir9Ojir1TG2s/slm4clXrla6GlGvNiHVHEPhiwm6ck1ruv2PwH31JOb6Ofm2pyYx0Ld9cjhg==",
       "type": "package",
-      "path": "common/2.0.1",
+      "path": "common/2.0.3",
       "files": [
         ".nupkg.metadata",
-        "common.2.0.1.nupkg.sha512",
+        "common.2.0.3.nupkg.sha512",
         "common.nuspec",
         "lib/net8.0/Common.dll"
       ]
@@ -4161,7 +4161,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Common >= 2.0.1",
+      "Common >= 2.0.3",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.EntityFrameworkCore >= 8.0.11",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.11",
@@ -4222,7 +4222,7 @@
         "dependencies": {
           "Common": {
             "target": "Package",
-            "version": "[2.0.1, )"
+            "version": "[2.0.3, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",

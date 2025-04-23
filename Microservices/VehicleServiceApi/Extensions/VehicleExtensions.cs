@@ -37,8 +37,7 @@ namespace VehicleServiceApi.Extensions
 
         public static Vehicle UpdateMapFromDtoToDomain(this UpdateVehicleDto dto, Vehicle domain)
         {
-            domain.Location = dto.Location;
-            domain.LicensePlate = dto.LicensePlate;
+            domain.Location = dto.Location; 
             domain.DailyRate = dto.DailyRate;
             domain.Type = dto.Type;
             domain.IsAvailable = dto.IsAvailable;

@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\Common\\Common.csproj": {
-      "version": "2.0.1",
+      "version": "2.0.3",
       "restore": {
         "projectUniqueName": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\Common\\Common.csproj",
         "projectName": "Common",

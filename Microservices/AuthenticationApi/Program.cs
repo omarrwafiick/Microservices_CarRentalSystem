@@ -42,11 +42,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IGetRepository<User>, GetRepository<User>>();
-builder.Services.AddScoped<IGetAllRepository<User>, GetAllRepository<User>>();
-builder.Services.AddScoped<IDeleteRepository<User>, DeleteRepository<User>>();
-builder.Services.AddScoped<ICreateRepository<User>, CreateRepository<User>>();
-builder.Services.AddScoped<IUpdateRepository<User>, UpdateRepository<User>>();
+builder.Services.AddScoped<IGetRepository<User >, GetRepository<ApplicationDbContext, User>>();
+builder.Services.AddScoped<IGetAllRepository<User>, GetAllRepository<ApplicationDbContext, User>>();
+builder.Services.AddScoped<IDeleteRepository<User>, DeleteRepository<ApplicationDbContext, User>>();
+builder.Services.AddScoped<ICreateRepository<User>, CreateRepository<ApplicationDbContext, User>>();
+builder.Services.AddScoped<IUpdateRepository<User>, UpdateRepository<ApplicationDbContext, User>>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();

@@ -18,12 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IGetRepository<Vehicle>, GetRepository<ApplicationDbContext, Vehicle>>();
+builder.Services.AddScoped<IGetAllRepository<Vehicle>, GetAllRepository<ApplicationDbContext, Vehicle>>();
+builder.Services.AddScoped<IDeleteRepository<Vehicle>, DeleteRepository<ApplicationDbContext, Vehicle>>();
+builder.Services.AddScoped<ICreateRepository<Vehicle>, CreateRepository<ApplicationDbContext, Vehicle>>();
+builder.Services.AddScoped<IUpdateRepository<Vehicle>, UpdateRepository<ApplicationDbContext, Vehicle>>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-builder.Services.AddScoped<IGetRepository<Vehicle>, GetRepository<Vehicle>>();
-builder.Services.AddScoped<IGetAllRepository<Vehicle>, GetAllRepository<Vehicle>>();
-builder.Services.AddScoped<IDeleteRepository<Vehicle>, DeleteRepository<Vehicle>>();
-builder.Services.AddScoped<ICreateRepository<Vehicle>, CreateRepository<Vehicle>>();
-builder.Services.AddScoped<IUpdateRepository<Vehicle>, UpdateRepository<Vehicle>>();
 
 var app = builder.Build();
  

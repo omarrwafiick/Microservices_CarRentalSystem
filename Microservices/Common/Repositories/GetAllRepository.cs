@@ -4,10 +4,13 @@ using System.Linq.Expressions;
 
 namespace Common.Repositories
 {
-    public class GetAllRepository<T> : IGetAllRepository<T> where T : class
+    public class GetAllRepository<TDbContext, T> : IGetAllRepository<T>
+    where TDbContext : DbContext
+    where T : class, IBaseEntity
     {
-        private readonly DbContext _context;
-        public GetAllRepository(DbContext context)
+        private readonly TDbContext _context;
+
+        public GetAllRepository(TDbContext context)
         {
             _context = context;
         }

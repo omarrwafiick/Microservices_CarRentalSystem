@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthenticationApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class UsersController(IUserService userService) : ControllerBase
     {
         [HttpGet]

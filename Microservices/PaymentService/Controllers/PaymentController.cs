@@ -9,7 +9,7 @@ namespace PaymentService.Controllers
     [ApiController]
     public class PaymentController(IPaymentService paymentService) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet] 
         public async Task<IActionResult> GetAllPayments() {
             var payments = await paymentService.GetAllPaymentsAsync();
             return payments.Any() ? Ok(payments.Select(x => x.MapFromDomainToDto())) : NotFound("No payment was found");

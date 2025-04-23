@@ -4,9 +4,7 @@ using Ocelot.Middleware;
 using Ocelot.Cache.CacheManager; 
 
 var builder = WebApplication.CreateBuilder(args);
-
-//builder.Services.AddEndpointsApiExplorer(); 
-
+ 
 builder.Configuration.AddJsonFile("ocelot.json", false, true);
 
 builder.Services.AddOcelot().AddCacheManager(options =>

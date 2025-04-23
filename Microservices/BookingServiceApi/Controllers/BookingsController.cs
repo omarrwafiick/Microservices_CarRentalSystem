@@ -9,6 +9,7 @@ namespace BookingServiceApi.Controllers
     [ApiController]
     public class BookingsController(IBookingService bookingService) : ControllerBase
     {
+
         [HttpGet]
         public async Task<IActionResult> GetAllBookings() { 
             var bookings = await bookingService.GetAllBookingsAsync();

@@ -34,7 +34,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<bool> CreateVehicleAsync(Vehicle domain)
         {
-            var exists = await _getRepository.Get(x => x.LicensePlate == x.LicensePlate);
+            var exists = await _getRepository.Get(x => x.LicensePlate == domain.LicensePlate);
             if(exists is not null) return false;
             var createResult = await _createRepository.CreateAsync(domain);
             return createResult;

@@ -12,9 +12,7 @@ namespace VehicleServiceApi.Dtos
         [Required][Range(1, 10)] decimal DailyRate, 
         [Required] bool IsAvailable, 
         [Required] string Location);
-    public record UpdateVehicleDto(
-        [Required] Guid Id,
-        [Required][Length(7, 7)] string LicensePlate,
+    public record UpdateVehicleDto( 
         [Required] string Type,
         [Required] decimal DailyRate,
         [Required] bool IsAvailable,

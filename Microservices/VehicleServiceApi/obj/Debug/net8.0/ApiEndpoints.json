@@ -1,0 +1,91 @@
+[
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "GetAllVehicles",
+    "RelativePath": "api/Vehicles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "CreateVehicle",
+    "RelativePath": "api/Vehicles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "VehicleServiceApi.Dtos.CreateVehicleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "GetVehicleById",
+    "RelativePath": "api/Vehicles/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "UpdateVehicle",
+    "RelativePath": "api/Vehicles/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "VehicleServiceApi.Dtos.UpdateVehicleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "DeleteVehicle",
+    "RelativePath": "api/Vehicles/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "GetAvailableVehicles",
+    "RelativePath": "api/Vehicles/available",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

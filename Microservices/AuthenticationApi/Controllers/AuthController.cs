@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace AuthenticationApi.Controllers
-{
+{ 
     [Route("api/auth")]
     [ApiController]
     public class AuthController(IConfiguration configuration, IUserService userService) : ControllerBase
