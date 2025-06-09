@@ -90,6 +90,24 @@
         "Header": "OC-Caching-Control",
         "EnableContentHashing": false
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/supportchat",
+      "DownstreamSchema": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7006
+        }
+      ],
+      "UpstreamPathTemplate": "/api/supportchat",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
     }
   ],
 

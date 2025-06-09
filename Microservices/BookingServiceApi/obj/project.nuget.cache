@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Dgh9Lg6QtvU=",
+  "dgSpecHash": "fmJjrLwCbOA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Microservices\\Microservices\\BookingServiceApi\\BookingServiceApi.csproj",
+  "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\BookingServiceApi\\BookingServiceApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sphinx\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\sphinx\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

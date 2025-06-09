@@ -4,7 +4,7 @@ namespace BookingServiceApi.Models
 {
     public class Booking : IBaseEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } 
         public Guid VehicleId { get; set; }
         public Guid UserId { get; set; }
         public DateTime StartDate = DateTime.UtcNow;
