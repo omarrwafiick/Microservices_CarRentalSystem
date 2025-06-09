@@ -16,19 +16,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
- 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
- 
+
 builder.Services.AddScoped<IGetRepository<ChatMessage>, GetRepository<ApplicationDbContext, ChatMessage>>();
 builder.Services.AddScoped<IGetAllRepository<ChatMessage>, GetAllRepository<ApplicationDbContext, ChatMessage>>();
 builder.Services.AddScoped<ICreateRepository<ChatMessage>, CreateRepository<ApplicationDbContext, ChatMessage>>();
@@ -40,6 +33,14 @@ builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
 builder.Services.AddSignalR();
 
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
+var app = builder.Build();
+ 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
