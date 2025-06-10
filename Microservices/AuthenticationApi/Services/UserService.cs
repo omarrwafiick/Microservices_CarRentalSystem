@@ -13,8 +13,11 @@ namespace AuthenticationApi.Services
         private readonly IGetRepository<User> _getRepository;
         private readonly ICreateRepository<User> _createRepository;
         private readonly IUpdateRepository<User> _updateRepository;
-        public UserService(IGetAllRepository<User> getAllRepository, IGetRepository<User> getRepository, 
-                           ICreateRepository<User> createRepository, IUpdateRepository<User> updateRepository)
+        public UserService(
+            IGetAllRepository<User> getAllRepository, 
+            IGetRepository<User> getRepository, 
+            ICreateRepository<User> createRepository, 
+            IUpdateRepository<User> updateRepository)
         {
             _getAllRepository = getAllRepository;
             _getRepository = getRepository;
@@ -26,13 +29,13 @@ namespace AuthenticationApi.Services
 
         public async Task<User> GetUserByIdAsync(Guid id) => await _getRepository.Get(id);
 
-        public async Task<bool> LoginAsync(LoginDto dto)
+        public async Task<User> LoginAsync(LoginDto dto)
         {
             var exists = await _getRepository.Get(x=>x.Email == dto.Email);
-            if(exists is null) return false;
+            if(exists is null) return null;
             var hashResult = UserSecurityService.VerifyPassword(exists.Password, dto.Password);
-            if (!hashResult) return false;
-            return true;
+            if (!hashResult) return null;
+            return exists;
         }
 
         public async Task<bool> RegisterAsync(RegisterDto dto)

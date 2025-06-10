@@ -1,5 +1,6 @@
 ﻿using AuthenticationApi.Dtos;  
-using AuthenticationApi.Interfaces; 
+using AuthenticationApi.Interfaces;
+using AuthenticationApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,18 +21,20 @@ namespace AuthenticationApi.Controllers
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto) {
-            var login = await userService.LoginAsync(loginDto);
-            return login ? Ok(GenerateJwt(loginDto.Email)) : BadRequest("User email or password is incorrect");
+            var user = await userService.LoginAsync(loginDto);
+            return user is not null ? Ok(GenerateJwt(user)) : BadRequest("User email or password is incorrect");
         }
 
-        private string GenerateJwt(string email)
+        private string GenerateJwt(User user)
         {
             var key = Encoding.UTF8.GetBytes(configuration["AuthSection:Key"]!);
             var securityKey = new SymmetricSecurityKey(key);
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email, email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()!)
             };
             var token = new JwtSecurityToken(
                 issuer: configuration["AuthSection:Issuer"],
