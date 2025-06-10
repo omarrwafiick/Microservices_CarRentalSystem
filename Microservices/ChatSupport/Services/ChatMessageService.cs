@@ -33,16 +33,19 @@ namespace ChatSupportApi.Services
             return result.ToList(); 
         } 
 
-        public async Task<bool> StoreMessage(ChatMessage message, Guid userId)
+        public async Task<bool> StoreMessage(ChatMessage message, Guid userId, Guid supportId)
         {
             var chat = await _getChatRepository.Get(x => x.Id == message.ChatId);
             if(chat is null)
             {
                 var ID = Guid.NewGuid();
-                await _createChatRepository.CreateAsync(Chat.Factory(ID, userId));
+                await _createChatRepository.CreateAsync(Chat.Factory(ID, userId, supportId));
                 message.ChatId = ID;
             } 
             return await _createMessageRepository.CreateAsync(message);
         }
+
+        public async Task<Chat> GetUserChatId(Guid userId)
+            => await _getChatRepository.Get(x => x.UserId == userId);   
     }
 }

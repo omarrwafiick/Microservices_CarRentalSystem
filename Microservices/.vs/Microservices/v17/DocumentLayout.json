@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{71CECE99-2DB5-4092-943A-EAF2D64D5F11}|ChatSupport\\ChatSupportApi.csproj|c:\\users\\sphinx\\documents\\my projects\\apis\\rest\\microservicesapis\\microservices\\chatsupport\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71CECE99-2DB5-4092-943A-EAF2D64D5F11}|ChatSupport\\ChatSupportApi.csproj|solutionrelative:chatsupport\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,19 +26,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\ChatSupport\\Program.cs",
-              "RelativeDocumentMoniker": "ChatSupport\\Program.cs",
-              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\ChatSupport\\Program.cs",
-              "RelativeToolTip": "ChatSupport\\Program.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAIwBcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T00:57:35.431Z",
-              "EditorCaption": ""
             }
           ]
         }

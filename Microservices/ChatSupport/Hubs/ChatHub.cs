@@ -11,11 +11,18 @@ namespace ChatSupportApi.Hubs
         {
             _chatService = chatService;
         }
-        public async Task SendMessage(string toUserIdRoute, Guid userId, Guid chatId, string userName, string message)
+
+        public async Task SendMessage(Guid chatId, Guid userId, Guid supportId, string message)
         {
-            var ID = Context.UserIdentifier;
-            await _chatService.StoreMessage(ChatMessage.Factory(message, ID, chatId), userId);
-            await Clients.User(toUserIdRoute).SendAsync("ReceiveMessage", userName, ID, message);
+            var senderId = Context.UserIdentifier!;
+            var receiverId = senderId == userId.ToString() ? supportId.ToString() : userId.ToString();
+
+            var msg = ChatMessage.Factory(message, senderId, chatId);
+            await _chatService.StoreMessage(msg, userId, supportId);
+             
+            await Clients.User(receiverId).SendAsync("ReceiveMessage", senderId, message);
+             
+            await Clients.User(senderId).SendAsync("ReceiveMessage", senderId, message);
         }
     }
 }

@@ -19,5 +19,12 @@ namespace ChatSupportApi.Controllers
             var messages = await _chatService.GetMessages(userId);
             return Ok(messages.Select(x => new { Messages = x.Message, ChatId = x.ChatId}));
         }
+
+        [HttpGet("chat/{userId}")]
+        public async Task<IActionResult> GetChatId(Guid userId)
+        {
+            var chat = await _chatService.GetUserChatId(userId);
+            return Ok(chat.Id);
+        }
     }
 }

@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "ChatSupportApi.Controllers.SupportChatController",
+    "Method": "GetChatId",
+    "RelativePath": "api/supportchat/chat/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ChatSupportApi.Controllers.SupportChatController",
     "Method": "GetMessages",
     "RelativePath": "api/supportchat/history/{userId}",
     "HttpMethod": "GET",

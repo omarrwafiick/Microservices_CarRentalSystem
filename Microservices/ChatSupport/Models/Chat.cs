@@ -7,22 +7,27 @@ namespace ChatSupportApi.Models
         private Chat()
         {  
         }
-        private Chat(Guid userId)
+        private Chat(Guid userId, Guid supportId)
         { 
             Id = Guid.NewGuid();
+            UserId = userId;
+            SupportId = supportId;
             CreatedAt = DateTime.UtcNow;
         }
-        private Chat(Guid id, Guid userId)
+        private Chat(Guid id, Guid userId, Guid supportId)
         { 
             Id = id;
+            UserId = userId;
+            SupportId = supportId;
             CreatedAt = DateTime.UtcNow;
         }
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public Guid SupportId { get; set; }
         public DateTime CreatedAt { get; set; }  
         public List<ChatMessage> ChatMessages { get; set; }
-        public static Chat Factory(Guid userId) => new Chat(userId);
-        public static Chat Factory(Guid id, Guid userId) => new Chat(id, userId);
+        public static Chat Factory(Guid userId, Guid supportId) => new Chat(userId, supportId);
+        public static Chat Factory(Guid id, Guid userId, Guid supportId) => new Chat(id, userId, supportId);
 
     }
 }
