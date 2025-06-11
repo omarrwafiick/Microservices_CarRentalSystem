@@ -2,7 +2,7 @@
   {
     "ContainingType": "PaymentService.Controllers.PaymentController",
     "Method": "GetAllPayments",
-    "RelativePath": "api/Payment",
+    "RelativePath": "api/payment",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -12,7 +12,7 @@
   {
     "ContainingType": "PaymentService.Controllers.PaymentController",
     "Method": "CreatePayment",
-    "RelativePath": "api/Payment",
+    "RelativePath": "api/payment",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "PaymentService.Controllers.PaymentController",
     "Method": "GetPaymentById",
-    "RelativePath": "api/Payment/{id}",
+    "RelativePath": "api/payment/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,7 +44,7 @@
   {
     "ContainingType": "PaymentService.Controllers.PaymentController",
     "Method": "RefundPayment",
-    "RelativePath": "api/Payment/refund/{id}",
+    "RelativePath": "api/payment/refund/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -60,7 +60,7 @@
   {
     "ContainingType": "PaymentService.Controllers.PaymentController",
     "Method": "GetPaymentsByUser",
-    "RelativePath": "api/Payment/user/{id}",
+    "RelativePath": "api/payment/user/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

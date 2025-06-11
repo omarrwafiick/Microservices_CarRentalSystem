@@ -35,8 +35,7 @@
         "Header": "OC-Caching-Control",
         "EnableContentHashing": false
       }
-    }
-    ,
+    },
     {
       "DownstreamPathTemplate": "/api/payment",
       "DownstreamSchema": "http",
@@ -68,6 +67,24 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "FileCacheOptions": {
         "TtlSeconds": 300,
+        "Region": "default",
+        "Header": "OC-Caching-Control",
+        "EnableContentHashing": false
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/location",
+      "DownstreamSchema": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ],
+      "UpstreamPathTemplate": "/api/location",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
         "Region": "default",
         "Header": "OC-Caching-Control",
         "EnableContentHashing": false

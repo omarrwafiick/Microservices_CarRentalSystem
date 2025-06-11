@@ -6,14 +6,16 @@ namespace BookingServiceApi.Extensions
     public static class BookingExtensions
     {
         public static GetBookingDto MapFromDomainToDto(this Booking domain)
-        {
+        { 
+            var startDate = domain.StartDate is not null ? domain.StartDate : DateTime.UtcNow;
+            var endDate = domain.EndDate is not null ? domain.EndDate : DateTime.UtcNow;
             return new GetBookingDto(
                 domain.Id,
                 domain.VehicleId,
-                domain.UserId,
-                domain.EndDate,
-                domain.BookingStatusId,
-                domain.TotalCost
+                domain.RenterId,
+                startDate,
+                endDate,
+                domain.InteractionType
                 );
         }
         public static Booking MapFromDtoToDomain(this CreateBookingDto dto)
@@ -21,10 +23,10 @@ namespace BookingServiceApi.Extensions
             return new Booking
             { 
                 VehicleId = dto.VehicleId,
-                UserId = dto.UserId,
+                RenterId = dto.UserId,
+                StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
-                BookingStatusId = dto.BookingStatusId,
-                TotalCost = dto.TotalCost
+                InteractionType = dto.InteractionType
             };
         }
     }

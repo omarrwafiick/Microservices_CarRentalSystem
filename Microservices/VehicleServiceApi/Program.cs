@@ -25,6 +25,12 @@ builder.Services.AddScoped<ICreateRepository<Vehicle>, CreateRepository<Applicat
 builder.Services.AddScoped<IUpdateRepository<Vehicle>, UpdateRepository<ApplicationDbContext, Vehicle>>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
+builder.Services.AddScoped<IGetRepository<Location>, GetRepository<ApplicationDbContext, Location>>();
+builder.Services.AddScoped<ICreateRepository<Location>, CreateRepository<ApplicationDbContext, Location>>();
+builder.Services.AddScoped<IDeleteRepository<Location>, DeleteRepository<ApplicationDbContext, Location>>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
  
 if (app.Environment.IsDevelopment())

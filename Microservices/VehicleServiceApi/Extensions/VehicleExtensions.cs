@@ -12,11 +12,11 @@ namespace VehicleServiceApi.Extensions
                 domain.LicensePlate,
                 domain.Make,
                 domain.Model,
-                domain.Year,
-                domain.Type,
+                domain.Year, 
+                domain.VehicleType,
                 domain.DailyRate,
-                domain.IsAvailable,
-                domain.Location
+                domain.VehicleStatus,
+                domain.CurrentLocationId
                 );
         }
 
@@ -28,19 +28,19 @@ namespace VehicleServiceApi.Extensions
                 Make = dto.Make,
                 Model = dto.Model,
                 Year = dto.Year,
-                Type = dto.Type,
+                VehicleType = dto.VehicleType,
                 DailyRate = dto.DailyRate,
-                IsAvailable = dto.IsAvailable,
-                Location = dto.Location
+                VehicleStatus = dto.VehicleStatus,
+                CurrentLocationId = dto.LocationId
             };
         }
 
         public static Vehicle UpdateMapFromDtoToDomain(this UpdateVehicleDto dto, Vehicle domain)
         {
-            domain.Location = dto.Location; 
+            domain.CurrentLocationId = dto.LocationId; 
             domain.DailyRate = dto.DailyRate;
-            domain.Type = dto.Type;
-            domain.IsAvailable = dto.IsAvailable;
+            domain.VehicleType = dto.VehicleType;
+            domain.VehicleStatus = dto.VehicleStatus;
             return domain;
         }
     }

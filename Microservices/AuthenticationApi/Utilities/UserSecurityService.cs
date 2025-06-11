@@ -57,6 +57,16 @@ namespace AuthenticationApi.Utilities
 
             return true;
         }
+
+        public static string GenerateResetToken(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var bytes = new byte[length];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(bytes);
+
+            return new string(bytes.Select(b => chars[b % chars.Length]).ToArray());
+        }
     }
 
 }

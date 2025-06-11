@@ -1,8 +1,40 @@
 [
   {
     "ContainingType": "AuthenticationApi.Controllers.AuthController",
+    "Method": "ForgetPassword",
+    "RelativePath": "api/auth/forgetpassword",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthenticationApi.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginDto",
+        "Type": "AuthenticationApi.Dtos.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthenticationApi.Controllers.AuthController",
+    "Method": "LogOut",
+    "RelativePath": "api/auth/logout",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -32,9 +64,30 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "AuthenticationApi.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/auth/resetpassword/{resetToken}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "resetToken",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "loginDto",
+        "Type": "AuthenticationApi.Dtos.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "AuthenticationApi.Controllers.UsersController",
     "Method": "GetUsers",
-    "RelativePath": "api/Users",
+    "RelativePath": "api/users",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,7 +97,7 @@
   {
     "ContainingType": "AuthenticationApi.Controllers.UsersController",
     "Method": "UpdateUser",
-    "RelativePath": "api/Users",
+    "RelativePath": "api/users",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -60,7 +113,7 @@
   {
     "ContainingType": "AuthenticationApi.Controllers.UsersController",
     "Method": "GetUserById",
-    "RelativePath": "api/Users/{id}",
+    "RelativePath": "api/users/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

@@ -21,8 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<ApplicationDbContext, Booking>>();
-builder.Services.AddScoped<IGetRepository<BookingStatus>, GetRepository<ApplicationDbContext, BookingStatus>>();
+builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<ApplicationDbContext, Booking>>(); 
 builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<ApplicationDbContext, Booking>>();
 builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<ApplicationDbContext, Booking>>();
 builder.Services.AddScoped<ICreateRepository<Booking>, CreateRepository<ApplicationDbContext, Booking>>();

@@ -5,7 +5,7 @@ using VehicleServiceApi.Interfaces;
  
 namespace VehicleServiceApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/vehicles")]
     [ApiController] 
     public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     {
@@ -19,6 +19,13 @@ namespace VehicleServiceApi.Controllers
         public async Task<IActionResult> GetVehicleById([FromRoute] Guid id) {
             var vehicle = await vehicleService.GetVehicleByIdAsync(id);
             return vehicle is not null ? Ok(vehicle.MapFromDomainToDto()) : NotFound("No vehicle was found");
+        }
+
+        [HttpGet("recommendation")]
+        public async Task<IActionResult> RecommendRelevantVehicles([FromQuery] RecommendationDto data)
+        {
+            var vehicles = await vehicleService.RecommendRelevantVehiclesAsync(data);
+            return vehicles.Any() ? Ok(vehicles.Select(x => x.MapFromDomainToDto())) : NotFound("No vehicle was found");
         }
 
         [HttpGet("available")]

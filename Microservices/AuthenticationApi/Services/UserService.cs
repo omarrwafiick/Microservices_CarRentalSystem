@@ -24,7 +24,7 @@ namespace AuthenticationApi.Services
             _createRepository = createRepository;
             _updateRepository = updateRepository;
         }
-         
+
         public async Task<IEnumerable<User>> GetAllUsersAsync() => await _getAllRepository.GetAll();
 
         public async Task<User> GetUserByIdAsync(Guid id) => await _getRepository.Get(id);
@@ -45,6 +45,27 @@ namespace AuthenticationApi.Services
             var newUser = dto.RegisterMapFromDtoToDomain();
             var result = await _createRepository.CreateAsync(newUser);
             return result;
+        }
+
+        public async Task<bool> ForgetPasswordAsync(string email)
+        {
+            var user = await _getRepository.Get(x => x.Email == email);
+
+            user.ResetToken = UserSecurityService.GenerateResetToken(16);
+            user.ResetTokenExpiresAt = DateTime.UtcNow.AddHours(1);
+
+            return await _updateRepository.UpdateAsync(user); 
+        }
+
+        public async Task<bool> ResetPasswordAsync(LoginDto dto, string token)
+        {
+            var user = await _getRepository.Get(x => x.Email == dto.Email);
+
+            if (user.ResetToken != token || user.ResetTokenExpiresAt < DateTime.UtcNow) 
+                return false;
+
+            user.Password = dto.Password;
+            return await _updateRepository.UpdateAsync(user); ;
         }
 
         public async Task<bool> UpdateUserAsync(UpdateUserDto dto)

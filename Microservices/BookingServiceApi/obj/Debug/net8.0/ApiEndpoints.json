@@ -44,13 +44,18 @@
   {
     "ContainingType": "BookingServiceApi.Controllers.BookingsController",
     "Method": "CancelBooking",
-    "RelativePath": "api/Bookings/{id}/cancel",
-    "HttpMethod": "PUT",
+    "RelativePath": "api/Bookings/cancel/{userId}/{vehicleId}",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vehicleId",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -60,13 +65,34 @@
   {
     "ContainingType": "BookingServiceApi.Controllers.BookingsController",
     "Method": "CompleteBooking",
-    "RelativePath": "api/Bookings/{id}/complete",
-    "HttpMethod": "PUT",
+    "RelativePath": "api/Bookings/complete",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "dto",
+        "Type": "BookingServiceApi.Dtos.CompleteBookingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingServiceApi.Controllers.BookingsController",
+    "Method": "DislikeBooking",
+    "RelativePath": "api/Bookings/dislike/{userId}/{vehicleId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vehicleId",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -84,6 +110,22 @@
       {
         "Name": "userId",
         "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingServiceApi.Controllers.BookingsController",
+    "Method": "ViewBookings",
+    "RelativePath": "api/Bookings/view/range",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "viewedBookings",
+        "Type": "System.Collections.Generic.List\u00601[[System.ValueTuple\u00602[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": true
       }
     ],

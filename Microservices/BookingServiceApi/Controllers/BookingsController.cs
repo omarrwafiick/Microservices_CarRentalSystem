@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookingServiceApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/bookings")]
     [ApiController]
     public class BookingsController(IBookingService bookingService) : ControllerBase
     {
@@ -28,18 +28,36 @@ namespace BookingServiceApi.Controllers
             return newBooking ? Ok("New booking was created successfully") : BadRequest("Failed to create a new booking");
         }
 
-        [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> CancelBooking([FromRoute] Guid id) {
-            var cancelBooking = await bookingService.CancelBookingAsync(id);
+        [HttpPost("cancel/{userId}/{vehicleId}")]
+        public async Task<IActionResult> CancelBooking([FromRoute] Guid userId, [FromRoute] Guid vehicleId) {
+            var cancelBooking = await bookingService.CancelBookingAsync(userId, vehicleId);
+            //cancel
             return cancelBooking ? Ok("Booking was canceled successfully") : BadRequest("Failed to cancel booking");
         }
-
-        [HttpPut("{id}/complete")]
-        public async Task<IActionResult> CompleteBooking([FromRoute] Guid id) {
-            var completeBooking = await bookingService.CompleteBookingAsync(id);
-            return completeBooking ? Ok("Booking was completed successfully") : BadRequest("Failed to complete booking");
+     
+        [HttpPost("dislike/{userId}/{vehicleId}")]
+        public async Task<IActionResult> DislikeBooking([FromRoute] Guid userId, [FromRoute] Guid vehicleId)
+        {
+            var cancelBooking = await bookingService.CancelBookingAsync(userId, vehicleId);
+            //cancel
+            return cancelBooking ? Ok("Booking was canceled successfully") : BadRequest("Failed to cancel booking");
+        }
+        
+        [HttpPut("view/range")]
+        public async Task<IActionResult> ViewBookings([FromBody] List<(Guid vehicleId, Guid userId)> viewedBookings)
+        {
+            var cancelBooking = await bookingService.RecordViewBookingsAsync(viewedBookings);
+            
+            return cancelBooking ? Ok("Bookings was recorded viewed successfully") : BadRequest("Failed to record view bookings");
         }
 
+        [HttpPost("complete")]
+        public async Task<IActionResult> CompleteBooking([FromBody] CompleteBookingDto dto) {
+            var completeBooking = await bookingService.CompleteBookingAsync(dto);
+
+            return completeBooking ? Ok("Booking was completed as booked successfully") : BadRequest("Failed to complete booking");
+        }
+ 
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetBookingsByUser([FromRoute] Guid userId) {
             var bookings = await bookingService.GetBookingsByUserAsync(userId);

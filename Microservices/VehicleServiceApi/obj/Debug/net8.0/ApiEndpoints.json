@@ -2,7 +2,7 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "GetAllVehicles",
-    "RelativePath": "api/Vehicles",
+    "RelativePath": "api/vehicles",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -12,7 +12,7 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "CreateVehicle",
-    "RelativePath": "api/Vehicles",
+    "RelativePath": "api/vehicles",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "GetVehicleById",
-    "RelativePath": "api/Vehicles/{id}",
+    "RelativePath": "api/vehicles/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,7 +44,7 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "UpdateVehicle",
-    "RelativePath": "api/Vehicles/{id}",
+    "RelativePath": "api/vehicles/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -65,7 +65,7 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "DeleteVehicle",
-    "RelativePath": "api/Vehicles/{id}",
+    "RelativePath": "api/vehicles/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -81,11 +81,110 @@
   {
     "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
     "Method": "GetAvailableVehicles",
-    "RelativePath": "api/Vehicles/available",
+    "RelativePath": "api/vehicles/available",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.VehiclesController",
+    "Method": "RecommendRelevantVehicles",
+    "RelativePath": "api/vehicles/recommendation",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "vehicleType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "rentalStartDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "rentalEndDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "district",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "city",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "userBookings",
+        "Type": "System.Collections.Generic.List\u00601[[VehicleServiceApi.Dtos.UserBookingRecords, VehicleServiceApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "bookingRecords",
+        "Type": "System.Collections.Generic.List\u00601[[VehicleServiceApi.Dtos.UserBookingRecords, VehicleServiceApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.LocationsController",
+    "Method": "AddLocation",
+    "RelativePath": "location",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "VehicleServiceApi.Dtos.LocationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.LocationsController",
+    "Method": "GetLocation",
+    "RelativePath": "location/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VehicleServiceApi.Controllers.LocationsController",
+    "Method": "DeleteLocation",
+    "RelativePath": "location/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]
