@@ -4,6 +4,7 @@ using System.Text;
 using VehicleServiceApi.Dtos;
 using VehicleServiceApi.Interfaces;
 using VehicleServiceApi.Models;
+using Azure.Core;
 
 namespace VehicleServiceApi.Services
 {
@@ -62,10 +63,10 @@ namespace VehicleServiceApi.Services
             return deleteResult;
         }
 
-        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data)
+        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string referrerHeader, string headerToken)
         { 
-            PopularityScoreCalculation(data.bookingRecords);
-            DailyRentalRateCalculation(); 
+            await PopularityScoreCalculation(data.bookingRecords);
+            await DailyRentalRateCalculation(); 
 
             var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
 
@@ -94,7 +95,15 @@ namespace VehicleServiceApi.Services
             {
                 var json = JsonSerializer.Serialize(viewedBookings);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                await _client.PostAsync("https://localhost:7000/api/bookings/view/range", content);
+
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7000/api/bookings/view/range")
+                {
+                    Content = content
+                };
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headerToken.Replace("Bearer ", "").Trim());
+                request.Headers.Referrer = new Uri(referrerHeader);
+
+                await _client.SendAsync(request);
             }
             catch (Exception ex) {
                 throw;
