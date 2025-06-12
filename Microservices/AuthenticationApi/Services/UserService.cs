@@ -47,14 +47,18 @@ namespace AuthenticationApi.Services
             return result;
         }
 
-        public async Task<bool> ForgetPasswordAsync(string email)
+        public async Task<string> ForgetPasswordAsync(string email)
         {
             var user = await _getRepository.Get(x => x.Email == email);
 
-            user.ResetToken = UserSecurityService.GenerateResetToken(16);
+            var genertatedToken = UserSecurityService.GenerateResetToken(16);
+
+            user.ResetToken = genertatedToken;
             user.ResetTokenExpiresAt = DateTime.UtcNow.AddHours(1);
 
-            return await _updateRepository.UpdateAsync(user); 
+            await _updateRepository.UpdateAsync(user);
+
+            return genertatedToken;
         }
 
         public async Task<bool> ResetPasswordAsync(LoginDto dto, string token)

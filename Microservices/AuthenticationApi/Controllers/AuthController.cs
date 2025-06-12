@@ -52,8 +52,8 @@ namespace AuthenticationApi.Controllers
         [HttpPost("forgetpassword")]
         public async Task<IActionResult> ForgetPassword([FromBody] string email)
         {
-            var result = await userService.ForgetPasswordAsync(email);
-            return result ? Ok("User was verified") : BadRequest("Failed to verify user");
+            var resetToken = await userService.ForgetPasswordAsync(email);
+            return resetToken is not null ? Ok($"reset-token/{resetToken}") : BadRequest("Failed to verify user");
         }
 
         [HttpPost("resetpassword/{resetToken}")]

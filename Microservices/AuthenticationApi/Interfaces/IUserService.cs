@@ -10,7 +10,7 @@ namespace AuthenticationApi.Interfaces
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(Guid id);
         Task<bool> UpdateUserAsync(UpdateUserDto dto);
-        Task<bool> ForgetPasswordAsync(string email);
+        Task<string> ForgetPasswordAsync(string email);
         Task<bool> ResetPasswordAsync(LoginDto dto, string token);
     }
 }

@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}|VehicleServiceApi\\VehicleServiceApi.csproj|c:\\users\\sphinx\\documents\\my projects\\apis\\rest\\microservicesapis\\microservices\\vehicleserviceapi\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}|VehicleServiceApi\\VehicleServiceApi.csproj|solutionrelative:vehicleserviceapi\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,19 +22,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:119168537:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Vehicle.cs",
-              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\VehicleServiceApi\\Models\\Vehicle.cs",
-              "RelativeDocumentMoniker": "VehicleServiceApi\\Models\\Vehicle.cs",
-              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\VehicleServiceApi\\Models\\Vehicle.cs",
-              "RelativeToolTip": "VehicleServiceApi\\Models\\Vehicle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T22:21:49.28Z",
-              "EditorCaption": ""
             }
           ]
         }
