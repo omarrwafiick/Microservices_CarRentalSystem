@@ -23,10 +23,9 @@ namespace VehicleServiceApi.Controllers
 
         [HttpGet("recommendation")]
         public async Task<IActionResult> RecommendRelevantVehicles([FromQuery] RecommendationDto data)
-        {
-            var referrerHeader = HttpContext.Request.Headers["Referrer"].ToString();
+        { 
             var authTokenHeader = HttpContext.Request.Headers["Authorization"].ToString();
-            var vehicles = await vehicleService.RecommendRelevantVehiclesAsync(data, authTokenHeader, referrerHeader);
+            var vehicles = await vehicleService.RecommendRelevantVehiclesAsync(data, authTokenHeader);
             return vehicles.Any() ? Ok(vehicles.Select(x => x.MapFromDomainToDto())) : NotFound("No vehicle was found");
         }
 

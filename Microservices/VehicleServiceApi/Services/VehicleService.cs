@@ -63,7 +63,7 @@ namespace VehicleServiceApi.Services
             return deleteResult;
         }
 
-        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string referrerHeader, string headerToken)
+        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
         { 
             await PopularityScoreCalculation(data.bookingRecords);
             await DailyRentalRateCalculation(); 
@@ -101,7 +101,6 @@ namespace VehicleServiceApi.Services
                     Content = content
                 };
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headerToken.Replace("Bearer ", "").Trim());
-                request.Headers.Referrer = new Uri(referrerHeader);
 
                 await _client.SendAsync(request);
             }

@@ -7,6 +7,8 @@
             var requestPath = context.Request.Path.Value;
             if(requestPath.Contains("auth/login", StringComparison.InvariantCultureIgnoreCase) ||
                requestPath.Contains("auth/register", StringComparison.InvariantCultureIgnoreCase) ||
+               requestPath.Contains("auth/forgetpassword", StringComparison.InvariantCultureIgnoreCase) ||
+               requestPath.Contains("auth/resetpassword", StringComparison.InvariantCultureIgnoreCase) ||
                requestPath.Equals("/")
             )
             {
