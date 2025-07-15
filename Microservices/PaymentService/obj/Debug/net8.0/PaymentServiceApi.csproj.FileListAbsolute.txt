@@ -288,3 +288,14 @@ C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentS.85025701.Up2Date
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\ref\PaymentServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.csproj.AssemblyReference.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.AssemblyInfoInputs.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.AssemblyInfo.cs
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.csproj.CoreCompileInputs.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.sourcelink.json
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\refint\PaymentServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.pdb

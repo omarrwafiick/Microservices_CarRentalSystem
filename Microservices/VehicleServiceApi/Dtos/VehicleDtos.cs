@@ -1,23 +1,154 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VehicleServiceApi.Models;
+using VehicleServiceApi.Enums;
 
 namespace VehicleServiceApi.Dtos
 {
-    public record GetVehicleDto(Guid Id, string LicensePlate, string Make, string Model, int Year, VehicleType VehicleType, decimal DailyRate, VehicleStatus VehicleStatus, Guid LocationId);
-    public record CreateVehicleDto(
-        [Required] [Length(7,7)] string LicensePlate, 
-        [Required] string Make,
-        [Required] string Model, 
-        [Required] [Range(1900,2025)] int Year, 
-        [Required] VehicleType VehicleType,
-        [Required][Range(1, 10)] decimal DailyRate,  
-        [Required] VehicleStatus VehicleStatus, 
-        [Required] Guid LocationId);
-    public record UpdateVehicleDto( 
-        [Required] VehicleType VehicleType,
-        [Required] decimal DailyRate,
-        [Required] VehicleStatus VehicleStatus,
-        [Required] Guid LocationId);
+    public record GetVehicleDto
+    {
+        public Guid Id { get; set; } 
+        public string LicensePlate { get; set; }
+        public string Make { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; } 
+        public string VehicleType { get; set; }
+        public string VehicleStatus { get; set; } 
+        public decimal DailyRate { get; set; }
+        public decimal Mileage { get; set; } 
+        public string FuelType { get; set; }
+        public string Transmission { get; set; } 
+        public bool IsGpsEnabled { get; set; }
+        public bool IsElectric { get; set; } 
+        public DateTime LastServiceDate { get; set; }
+        public int ServiceIntervalKm { get; set; } 
+        public string LocationName { get; set; }
+        public string LocationCity { get; set; }
+        public string LocationCountry { get; set; }  
+        public List<string> ImageUrls { get; set; } = new();
+    }
+    
+    public record CreateVehicleDto
+    {
+        [Required]
+        public Guid OwnerId { get; set; }
+
+        [Required]
+        public Guid CurrentLocationId { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 3)]
+        public string LicensePlate { get; set; }
+
+        [Required]
+        [StringLength(17, MinimumLength = 11, ErrorMessage = "VIN must be between 11 and 17 characters.")]
+        public string VIN { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Make { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Model { get; set; }
+
+        [Range(1900, 2100)]
+        public int Year { get; set; }
+
+        [Required]
+        public string VehicleType { get; set; }
+
+        [Required]
+        public DateTime RegistrationExpiryDate { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string InsurancePolicyNumber { get; set; }
+
+        [Required]
+        public DateTime InsuranceExpiryDate { get; set; }
+
+        [Required]
+        [Range(0, 10000)]
+        public decimal DailyRate { get; set; }
+
+        [Range(0, 1000000)]
+        public decimal Mileage { get; set; }
+
+        [Required]
+        public string FuelType { get; set; }
+
+        [Required]
+        public string Transmission { get; set; }
+
+        [Range(0, 100)]
+        public int PopularityScore { get; set; }
+
+        public bool IsGpsEnabled { get; set; }
+        public bool IsElectric { get; set; }
+        public bool IsActive { get; set; }
+
+        public DateTime LastServiceDate { get; set; }
+
+        [Range(1000, 50000)]
+        public int ServiceIntervalKm { get; set; }
+    }
+
+    public class UpdateVehicleDto
+    {
+        [Required]
+        public Guid CurrentLocationId { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 3)]
+        public string LicensePlate { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Make { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Model { get; set; }
+
+        [Range(1900, 2100)]
+        public int Year { get; set; }
+
+        [Required]
+        public string VehicleType { get; set; }
+
+        [Required]
+        public DateTime RegistrationExpiryDate { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string InsurancePolicyNumber { get; set; }
+
+        [Required]
+        public DateTime InsuranceExpiryDate { get; set; }
+
+        [Range(0, 10000)]
+        public decimal DailyRate { get; set; }
+
+        [Range(0, 1000000)]
+        public decimal Mileage { get; set; }
+
+        [Required]
+        public string FuelType { get; set; }
+
+        [Required]
+        public string Transmission { get; set; }
+
+        [Range(0, 100)]
+        public int PopularityScore { get; set; }
+
+        public bool IsGpsEnabled { get; set; }
+        public bool IsElectric { get; set; }
+        public bool IsActive { get; set; }
+
+        public DateTime LastServiceDate { get; set; }
+
+        [Range(1000, 50000)]
+        public int ServiceIntervalKm { get; set; }
+    }
 
     public record RecommendationDto(
         [Required]
@@ -32,21 +163,9 @@ namespace VehicleServiceApi.Dtos
         string district,
         [Required]
         string city,
-        List<UserBookingRecords> userBookings,
-        List<UserBookingRecords> bookingRecords
-        );
-
-    public record UserBookingRecords(
-        Guid Id,
-        Guid VehicleId,
-        Guid RenterId,
-        Guid? ProviderId,
-        DateTime StartDate,
-        DateTime EndDate,
-        InteractionType InteractionType,
-        Guid BookingStatusId, 
-        DateTime RecordedAt,
-        decimal TotalCost
+        List<UserBookingRecordDto> userBookings,
+        List<UserBookingRecordDto> bookingRecords,
+        List<GetMaintenanceRecordDto> maintenanceRecords
     );
 
     public enum InteractionType
@@ -57,10 +176,4 @@ namespace VehicleServiceApi.Dtos
         DISLIKED
     }
 
-    public record LocationDto(
-        string District,
-        string City,
-        double Longitude,
-        double Latitude
-    ); 
 }

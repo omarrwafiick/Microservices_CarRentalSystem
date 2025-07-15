@@ -5,7 +5,7 @@ using Common.Repositories;
 using Common.Interfaces;
 using PaymentService.Models;
 using PaymentServiceApi.Interfaces;
-using PaymentServiceApi.Models;
+using PaymentServiceApi.Enums;
 ;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,13 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddScoped<IGetRepository<PaymentStatus>, GetRepository<ApplicationDbContext, PaymentStatus>>();
-builder.Services.AddScoped<IGetRepository<Payment>, GetRepository<ApplicationDbContext, Payment>>();
-builder.Services.AddScoped<IGetAllRepository<Payment>, GetAllRepository<ApplicationDbContext, Payment>>();
-builder.Services.AddScoped<IDeleteRepository<Payment>, DeleteRepository<ApplicationDbContext, Payment>>();
-builder.Services.AddScoped<ICreateRepository<Payment>, CreateRepository<ApplicationDbContext, Payment>>();
-builder.Services.AddScoped<IUpdateRepository<Payment>, UpdateRepository<ApplicationDbContext, Payment>>();
+ 
+builder.Services.AddScoped<IGetRepository<PaymentsRecord>, GetRepository<ApplicationDbContext, PaymentsRecord>>();
+builder.Services.AddScoped<IGetAllRepository<PaymentsRecord>, GetAllRepository<ApplicationDbContext, PaymentsRecord>>();
+builder.Services.AddScoped<IDeleteRepository<PaymentsRecord>, DeleteRepository<ApplicationDbContext, PaymentsRecord>>();
+builder.Services.AddScoped<ICreateRepository<PaymentsRecord>, CreateRepository<ApplicationDbContext, PaymentsRecord>>();
+builder.Services.AddScoped<IUpdateRepository<PaymentsRecord>, UpdateRepository<ApplicationDbContext, PaymentsRecord>>();
 builder.Services.AddScoped<IPaymentService, PaymentServiceApi.Services.PaymentService>();
  
 var app = builder.Build();

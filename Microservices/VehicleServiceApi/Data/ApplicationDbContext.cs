@@ -9,6 +9,8 @@ namespace VehicleServiceApi.Data
           
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Location> Locations { get; set; }
-        
+        public DbSet<VehicleImages> VehicleImages { get; set; }
+        public DbSet<MaintenanceCenter> MaintenanceCenters { get; set; }
+        public DbSet<MaintenanceRecord> MaintenanceRecords { get; set; }  
     }
 }

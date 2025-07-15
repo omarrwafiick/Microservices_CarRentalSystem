@@ -1,10 +1,6 @@
-﻿using Common.Interfaces;
-using System.Text.Json;
-using System.Text;
-using VehicleServiceApi.Dtos;
+﻿using Common.Interfaces; 
 using VehicleServiceApi.Interfaces;
-using VehicleServiceApi.Models;
-using Azure.Core;
+using VehicleServiceApi.Models;  
 
 namespace VehicleServiceApi.Services
 {
@@ -16,7 +12,6 @@ namespace VehicleServiceApi.Services
         private readonly ICreateRepository<Vehicle> _createRepository; 
         private readonly IUpdateRepository<Vehicle> _updateRepository;
         private readonly IDeleteRepository<Vehicle> _deleteRepository; 
-        private readonly HttpClient _client;
 
         public VehicleService(
             IGetAllRepository<Vehicle> getAllRepository, 
@@ -24,8 +19,7 @@ namespace VehicleServiceApi.Services
             IGetRepository<Location> getLocationRepository,
             ICreateRepository<Vehicle> createRepository, 
             IUpdateRepository<Vehicle> updateRepository, 
-            IDeleteRepository<Vehicle> deleteRepository, 
-            HttpClient client
+            IDeleteRepository<Vehicle> deleteRepository
             )
         {
             _getAllRepository = getAllRepository;
@@ -34,135 +28,109 @@ namespace VehicleServiceApi.Services
             _createRepository = createRepository; 
             _updateRepository = updateRepository;
             _deleteRepository = deleteRepository; 
-            _client = client;
         }
+         
 
-        public async Task<IEnumerable<Vehicle>> GetAllVehiclesAsync() => await _getAllRepository.GetAll();
+        //public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
+        //{ 
+        //    await PopularityScoreCalculation(data.bookingRecords);
+        //    await DailyRentalRateCalculation(); 
 
-        public async Task<IEnumerable<Vehicle>> GetAvailableVehiclesAsync() => await _getAllRepository.GetAll(x => x.VehicleStatus == VehicleStatus.Available);
+        //    var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
 
-        public async Task<Vehicle> GetVehicleByIdAsync(Guid id) => await _getRepository.Get(id);
+        //    if (location == null)
+        //    {
+        //         return null;
+        //    }
 
-        public async Task<bool> CreateVehicleAsync(Vehicle domain)
-        {
-            var exists = await _getRepository.Get(x => x.LicensePlate == domain.LicensePlate);
-            if(exists is not null) return false;
-            var createResult = await _createRepository.CreateAsync(domain);
-            return createResult;
-        }
+        //    var targetVehicles = await _getAllRepository.GetAll(v =>
+        //                        v.CurrentLocationId == location.Id
+        //                        && v.VehicleStatus == VehicleStatus.Available);
 
-        public async Task<bool> UpdateVehicleAsync(Vehicle domain)
-        {  
-            var updateResult = await _updateRepository.UpdateAsync(domain);
-            return updateResult;
-        }
+        //    if (!targetVehicles.Any())
+        //    {
+        //         return null;
+        //    }
 
-        public async Task<bool> DeleteVehicleAsync(Guid id)
-        {
-            var deleteResult = await _deleteRepository.DeleteAsync(id);
-            return deleteResult;
-        }
+        //    List<(Guid vehicleId, Guid userId)> viewedBookings = new();
 
-        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
-        { 
-            await PopularityScoreCalculation(data.bookingRecords);
-            await DailyRentalRateCalculation(); 
-
-            var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
-
-            if (location == null)
-            {
-                 return null;
-            }
-
-            var targetVehicles = await _getAllRepository.GetAll(v =>
-                                v.CurrentLocationId == location.Id
-                                && v.VehicleStatus == VehicleStatus.Available);
-
-            if (!targetVehicles.Any())
-            {
-                 return null;
-            }
-
-            List<(Guid vehicleId, Guid userId)> viewedBookings = new();
-
-            foreach (var vehicle in targetVehicles)
-            {
-                viewedBookings.Add((vehicle.Id, data.userId));
-            }
+        //    foreach (var vehicle in targetVehicles)
+        //    {
+        //        viewedBookings.Add((vehicle.Id, data.userId));
+        //    }
              
-            try
-            {
-                var json = JsonSerializer.Serialize(viewedBookings);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //    try
+        //    {
+        //        var json = JsonSerializer.Serialize(viewedBookings);
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7000/api/bookings/view/range")
-                {
-                    Content = content
-                };
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headerToken.Replace("Bearer ", "").Trim());
+        //        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7000/api/bookings/view/range")
+        //        {
+        //            Content = content
+        //        };
+        //        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headerToken.Replace("Bearer ", "").Trim());
 
-                await _client.SendAsync(request);
-            }
-            catch (Exception ex) {
-                throw;
-            }
+        //        await _client.SendAsync(request);
+        //    }
+        //    catch (Exception ex) {
+        //        throw;
+        //    }
 
-            List<Vehicle> recommendedVehicles = new();
+        //    List<Vehicle> recommendedVehicles = new();
 
-            //first time
-            if (data.userBookings is null)
-            {
-                foreach (var vehicle in targetVehicles)
-                {
-                    if (recommendedVehicles.Any(x => x.Id == vehicle.Id))
-                    {
-                        continue;
-                    }
+        //    //first time
+        //    if (data.userBookings is null)
+        //    {
+        //        foreach (var vehicle in targetVehicles)
+        //        {
+        //            if (recommendedVehicles.Any(x => x.Id == vehicle.Id))
+        //            {
+        //                continue;
+        //            }
 
-                    recommendedVehicles.Add(vehicle);
-                }
-                return recommendedVehicles
-                        .OrderBy(x => x.DailyRate)
-                        .Take(3)
-                        .ToList();
-            }
+        //            recommendedVehicles.Add(vehicle);
+        //        }
+        //        return recommendedVehicles
+        //                .OrderBy(x => x.DailyRate)
+        //                .Take(3)
+        //                .ToList();
+        //    }
 
-            return recommendedVehicles
-                .OrderByDescending(x => x.PopularityScore)
-                .Take(10)
-                .ToList();
-        }
+        //    return recommendedVehicles
+        //        .OrderByDescending(x => x.PopularityScore)
+        //        .Take(10)
+        //        .ToList();
+        //}
 
-        private async Task PopularityScoreCalculation(List<UserBookingRecords> bookingRecords)
-        {
-            var vehicles = await _getAllRepository.GetAll();
+        //private async Task PopularityScoreCalculation(List<UserBookingRecords> bookingRecords)
+        //{
+        //    var vehicles = await _getAllRepository.GetAll();
 
-            foreach (var vehicle in vehicles)
-            {
-                var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
+        //    foreach (var vehicle in vehicles)
+        //    {
+        //        var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
 
-                var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
+        //        var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
 
-                var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
+        //        var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
                   
-                int score = (bookedCount * 10) + (viewedCount);
+        //        int score = (bookedCount * 10) + (viewedCount);
 
-                vehicle.PopularityScore = score;
-            }
-        }
+        //        vehicle.PopularityScore = score;
+        //    }
+        //}
 
-        private async Task DailyRentalRateCalculation()
-        {
-            var vehicles = await _getAllRepository.GetAll();
+        //private async Task DailyRentalRateCalculation()
+        //{
+        //    var vehicles = await _getAllRepository.GetAll();
 
-            foreach (var vehicle in vehicles)
-            {
-                decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
+        //    foreach (var vehicle in vehicles)
+        //    {
+        //        decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
                  
-                vehicle.DailyRate = adjustedRate;
-            }
-        }
+        //        vehicle.DailyRate = adjustedRate;
+        //    }
+        //}
          
     }
 }

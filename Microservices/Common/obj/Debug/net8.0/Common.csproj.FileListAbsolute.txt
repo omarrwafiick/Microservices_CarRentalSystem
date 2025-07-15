@@ -24,3 +24,16 @@ C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\refint\Common.dll
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.pdb
 C:\Users\sphinx\Documents\My Projects\Apis\Rest\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\ref\Common.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\bin\Debug\net8.0\Common.deps.json
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\bin\Debug\net8.0\Common.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\bin\Debug\net8.0\Common.pdb
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.csproj.AssemblyReference.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.AssemblyInfoInputs.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.AssemblyInfo.cs
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.csproj.CoreCompileInputs.cache
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.sourcelink.json
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\refint\Common.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\Common.pdb
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Common\obj\Debug\net8.0\ref\Common.dll

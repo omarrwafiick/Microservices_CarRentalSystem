@@ -1,20 +1,63 @@
-﻿
-using BookingServiceApi.Models;
+﻿ 
 using System.ComponentModel.DataAnnotations;
 
 namespace BookingServiceApi.Dtos
 {
-     public record GetBookingDto(Guid Id, Guid VehicleId, Guid UserId, DateTime? StartDate, DateTime? EndDate, InteractionType InteractionType);
-     public record CreateBookingDto(
-         [Required] Guid VehicleId, 
-         [Required] Guid UserId,
-         [Required] DateTime StartDate,
-         [Required] DateTime EndDate, 
-         [Required] InteractionType InteractionType);
+    public record CreateBookingDto
+    {
+        [Required]
+        public Guid VehicleId { get; set; }
 
-    public record CompleteBookingDto(
-         [Required] Guid VehicleId,
-         [Required] Guid UserId,
-         [Required] DateTime StartDate,
-         [Required] DateTime EndDate);
+        [Required]
+        public Guid RenterId { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string InteractionType { get; set; }
+
+        [Required]
+        [Range(0.01, 1_000_000)]
+        public decimal TotalPrice { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string PickupLocation { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string DropoffLocation { get; set; }
+
+        [MaxLength(500)]
+        public string Notes { get; set; }
+    }
+
+    public record GetBookingDto
+    {
+        public Guid Id { get; set; }
+
+        public Guid VehicleId { get; set; } 
+
+        public Guid RenterId { get; set; } 
+
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+
+        public string InteractionType { get; set; }
+
+        public decimal TotalPrice { get; set; }
+
+        public string PickupLocation { get; set; }
+        public string DropoffLocation { get; set; }
+        public string Notes { get; set; }
+
+        public DateTime RecordedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public DateTime? CancelledAt { get; set; }
+    }
+     
 }

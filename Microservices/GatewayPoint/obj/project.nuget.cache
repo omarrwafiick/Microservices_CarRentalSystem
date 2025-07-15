@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/Ta7SN26koI=",
+  "dgSpecHash": "D/obR6XB8GE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\GatewayPoint\\GatewayPoint.csproj",
+  "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\GatewayPoint\\GatewayPoint.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sphinx\\.nuget\\packages\\cachemanager.core\\2.0.0-beta-1629\\cachemanager.core.2.0.0-beta-1629.nupkg.sha512",
     "C:\\Users\\sphinx\\.nuget\\packages\\cachemanager.microsoft.extensions.configuration\\2.0.0-beta-1629\\cachemanager.microsoft.extensions.configuration.2.0.0-beta-1629.nupkg.sha512",
