@@ -38,9 +38,9 @@ namespace ChatSupportApi.Services
             var chat = await _getChatRepository.Get(x => x.Id == message.ChatId);
             if(chat is null)
             {
-                var ID = Guid.NewGuid();
-                await _createChatRepository.CreateAsync(Chat.Factory(ID, userId, supportId));
-                message.ChatId = ID;
+                var newModel = Chat.Factory(userId, supportId);
+                await _createChatRepository.CreateAsync(newModel);
+                message.ChatId = newModel.Id;
             } 
             return await _createMessageRepository.CreateAsync(message);
         }

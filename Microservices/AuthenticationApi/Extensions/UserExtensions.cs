@@ -11,7 +11,7 @@ namespace AuthenticationApi.Extensions
                 domain.Id,
                 domain.FullName,
                 domain.Email,
-                domain.Password,
+                domain.PhoneNumber,
                 domain.Role.ToString()
             );
         }

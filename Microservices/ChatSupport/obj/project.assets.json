@@ -1773,7 +1773,7 @@
       ]
     },
     "Common/2.0.3": {
-      "sha512": "FB2cGyS+bL9d0/Ir9Ojir1TG2s/slm4clXrla6GlGvNiHVHEPhiwm6ck1ruv2PwH31JOb6Ofm2pyYx0Ld9cjhg==",
+      "sha512": "/4fInE5+iZ+KvNq3XxCmJXB7LEkd9BqeyqQ7bzwltphRuD5nCMqdg5rNelWEVF6yqg021JGGgHFxtfSlVA8LJA==",
       "type": "package",
       "path": "common/2.0.3",
       "files": [
@@ -4768,7 +4768,6 @@
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\NuGet.Config",
         "C:\\Users\\sphinx\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -4779,7 +4778,6 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\packages": {},
         "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -4853,13 +4851,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
-    }
-  ]
+  }
 }

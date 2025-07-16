@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GatewayPoint")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32316ee5154ffa38e4f73d4e60b9caa5d95dc46e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9aff2bcc89b6ccc3bcc3348e100148942e7e91b5")]
 [assembly: System.Reflection.AssemblyProductAttribute("GatewayPoint")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GatewayPoint")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

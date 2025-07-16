@@ -1,4 +1,6 @@
-﻿ 
+﻿
+using Common.Models;
+
 namespace VehicleServiceApi.Models
 {
     public class Location : BaseEntity
@@ -13,8 +15,7 @@ namespace VehicleServiceApi.Models
             string country, 
             double longitude, 
             double latitude)
-        {
-            Id = Guid.NewGuid();
+        { 
             Name = name;
             District = district;
             City = city;

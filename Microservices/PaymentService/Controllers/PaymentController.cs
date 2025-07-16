@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaymentServiceApi.Dtos;
 using PaymentServiceApi.Interfaces;
+using Common.Helpers;
 
 namespace PaymentService.Controllers
 {
-    [AuthenticateRole("RENTER")]
+    //[AuthorizeRoles("RENTER")]
     [Route("api/paymentrecords")]
     [ApiController]
     public class PaymentController(IPaymentService paymentService) : ControllerBase

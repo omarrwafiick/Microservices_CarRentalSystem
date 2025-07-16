@@ -1,6 +1,5 @@
-﻿
-
-using VehicleServiceApi.Enums;
+﻿using VehicleServiceApi.Enums;
+using Common.Models;
 
 namespace VehicleServiceApi.Models
 {

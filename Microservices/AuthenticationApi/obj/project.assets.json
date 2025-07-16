@@ -47,6 +47,21 @@
           }
         }
       },
+      "Common/2.0.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.11"
+        },
+        "compile": {
+          "lib/net8.0/Common.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Common.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -1583,6 +1598,17 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
+      ]
+    },
+    "Common/2.0.4": {
+      "sha512": "MF8nWSTJnsW18o8HRepGuPugoUB9VFy7OuimNmwXJipnxxjwwS/gNiNlNJ+jhnpbXITrX4zzZGIgi9YuT1Ybvg==",
+      "type": "package",
+      "path": "common/2.0.4",
+      "files": [
+        ".nupkg.metadata",
+        "common.2.0.4.nupkg.sha512",
+        "common.nuspec",
+        "lib/net8.0/Common.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -4135,6 +4161,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Common >= 2.0.4",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.EntityFrameworkCore >= 8.0.11",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.11",
@@ -4159,7 +4186,6 @@
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\NuGet.Config",
         "C:\\Users\\sphinx\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -4170,7 +4196,6 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\packages": {},
         "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -4195,6 +4220,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Common": {
+            "target": "Package",
+            "version": "[2.0.4, )"
+          },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
             "version": "[8.0.11, )"

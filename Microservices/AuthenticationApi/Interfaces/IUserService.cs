@@ -11,6 +11,6 @@ namespace AuthenticationApi.Interfaces
         Task<User> GetUserByIdAsync(Guid id);
         Task<bool> UpdateUserAsync(UpdateUserDto dto);
         Task<string> ForgetPasswordAsync(string email);
-        Task<bool> ResetPasswordAsync(LoginDto dto, string token);
+        Task<bool> ResetPasswordAsync(ResetPasswordDto dto, string token);
     }
 }

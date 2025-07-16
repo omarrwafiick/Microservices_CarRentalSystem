@@ -1,16 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{C6AC2D55-C7CB-4B9D-937B-EFBD8FC05F59}|AuthenticationApi\\AuthenticationApi.csproj|c:\\users\\sphinx\\documents\\my projects\\systems\\microservicesapis\\microservices\\authenticationapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C6AC2D55-C7CB-4B9D-937B-EFBD8FC05F59}|AuthenticationApi\\AuthenticationApi.csproj|solutionrelative:authenticationapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C6AC2D55-C7CB-4B9D-937B-EFBD8FC05F59}|AuthenticationApi\\AuthenticationApi.csproj|c:\\users\\sphinx\\documents\\my projects\\systems\\microservicesapis\\microservices\\authenticationapi\\authenticationapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{C6AC2D55-C7CB-4B9D-937B-EFBD8FC05F59}|AuthenticationApi\\AuthenticationApi.csproj|solutionrelative:authenticationapi\\authenticationapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -18,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -33,30 +24,8 @@
               "Name": "ST:119168537:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthenticationApi",
-              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\AuthenticationApi\\AuthenticationApi.csproj",
-              "RelativeDocumentMoniker": "AuthenticationApi\\AuthenticationApi.csproj",
-              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\AuthenticationApi\\AuthenticationApi.csproj",
-              "RelativeToolTip": "AuthenticationApi\\AuthenticationApi.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-07-16T20:41:41.15Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\AuthenticationApi\\Models\\User.cs",
-              "RelativeDocumentMoniker": "AuthenticationApi\\Models\\User.cs",
-              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\AuthenticationApi\\Models\\User.cs",
-              "RelativeToolTip": "AuthenticationApi\\Models\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T20:41:17.949Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             }
           ]
         }

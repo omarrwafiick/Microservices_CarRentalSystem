@@ -1,6 +1,7 @@
 ﻿
 
 using BookingServiceApi.Enums;
+using Common.Models;
 
 namespace BookingServiceApi.Models
 {

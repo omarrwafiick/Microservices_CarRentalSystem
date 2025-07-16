@@ -24,10 +24,7 @@ namespace PaymentServiceApi.Dtos
 
         [Required]
         [StringLength(100)]
-        public string TransactionId { get; set; }
-
-        [StringLength(100)]
-        public string ReferenceCode { get; set; }
+        public string TransactionId { get; set; } 
 
         [Required]
         [StringLength(3, MinimumLength = 3)]

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6o14VieqyCs=",
+  "dgSpecHash": "P1U+GRdZC+o=",
   "success": true,
   "projectFilePath": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\GatewayPoint\\GatewayPoint.csproj",
   "expectedPackageFiles": [
@@ -37,12 +37,5 @@
     "C:\\Users\\sphinx\\.nuget\\packages\\system.security.permissions\\4.5.0\\system.security.permissions.4.5.0.nupkg.sha512",
     "C:\\Users\\sphinx\\.nuget\\packages\\system.security.principal.windows\\4.5.0\\system.security.principal.windows.4.5.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
-    }
-  ]
+  "logs": []
 }

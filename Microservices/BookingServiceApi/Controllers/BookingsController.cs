@@ -1,12 +1,12 @@
-﻿
-using BookingServiceApi.Dtos;
+﻿using BookingServiceApi.Dtos;
 using BookingServiceApi.Interfaces; 
 using Microsoft.AspNetCore.Mvc;
+using Common.Helpers;
 
 namespace BookingServiceApi.Controllers
 {
 
-    [AuthenticateRole("RENTER")]
+    //[AuthorizeRoles("RENTER")]
     [Route("api/bookings")]
     [ApiController]
     public class BookingsController(IBookingService bookingService) : ControllerBase

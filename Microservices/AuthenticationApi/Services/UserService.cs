@@ -1,6 +1,5 @@
 ﻿using AuthenticationApi.Dtos;
-using AuthenticationApi.Enums;
-using AuthenticationApi.Extensions;
+using AuthenticationApi.Enums; 
 using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
 using AuthenticationApi.Utilities;
@@ -37,7 +36,7 @@ namespace AuthenticationApi.Services
             if(exists is null) 
                 return null;
 
-            var hashResult = UserSecurityService.VerifyPassword(exists.Password, dto.Password);
+            var hashResult = UserSecurityService.VerifyPassword(exists.HashedPassword, dto.Password);
 
             if (!hashResult)
                 return null;
@@ -47,7 +46,7 @@ namespace AuthenticationApi.Services
 
         public async Task<bool> RegisterAsync(RegisterDto dto)
         {
-            var exists = await _getRepository.Get(x => x.Email == dto.Email);
+            var exists = await _getRepository.Get(x => x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
 
             if (exists is not null) 
                 return false;
@@ -103,9 +102,9 @@ namespace AuthenticationApi.Services
             if (exists is null) 
                 return false;
 
-            var updateUser = exists.UpdateMapFromDtoToDomain(dto);
+            exists.UpdateUser(dto.FullName, dto.PhoneNumber);
 
-            var result = await _updateRepository.UpdateAsync(updateUser);
+            var result = await _updateRepository.UpdateAsync(exists);
 
             return result;
         }
@@ -113,7 +112,7 @@ namespace AuthenticationApi.Services
         private Role CheckRole(string UserRole)
         {
             var roles = Enum.GetValues<Role>().OfType<string>().ToList();
-            Role role = Role.None;
+            Role role = Role.NONE;
 
             for (int r = 0; r < roles.Count(); r++)
             {
@@ -125,5 +124,7 @@ namespace AuthenticationApi.Services
 
             return role;
         }
+
+         
     }
 }

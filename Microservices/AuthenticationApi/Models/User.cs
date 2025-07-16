@@ -1,4 +1,5 @@
-﻿using AuthenticationApi.Enums; 
+﻿using AuthenticationApi.Enums;
+using Common.Models;
 
 namespace AuthenticationApi.Models
 {

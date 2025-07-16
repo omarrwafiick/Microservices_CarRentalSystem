@@ -47,7 +47,7 @@
           }
         }
       },
-      "Common/2.0.3": {
+      "Common/2.0.4": {
         "type": "package",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "8.0.11"
@@ -1638,13 +1638,13 @@
         "lib/netstandard2.0/Azure.Identity.xml"
       ]
     },
-    "Common/2.0.3": {
-      "sha512": "FB2cGyS+bL9d0/Ir9Ojir1TG2s/slm4clXrla6GlGvNiHVHEPhiwm6ck1ruv2PwH31JOb6Ofm2pyYx0Ld9cjhg==",
+    "Common/2.0.4": {
+      "sha512": "MF8nWSTJnsW18o8HRepGuPugoUB9VFy7OuimNmwXJipnxxjwwS/gNiNlNJ+jhnpbXITrX4zzZGIgi9YuT1Ybvg==",
       "type": "package",
-      "path": "common/2.0.3",
+      "path": "common/2.0.4",
       "files": [
         ".nupkg.metadata",
-        "common.2.0.3.nupkg.sha512",
+        "common.2.0.4.nupkg.sha512",
         "common.nuspec",
         "lib/net8.0/Common.dll"
       ]
@@ -4442,7 +4442,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Common >= 2.0.3",
+      "Common >= 2.0.4",
       "Microsoft.EntityFrameworkCore >= 8.0.11",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.11",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.11",
@@ -4466,7 +4466,6 @@
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\NuGet.Config",
         "C:\\Users\\sphinx\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -4477,7 +4476,6 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Users\\sphinx\\Documents\\My Projects\\Apis\\Rest\\MicroservicesApis\\Microservices\\packages": {},
         "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -4504,7 +4502,7 @@
         "dependencies": {
           "Common": {
             "target": "Package",
-            "version": "[2.0.3, )"
+            "version": "[2.0.4, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -4547,13 +4545,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
-    }
-  ]
+  }
 }

@@ -1,21 +1,19 @@
-﻿using Common.Interfaces;
+﻿using Common.Models;
 
 namespace ChatSupportApi.Models
 {
-    public class ChatMessage : IBaseEntity
+    public class ChatMessage : BaseEntity
     {
         private ChatMessage()
         { 
         }
         private ChatMessage(string message, string connectionID, Guid chatId)
-        { 
-            Id = Guid.NewGuid();
+        {  
             Message = message;
             ConnectionID = connectionID;
             ChatId = chatId;
             SentAt = DateTime.UtcNow;
-        }
-        public Guid Id { get; set; }  
+        } 
         public string Message { get; set; }
         public string ConnectionID { get; set; }
         public DateTime SentAt { get; set; } 
