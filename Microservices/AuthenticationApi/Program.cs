@@ -48,6 +48,7 @@ builder.Services.AddScoped<IDeleteRepository<User>, DeleteRepository<Application
 builder.Services.AddScoped<ICreateRepository<User>, CreateRepository<ApplicationDbContext, User>>();
 builder.Services.AddScoped<IUpdateRepository<User>, UpdateRepository<ApplicationDbContext, User>>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 var app = builder.Build();
  

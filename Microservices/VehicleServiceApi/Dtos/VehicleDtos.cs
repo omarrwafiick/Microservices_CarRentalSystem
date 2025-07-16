@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VehicleServiceApi.Enums;
+ 
 
 namespace VehicleServiceApi.Dtos
 {
@@ -154,7 +154,7 @@ namespace VehicleServiceApi.Dtos
         [Required]
         Guid userId,
         [Required]
-        VehicleType vehicleType,
+        string vehicleType,
         [Required]
         DateTime rentalStartDate,
         [Required]
@@ -166,6 +166,11 @@ namespace VehicleServiceApi.Dtos
         List<UserBookingRecordDto> userBookings,
         List<UserBookingRecordDto> bookingRecords,
         List<GetMaintenanceRecordDto> maintenanceRecords
+    );
+
+    public record UpdateVehicleStatusDto(
+        [Required]
+        string Status 
     );
 
     public enum InteractionType

@@ -2,7 +2,7 @@
 
 namespace ChatSupportApi.Models
 {
-    public class Chat : IBaseEntity
+    public class Chat : BaseEntity
     {
         private Chat()
         {  
@@ -20,8 +20,7 @@ namespace ChatSupportApi.Models
             UserId = userId;
             SupportId = supportId;
             CreatedAt = DateTime.UtcNow;
-        }
-        public Guid Id { get; set; }
+        }  
         public Guid UserId { get; set; }
         public Guid SupportId { get; set; }
         public DateTime CreatedAt { get; set; }  

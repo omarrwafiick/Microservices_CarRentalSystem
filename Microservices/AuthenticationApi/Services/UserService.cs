@@ -1,4 +1,5 @@
 ﻿using AuthenticationApi.Dtos;
+using AuthenticationApi.Enums;
 using AuthenticationApi.Extensions;
 using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
@@ -32,18 +33,42 @@ namespace AuthenticationApi.Services
         public async Task<User> LoginAsync(LoginDto dto)
         {
             var exists = await _getRepository.Get(x=>x.Email == dto.Email);
-            if(exists is null) return null;
+
+            if(exists is null) 
+                return null;
+
             var hashResult = UserSecurityService.VerifyPassword(exists.Password, dto.Password);
-            if (!hashResult) return null;
+
+            if (!hashResult)
+                return null;
+
             return exists;
         }
 
         public async Task<bool> RegisterAsync(RegisterDto dto)
         {
             var exists = await _getRepository.Get(x => x.Email == dto.Email);
-            if (exists is not null) return false;
-            var newUser = dto.RegisterMapFromDtoToDomain();
+
+            if (exists is not null) 
+                return false;
+
+            var hashedPassword = UserSecurityService.HashPassword(dto.Password);
+
+            var role = CheckRole(dto.Role);
+
+            if (role == Role.NONE) 
+                return false;
+
+            var newUser = User.Factory(
+                dto.FullName, 
+                dto.Email,
+                dto.PhoneNumber, 
+                hashedPassword, 
+                role, 
+                SSNHashing.ComputeSHA256(dto.SSN.ToString()));
+
             var result = await _createRepository.CreateAsync(newUser);
+
             return result;
         }
 
@@ -53,32 +78,52 @@ namespace AuthenticationApi.Services
 
             var genertatedToken = UserSecurityService.GenerateResetToken(16);
 
-            user.ResetToken = genertatedToken;
-            user.ResetTokenExpiresAt = DateTime.UtcNow.AddHours(1);
+            user.ResetUserPasswordToken(genertatedToken, DateTime.UtcNow.AddHours(1)); 
 
             await _updateRepository.UpdateAsync(user);
 
             return genertatedToken;
         }
 
-        public async Task<bool> ResetPasswordAsync(LoginDto dto, string token)
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
-            var user = await _getRepository.Get(x => x.Email == dto.Email);
+            var user = await _getRepository.Get(x => x.ResetToken == dto.ResetToken);
 
             if (user.ResetToken != token || user.ResetTokenExpiresAt < DateTime.UtcNow) 
                 return false;
 
-            user.Password = dto.Password;
+            user.ResetUserHashedPassword(dto.NewPassword);
             return await _updateRepository.UpdateAsync(user); ;
         }
 
         public async Task<bool> UpdateUserAsync(UpdateUserDto dto)
         {
             var exists = await _getRepository.Get(x => x.Id == dto.Id);
-            if (exists is null) return false;
+
+            if (exists is null) 
+                return false;
+
             var updateUser = exists.UpdateMapFromDtoToDomain(dto);
+
             var result = await _updateRepository.UpdateAsync(updateUser);
+
             return result;
+        }
+
+        private Role CheckRole(string UserRole)
+        {
+            var roles = Enum.GetValues<Role>().OfType<string>().ToList();
+            Role role = Role.None;
+
+            for (int r = 0; r < roles.Count(); r++)
+            {
+                if (roles[r].ToLower() == UserRole.ToLower())
+                {
+                    role = Enum.Parse<Role>(roles[r]);
+                }
+            }
+
+            return role;
         }
     }
 }

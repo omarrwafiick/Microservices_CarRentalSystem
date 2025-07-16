@@ -1,6 +1,5 @@
 ﻿
-
-using PaymentServiceApi.Models;
+ 
 using System.ComponentModel.DataAnnotations;
 
 namespace PaymentServiceApi.Dtos

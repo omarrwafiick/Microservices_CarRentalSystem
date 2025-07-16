@@ -21,7 +21,8 @@ namespace BookingServiceApi.Models
 
         public string Notes { get; private set; }
 
-        public DateTime RecordedAt { get; private set; } 
+        public DateTime RecordedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
         public DateTime? CancelledAt { get; private set; }
         public DateTime? CompletedAt { get; private set; }
 
@@ -53,7 +54,12 @@ namespace BookingServiceApi.Models
                 RecordedAt = DateTime.UtcNow
             };
         }
-         
+
+        public void MarkAsUpdated()
+        {
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public void MarkAsCompleted()
         {
             CompletedAt = DateTime.UtcNow;
