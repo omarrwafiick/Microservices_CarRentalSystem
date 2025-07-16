@@ -125,6 +125,16 @@ namespace VehicleServiceApi.Models
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
+        public void UpdatePopularityScore(int newValue)
+        {
+            PopularityScore = newValue;
+        }
+
+        public void UpdateDailyRate(decimal newValue)
+        {
+            DailyRate = newValue;
+        }
+
         public void MarkAsUpdated()
         {
             UpdatedAt = DateTime.UtcNow;

@@ -1,4 +1,8 @@
-﻿using Common.Interfaces; 
+﻿using Common.Interfaces;
+using RabbitMQ.Client;
+using System.Text.Json;
+using VehicleServiceApi.Dtos;
+using VehicleServiceApi.Enums;
 using VehicleServiceApi.Interfaces;
 using VehicleServiceApi.Models;  
 
@@ -28,109 +32,126 @@ namespace VehicleServiceApi.Services
             _createRepository = createRepository; 
             _updateRepository = updateRepository;
             _deleteRepository = deleteRepository; 
+        } 
+
+        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
+        {
+            await PopularityScoreCalculation(data.bookingRecords);
+            await DailyRentalRateCalculation();
+
+            var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
+
+            if (location == null)
+            {
+                return null;
+            }
+
+            var targetVehicles = await _getAllRepository.GetAll(vehicle =>
+                                vehicle.CurrentLocationId == location.Id
+                                && vehicle.VehicleStatus == VehicleStatus.Available);
+
+            if (!targetVehicles.Any())
+            {
+                return null;
+            }
+
+            List<(Guid vehicleId, Guid userId)> viewedBookings = new();
+
+            foreach (var vehicle in targetVehicles)
+            {
+                viewedBookings.Add((vehicle.Id, data.userId));
+            }
+
+            RabbitMqMessageToBookingsService(viewedBookings);
+
+            List<Vehicle> recommendedVehicles = new();
+
+            //first time
+            if (data.userBookings is null)
+            {
+                foreach (var vehicle in targetVehicles)
+                {
+                    if (recommendedVehicles.Any(x => x.Id == vehicle.Id))
+                    {
+                        continue;
+                    }
+
+                    recommendedVehicles.Add(vehicle);
+                }
+                return recommendedVehicles
+                        .OrderBy(x => x.DailyRate)
+                        .Take(3)
+                        .ToList();
+            }
+
+            return recommendedVehicles
+                .OrderByDescending(x => x.PopularityScore)
+                .Take(10)
+                .ToList();
         }
-         
 
-        //public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
-        //{ 
-        //    await PopularityScoreCalculation(data.bookingRecords);
-        //    await DailyRentalRateCalculation(); 
+        private async Task RabbitMqMessageToBookingsService(List<(Guid vehicleId, Guid userId)> viewedBookings)
+        {
+            Console.WriteLine($"Start Pushing Message by RabbitMq at : {DateTime.UtcNow}");
 
-        //    var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
+            //RabbitMq connection
+            //Port : 5672
+            var factory = new ConnectionFactory { HostName = "localhost" };
 
-        //    if (location == null)
-        //    {
-        //         return null;
-        //    }
+            using var connection = await factory.CreateConnectionAsync();
 
-        //    var targetVehicles = await _getAllRepository.GetAll(v =>
-        //                        v.CurrentLocationId == location.Id
-        //                        && v.VehicleStatus == VehicleStatus.Available);
+            using var channel = await connection.CreateChannelAsync();
 
-        //    if (!targetVehicles.Any())
-        //    {
-        //         return null;
-        //    }
+            await channel.QueueDeclareAsync(
+                queue: "messages",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
 
-        //    List<(Guid vehicleId, Guid userId)> viewedBookings = new();
+            byte[] body = JsonSerializer.SerializeToUtf8Bytes(viewedBookings);
 
-        //    foreach (var vehicle in targetVehicles)
-        //    {
-        //        viewedBookings.Add((vehicle.Id, data.userId));
-        //    }
-             
-        //    try
-        //    {
-        //        var json = JsonSerializer.Serialize(viewedBookings);
-        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: "messages",
+                mandatory: true,
+                basicProperties: new BasicProperties { Persistent = true },
+                body: body
+            );
 
-        //        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7000/api/bookings/view/range")
-        //        {
-        //            Content = content
-        //        };
-        //        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headerToken.Replace("Bearer ", "").Trim());
+            Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
+        }
 
-        //        await _client.SendAsync(request);
-        //    }
-        //    catch (Exception ex) {
-        //        throw;
-        //    }
+        private async Task PopularityScoreCalculation(List<UserBookingRecordDto> bookingRecords)
+        {
+            var vehicles = await _getAllRepository.GetAll();
 
-        //    List<Vehicle> recommendedVehicles = new();
+            foreach (var vehicle in vehicles)
+            {
+                var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
 
-        //    //first time
-        //    if (data.userBookings is null)
-        //    {
-        //        foreach (var vehicle in targetVehicles)
-        //        {
-        //            if (recommendedVehicles.Any(x => x.Id == vehicle.Id))
-        //            {
-        //                continue;
-        //            }
+                var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
 
-        //            recommendedVehicles.Add(vehicle);
-        //        }
-        //        return recommendedVehicles
-        //                .OrderBy(x => x.DailyRate)
-        //                .Take(3)
-        //                .ToList();
-        //    }
+                var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
 
-        //    return recommendedVehicles
-        //        .OrderByDescending(x => x.PopularityScore)
-        //        .Take(10)
-        //        .ToList();
-        //}
+                int score = (bookedCount * 10) + (viewedCount);
 
-        //private async Task PopularityScoreCalculation(List<UserBookingRecords> bookingRecords)
-        //{
-        //    var vehicles = await _getAllRepository.GetAll();
+                vehicle.UpdatePopularityScore(score);
+            }
+        }
 
-        //    foreach (var vehicle in vehicles)
-        //    {
-        //        var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
+        private async Task DailyRentalRateCalculation()
+        {
+            var vehicles = await _getAllRepository.GetAll();
 
-        //        var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
+            foreach (var vehicle in vehicles)
+            {
+                decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
 
-        //        var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
-                  
-        //        int score = (bookedCount * 10) + (viewedCount);
+                vehicle.UpdateDailyRate(adjustedRate);
+            }
+        }
 
-        //        vehicle.PopularityScore = score;
-        //    }
-        //}
-
-        //private async Task DailyRentalRateCalculation()
-        //{
-        //    var vehicles = await _getAllRepository.GetAll();
-
-        //    foreach (var vehicle in vehicles)
-        //    {
-        //        decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
-                 
-        //        vehicle.DailyRate = adjustedRate;
-        //    }
-        //}
-         
     }
 }
