@@ -5,6 +5,10 @@ using AuthenticationApi.Models;
 using AuthenticationApi.Utilities;
 using Common.Dtos;
 using Common.Interfaces;
+using Microsoft.AspNetCore.Connections;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text.Json;
 
 namespace AuthenticationApi.Services
 {
@@ -155,5 +159,61 @@ namespace AuthenticationApi.Services
             return role;
         }
 
+        private async Task ResponseToValidationRequest()
+        {
+            var factory = new ConnectionFactory { HostName = "localhost" };
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            await channel.QueueDeclareAsync(
+                queue: "validate-user",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.ReceivedAsync += async (sender, ea) =>
+            {
+                try
+                {
+                    var userId = JsonSerializer.Deserialize<Guid>(ea.Body.ToArray());
+                     
+                    bool isValidUser = await _getRepository.Get(userId) is not null;
+                     
+                    var responseBytes = JsonSerializer.SerializeToUtf8Bytes(isValidUser);
+
+                    var props = new BasicProperties
+                    {
+                        CorrelationId = ea.BasicProperties.CorrelationId
+                    };
+
+                    props.CorrelationId = ea.BasicProperties.CorrelationId;
+
+                    await channel.BasicPublishAsync(
+                        exchange: "",
+                        routingKey: ea.BasicProperties.ReplyTo,
+                        mandatory: false,
+                        basicProperties: props,
+                        body: responseBytes
+                    );
+                    await channel.BasicAckAsync(ea.DeliveryTag, false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Validation response failed: {ex.Message}");
+                }
+            };
+
+            await channel.BasicConsumeAsync(
+                queue: "validate-user",
+                autoAck: false,
+                consumer: consumer
+            );
+
+            Console.WriteLine("Response was sent to consumer successfully"); 
+        }
     }
 }

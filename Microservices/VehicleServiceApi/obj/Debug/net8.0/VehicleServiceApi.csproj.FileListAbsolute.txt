@@ -433,3 +433,4 @@ C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Ve
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\VehicleServiceApi\obj\Debug\net8.0\VehicleS.8FE883BE.Up2Date
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\VehicleServiceApi\obj\Debug\net8.0\VehicleServiceApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\VehicleServiceApi\obj\Debug\net8.0\ref\VehicleServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\VehicleServiceApi\bin\Debug\net8.0\RabbitMQ.Client.dll

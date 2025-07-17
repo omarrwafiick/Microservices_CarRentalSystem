@@ -29,7 +29,6 @@ builder.Services.AddScoped<IGetRepository<Location>, GetRepository<ApplicationDb
 builder.Services.AddScoped<ICreateRepository<Location>, CreateRepository<ApplicationDbContext, Location>>();
 builder.Services.AddScoped<IDeleteRepository<Location>, DeleteRepository<ApplicationDbContext, Location>>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddHttpClient();
 
 var app = builder.Build();
  

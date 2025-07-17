@@ -58,6 +58,6 @@ namespace BookingServiceApi.Dtos
         public DateTime RecordedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public DateTime? CancelledAt { get; set; }
-    }
-     
+    } 
+   
 }

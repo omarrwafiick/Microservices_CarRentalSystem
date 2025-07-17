@@ -7,10 +7,10 @@ namespace PaymentServiceApi.Dtos
     public record CreatePaymentDto
     {
         [Required]
-        public Guid BookingId { get; set; }
+        public string BookingId { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         [Range(0.01, 1_000_000)]
@@ -32,6 +32,9 @@ namespace PaymentServiceApi.Dtos
 
         [MaxLength(250)]
         public string Notes { get; set; }
+
+        [Required]
+        public DateTime PaidAt { get; set; }
     }
 
     public record GetPaymentDto
@@ -56,9 +59,7 @@ namespace PaymentServiceApi.Dtos
     }
 
     public record UpdatePaymentStatusDto
-    {
-        [Required]
-        public Guid PaymentId { get; set; }
+    { 
 
         [Required]
         public string NewStatus { get; set; }
@@ -66,4 +67,16 @@ namespace PaymentServiceApi.Dtos
         [MaxLength(250)]
         public string AdminNote { get; set; }
     }
+
+    public record PaymentSummaryDto
+    {
+        public Guid UserId { get; set; } 
+        public int TotalBookings { get; set; }
+        public decimal TotalAmountPaid { get; set; } 
+        public decimal PendingAmount { get; set; }
+        public decimal RefundedAmount { get; set; }
+        public DateTime SummaryFrom { get; set; }
+        public DateTime SummaryTo { get; set; }
+    }
+
 }

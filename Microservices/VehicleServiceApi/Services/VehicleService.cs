@@ -1,5 +1,6 @@
 ﻿using Common.Interfaces;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System.Text.Json;
 using VehicleServiceApi.Dtos;
 using VehicleServiceApi.Enums;
@@ -90,6 +91,37 @@ namespace VehicleServiceApi.Services
                 .ToList();
         }
 
+       
+        private async Task PopularityScoreCalculation(List<UserBookingRecordDto> bookingRecords)
+        {
+            var vehicles = await _getAllRepository.GetAll();
+
+            foreach (var vehicle in vehicles)
+            {
+                var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
+
+                var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
+
+                var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
+
+                int score = (bookedCount * 10) + (viewedCount);
+
+                vehicle.UpdatePopularityScore(score);
+            }
+        }
+
+        private async Task DailyRentalRateCalculation()
+        {
+            var vehicles = await _getAllRepository.GetAll();
+
+            foreach (var vehicle in vehicles)
+            {
+                decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
+
+                vehicle.UpdateDailyRate(adjustedRate);
+            }
+        }
+
         private async Task RabbitMqMessageToBookingsService(List<(Guid vehicleId, Guid userId)> viewedBookings)
         {
             Console.WriteLine($"Start Pushing Message by RabbitMq at : {DateTime.UtcNow}");
@@ -121,36 +153,6 @@ namespace VehicleServiceApi.Services
             );
 
             Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
-        }
-
-        private async Task PopularityScoreCalculation(List<UserBookingRecordDto> bookingRecords)
-        {
-            var vehicles = await _getAllRepository.GetAll();
-
-            foreach (var vehicle in vehicles)
-            {
-                var vehicleBookings = bookingRecords.Where(x => x.Id == vehicle.Id);
-
-                var bookedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.BOOKED).Count();
-
-                var viewedCount = vehicleBookings.Where(x => x.InteractionType == InteractionType.VIEWED).Count();
-
-                int score = (bookedCount * 10) + (viewedCount);
-
-                vehicle.UpdatePopularityScore(score);
-            }
-        }
-
-        private async Task DailyRentalRateCalculation()
-        {
-            var vehicles = await _getAllRepository.GetAll();
-
-            foreach (var vehicle in vehicles)
-            {
-                decimal adjustedRate = vehicle.DailyRate * (1 + (decimal)vehicle.PopularityScore / 2000);
-
-                vehicle.UpdateDailyRate(adjustedRate);
-            }
         }
 
     }

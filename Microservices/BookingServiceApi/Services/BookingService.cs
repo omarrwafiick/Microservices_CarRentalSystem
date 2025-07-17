@@ -154,6 +154,62 @@ namespace BookingServiceApi.Services
 
             Console.WriteLine($"Messages was received from RabbitMq at : {DateTime.UtcNow}");
         }
- 
+
+        public async Task ResponseToValidationRequest()
+        {
+            var factory = new ConnectionFactory { HostName = "localhost" };
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            await channel.QueueDeclareAsync(
+                queue: "validate-booking",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.ReceivedAsync += async (sender, ea) =>
+            {
+                try
+                {
+                    var bookingId = JsonSerializer.Deserialize<Guid>(ea.Body.ToArray());
+
+                    bool isValidUser = await _getRepository.Get(bookingId) is not null;
+
+                    var responseBytes = JsonSerializer.SerializeToUtf8Bytes(isValidUser);
+
+                    var props = new BasicProperties
+                    {
+                        CorrelationId = ea.BasicProperties.CorrelationId
+                    };
+
+                    props.CorrelationId = ea.BasicProperties.CorrelationId;
+
+                    await channel.BasicPublishAsync(
+                        exchange: "",
+                        routingKey: ea.BasicProperties.ReplyTo,
+                        mandatory: false,
+                        basicProperties: props,
+                        body: responseBytes
+                    );
+                    await channel.BasicAckAsync(ea.DeliveryTag, false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Validation response failed: {ex.Message}");
+                }
+            };
+
+            await channel.BasicConsumeAsync(
+                queue: "validate-booking",
+                autoAck: false,
+                consumer: consumer
+            );
+
+            Console.WriteLine("Response was sent to consumer successfully");
+        }
     }
 }

@@ -436,3 +436,4 @@ C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Au
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\AuthenticationApi\obj\Debug\net8.0\Authenti.D938D8C2.Up2Date
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\AuthenticationApi\obj\Debug\net8.0\AuthenticationApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\AuthenticationApi\obj\Debug\net8.0\ref\AuthenticationApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\AuthenticationApi\bin\Debug\net8.0\RabbitMQ.Client.dll

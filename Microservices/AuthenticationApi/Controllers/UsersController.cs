@@ -10,6 +10,7 @@ namespace AuthenticationApi.Controllers
     [ApiController] 
     public class UsersController(IUserService userService) : ControllerBase
     {
+        //[AuthorizeRoles("ADMIN")]
         [HttpGet]
         public async Task<IActionResult> GetUsers() {
             var result = await userService.GetAllUsersAsync();

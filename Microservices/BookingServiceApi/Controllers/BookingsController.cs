@@ -12,6 +12,7 @@ namespace BookingServiceApi.Controllers
     [ApiController]
     public class BookingsController(IBookingService bookingService, IMapper mapper) : ControllerBase
     {
+        //[AuthorizeRoles("ADMIN")]
         [HttpGet]
         public async Task<IActionResult> GetBookings()
         { 
