@@ -3,6 +3,7 @@ using AuthenticationApi.Enums;
 using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
 using AuthenticationApi.Utilities;
+using Common.Dtos;
 using Common.Interfaces;
 
 namespace AuthenticationApi.Services
@@ -25,38 +26,54 @@ namespace AuthenticationApi.Services
             _updateRepository = updateRepository;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync() => await _getAllRepository.GetAll();
+        public async Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync() 
+        { 
+            var result = await _getAllRepository.GetAll();
 
-        public async Task<User> GetUserByIdAsync(Guid id) => await _getRepository.Get(id);
+            return result.Any() ?
+                ServiceResult<IEnumerable<User>>.Success("Users exists!", result) :
+                ServiceResult<IEnumerable<User>>.Failure("No user exists inside the server");
+        }
 
-        public async Task<User> LoginAsync(LoginDto dto)
+        public async Task<ServiceResult<User>> GetUserByIdAsync(Guid id)
+        {
+            var result = await _getRepository.Get(id);
+
+            return result is not null ?
+                ServiceResult<User>.Success("User was found!", result) :
+                ServiceResult<User>.Failure($"No user exists inside the server with this id: {id}");
+        }
+       
+        public async Task<ServiceResult<User>> LoginAsync(LoginDto dto)
         {
             var exists = await _getRepository.Get(x=>x.Email == dto.Email);
 
             if(exists is null) 
-                return null;
+                return ServiceResult<User>.Failure(
+                    $"No user exists inside the server with this email: {dto.Email}");
 
             var hashResult = UserSecurityService.VerifyPassword(exists.HashedPassword, dto.Password);
 
             if (!hashResult)
-                return null;
+                return ServiceResult<User>.Failure("Incorrect Password");
 
-            return exists;
+            return ServiceResult<User>.Success("Logged in successfully", exists);
         }
 
-        public async Task<bool> RegisterAsync(RegisterDto dto)
+        public async Task<ServiceResult<bool>> RegisterAsync(RegisterDto dto)
         {
             var exists = await _getRepository.Get(x => x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
 
             if (exists is not null) 
-                return false;
+                return ServiceResult<bool>.Failure(
+                    "User already exists with same email or phone please enter a unique valued");
 
             var hashedPassword = UserSecurityService.HashPassword(dto.Password);
 
             var role = CheckRole(dto.Role);
 
             if (role == Role.NONE) 
-                return false;
+                return ServiceResult<bool>.Failure("Role sent was not found");
 
             var newUser = User.Factory(
                 dto.FullName, 
@@ -68,10 +85,12 @@ namespace AuthenticationApi.Services
 
             var result = await _createRepository.CreateAsync(newUser);
 
-            return result;
+            return result ?
+                ServiceResult<bool>.Success("New account was created successfully") :
+                ServiceResult<bool>.Failure("Failed to create new user"); 
         }
 
-        public async Task<string> ForgetPasswordAsync(string email)
+        public async Task<ServiceResult<string>> ForgetPasswordAsync(string email)
         {
             var user = await _getRepository.Get(x => x.Email == email);
 
@@ -79,34 +98,45 @@ namespace AuthenticationApi.Services
 
             user.ResetUserPasswordToken(genertatedToken, DateTime.UtcNow.AddHours(1)); 
 
-            await _updateRepository.UpdateAsync(user);
+            var result = await _updateRepository.UpdateAsync(user);
 
-            return genertatedToken;
+            return result ?
+                ServiceResult<string>.Success("Reset token was set successfully", genertatedToken) :
+                ServiceResult<string>.Failure("Failed to create a reset password token");
         }
 
-        public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto, string token)
+        public async Task<ServiceResult<bool>> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
             var user = await _getRepository.Get(x => x.ResetToken == dto.ResetToken);
 
             if (user.ResetToken != token || user.ResetTokenExpiresAt < DateTime.UtcNow) 
-                return false;
+                return ServiceResult<bool>.Failure("Incorrect or expired reset token");
 
             user.ResetUserHashedPassword(dto.NewPassword);
-            return await _updateRepository.UpdateAsync(user); ;
+
+            var result = await _updateRepository.UpdateAsync(user);
+
+            return result ?
+                ServiceResult<bool>.Success("Password was updated successfully") :
+                ServiceResult<bool>.Failure("Failed to reset password");
         }
 
-        public async Task<bool> UpdateUserAsync(UpdateUserDto dto)
+        public async Task<ServiceResult<bool>> UpdateUserAsync(UpdateUserDto dto)
         {
             var exists = await _getRepository.Get(x => x.Id == dto.Id);
 
-            if (exists is null) 
-                return false;
+            var failMessage = "Failed to update user info";
+
+            if (exists is null)
+                return ServiceResult<bool>.Failure(failMessage);
 
             exists.UpdateUser(dto.FullName, dto.PhoneNumber);
 
             var result = await _updateRepository.UpdateAsync(exists);
 
-            return result;
+            return result ?
+               ServiceResult<bool>.Success("User was updated successfully") :
+               ServiceResult<bool>.Failure(failMessage);
         }
 
         private Role CheckRole(string UserRole)
@@ -125,6 +155,5 @@ namespace AuthenticationApi.Services
             return role;
         }
 
-         
     }
 }

@@ -1,4 +1,5 @@
-﻿using AuthenticationApi.Dtos;  
+﻿using AuthenticationApi.Dtos;
+using AuthenticationApi.Extensions;
 using AuthenticationApi.Interfaces;  
 using Microsoft.AspNetCore.Mvc;  
 
@@ -12,24 +13,32 @@ namespace AuthenticationApi.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto) {
             var register = await userService.RegisterAsync(registerDto);
 
-            return register ? Ok("New account was created successfully") : BadRequest("Failed to create new account");
+            return register.SuccessOrNot ? 
+                Ok(new { message = register.Message, data = register.Data }) : 
+                BadRequest(new { message = register.Message });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto) {
-            var user = await userService.LoginAsync(loginDto);
-
-            var token = tokenGenerator.GenerateToken(user); 
-
-            return user is not null ? Ok(token) : BadRequest("User email or password is incorrect");
+            var result = await userService.LoginAsync(loginDto);
+             
+            return result.SuccessOrNot ?
+                Ok(new { 
+                    message = result.Message, 
+                    data = result.Data.MapFromDomainToDto(),
+                    token = tokenGenerator.GenerateToken(result.Data)
+                }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpPost("forgetpassword")]
         public async Task<IActionResult> ForgetPassword([FromBody] string email)
         {
-            var resetToken = await userService.ForgetPasswordAsync(email);
+            var result = await userService.ForgetPasswordAsync(email);
 
-            return resetToken is not null ? Ok($"reset-token/{resetToken}") : BadRequest("Failed to verify user");
+            return result.SuccessOrNot ?
+            Ok(new { message = result.Message, path = result.Data }) :
+            BadRequest(new { message = result.Message }); 
         }
 
         [HttpPost("resetpassword/{resetToken}")]
@@ -39,7 +48,9 @@ namespace AuthenticationApi.Controllers
         {
             var result = await userService.ResetPasswordAsync(resetPasswordDto, resetToken);
 
-            return result ? Ok("Password was reset successfully") : BadRequest("Failed to reset Password");
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message }) :
+                BadRequest(new { message = result.Message }); 
         } 
     }
 }

@@ -11,20 +11,29 @@ namespace AuthenticationApi.Controllers
     {
         [HttpGet]
         public async Task<IActionResult> GetUsers() {
-            var users = await userService.GetAllUsersAsync();
-            return users.Any() ? Ok(users.Select(x=>x.MapFromDomainToDto())) : NotFound("No user was found");
+            var result = await userService.GetAllUsersAsync();
+
+            return result.SuccessOrNot ?
+               Ok(new { message = result.Message, data = result.Data.Select(x => x.MapFromDomainToDto()) }) :
+               BadRequest(new { message = result.Message });  
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById([FromRoute] Guid id) {
-            var user = await userService.GetUserByIdAsync(id);
-            return user is not null ? Ok(user.MapFromDomainToDto()) : NotFound("No user was found");
+            var result = await userService.GetUserByIdAsync(id);
+
+            return result.SuccessOrNot ?
+              Ok(new { message = result.Message, data = result.Data.MapFromDomainToDto() }) :
+              BadRequest(new { message = result.Message }); 
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto) {
-            var user = await userService.UpdateUserAsync(dto);
-            return user ? Ok("User was updated successfully") : BadRequest("User couldn't be updated");
+            var result = await userService.UpdateUserAsync(dto);
+
+            return result.SuccessOrNot ?
+              Ok(new { message = result.Message }) :
+              BadRequest(new { message = result.Message });
         }
     }
 }
