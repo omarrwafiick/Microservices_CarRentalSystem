@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationApi.Controllers
 {
+    //[AuthorizeRoles("RENTER", "OWNER")]
     [Route("api/users")]
     [ApiController] 
     public class UsersController(IUserService userService) : ControllerBase

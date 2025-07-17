@@ -132,7 +132,7 @@ namespace AuthenticationApi.Services
 
             exists.UpdateUser(dto.FullName, dto.PhoneNumber);
 
-            var result = await _updateRepository.UpdateAsync(exists);
+            var result = await _updateRepository.UpdateAsync(exists);  
 
             return result ?
                ServiceResult<bool>.Success("User was updated successfully") :

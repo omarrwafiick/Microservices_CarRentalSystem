@@ -1,5 +1,6 @@
 using BookingServiceApi.Data;
 using BookingServiceApi.Interfaces;
+using BookingServiceApi.Mappers;
 using BookingServiceApi.Models;
 using BookingServiceApi.Services;
 using Common.Interfaces;
@@ -26,7 +27,9 @@ builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<Applicat
 builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<ApplicationDbContext, Booking>>();
 builder.Services.AddScoped<ICreateRepository<Booking>, CreateRepository<ApplicationDbContext, Booking>>();
 builder.Services.AddScoped<IUpdateRepository<Booking>, UpdateRepository<ApplicationDbContext, Booking>>();
-builder.Services.AddScoped<IBookingService, BookingService>(); 
+builder.Services.AddScoped<IBookingService, BookingService>();
+
+builder.Services.AddAutoMapper(typeof(BookingProfile));
 
 var app = builder.Build();
  
@@ -45,3 +48,6 @@ app.UseMiddleware<RestrictAccessMiddleware>();
 app.MapControllers();
 
 app.Run();
+ 
+//TODO
+//connect to rabbit mq

@@ -433,3 +433,6 @@ C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Bo
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\obj\Debug\net8.0\BookingS.981838DB.Up2Date
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\obj\Debug\net8.0\BookingServiceApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\obj\Debug\net8.0\ref\BookingServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\BookingServiceApi\bin\Debug\net8.0\RabbitMQ.Client.dll
