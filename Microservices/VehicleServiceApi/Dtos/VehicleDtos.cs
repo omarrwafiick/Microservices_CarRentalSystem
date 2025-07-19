@@ -29,10 +29,10 @@ namespace VehicleServiceApi.Dtos
     public record CreateVehicleDto
     {
         [Required]
-        public Guid OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         [Required]
-        public Guid CurrentLocationId { get; set; }
+        public string CurrentLocationId { get; set; }
 
         [Required]
         [StringLength(10, MinimumLength = 3)]
@@ -91,65 +91,7 @@ namespace VehicleServiceApi.Dtos
         [Range(1000, 50000)]
         public int ServiceIntervalKm { get; set; }
     }
-
-    public class UpdateVehicleDto
-    {
-        [Required]
-        public Guid CurrentLocationId { get; set; }
-
-        [Required]
-        [StringLength(10, MinimumLength = 3)]
-        public string LicensePlate { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Make { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Model { get; set; }
-
-        [Range(1900, 2100)]
-        public int Year { get; set; }
-
-        [Required]
-        public string VehicleType { get; set; }
-
-        [Required]
-        public DateTime RegistrationExpiryDate { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string InsurancePolicyNumber { get; set; }
-
-        [Required]
-        public DateTime InsuranceExpiryDate { get; set; }
-
-        [Range(0, 10000)]
-        public decimal DailyRate { get; set; }
-
-        [Range(0, 1000000)]
-        public decimal Mileage { get; set; }
-
-        [Required]
-        public string FuelType { get; set; }
-
-        [Required]
-        public string Transmission { get; set; }
-
-        [Range(0, 100)]
-        public int PopularityScore { get; set; }
-
-        public bool IsGpsEnabled { get; set; }
-        public bool IsElectric { get; set; }
-        public bool IsActive { get; set; }
-
-        public DateTime LastServiceDate { get; set; }
-
-        [Range(1000, 50000)]
-        public int ServiceIntervalKm { get; set; }
-    }
-
+  
     public record RecommendationDto(
         [Required]
         Guid userId,
@@ -167,11 +109,7 @@ namespace VehicleServiceApi.Dtos
         List<UserBookingRecordDto> bookingRecords,
         List<GetMaintenanceRecordDto> maintenanceRecords
     );
-
-    public record UpdateVehicleStatusDto(
-        [Required]
-        string Status 
-    );
+ 
 
     public enum InteractionType
     {

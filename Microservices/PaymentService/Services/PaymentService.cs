@@ -106,9 +106,9 @@ namespace PaymentServiceApi.Services
                 return ServiceResult<bool>.Failure("Payment record already exists");
             }
 
-            if (ValidateEnumValue<PaymentMethod>(dto.Method) ||
-                ValidateEnumValue<CurrencyType>(dto.Currency) ||
-                ValidateEnumValue<PaymentStatus>(dto.Status) )
+            if (!ValidateEnumValue<PaymentMethod>(dto.Method) ||
+                !ValidateEnumValue<CurrencyType>(dto.Currency) ||
+                !ValidateEnumValue<PaymentStatus>(dto.Status) )
             {
                 return ServiceResult<bool>.Failure("Invalid enum values");
             }

@@ -26,8 +26,7 @@ namespace VehicleServiceApi.Models
             FuelType fuelType,
             TransmissionType transmission,
             bool isGpsEnabled,
-            bool isElectric,
-            bool isActive,
+            bool isElectric, 
             DateTime lastServiceDate,
             int serviceIntervalKm)
         {
@@ -50,7 +49,7 @@ namespace VehicleServiceApi.Models
             Transmission = transmission;
             IsGpsEnabled = isGpsEnabled;
             IsElectric = isElectric;
-            IsActive = isActive;
+            IsActive = true;
             LastServiceDate = lastServiceDate;
             ServiceIntervalKm = serviceIntervalKm;
             CreatedAt = DateTime.UtcNow;
@@ -73,8 +72,7 @@ namespace VehicleServiceApi.Models
             FuelType fuelType,
             TransmissionType transmission,
             bool isGpsEnabled,
-            bool isElectric,
-            bool isActive,
+            bool isElectric, 
             DateTime lastServiceDate,
             int serviceIntervalKm) =>
             new Vehicle(
@@ -94,8 +92,7 @@ namespace VehicleServiceApi.Models
                 fuelType,
                 transmission,
                 isGpsEnabled,
-                isElectric,
-                isActive,
+                isElectric, 
                 lastServiceDate,
                 serviceIntervalKm); 
         public Guid OwnerId { get; private set; }
@@ -128,11 +125,35 @@ namespace VehicleServiceApi.Models
         public void UpdatePopularityScore(int newValue)
         {
             PopularityScore = newValue;
+            MarkAsUpdated();
         }
 
         public void UpdateDailyRate(decimal newValue)
         {
             DailyRate = newValue;
+            MarkAsUpdated();
+        }
+
+        public void Deactivate()
+        {
+            if (IsActive)
+            { 
+                IsActive = false;
+            }
+        }
+
+        public void Activate()
+        {
+            if (!IsActive)
+            {
+                IsActive = true;
+            }
+        }
+
+        public void UpdateStatus(VehicleStatus newVehicleStatus)
+        {
+            VehicleStatus = newVehicleStatus;
+            MarkAsUpdated();
         }
 
         public void MarkAsUpdated()

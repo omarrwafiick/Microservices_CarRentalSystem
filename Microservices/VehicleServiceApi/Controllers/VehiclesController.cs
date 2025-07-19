@@ -1,55 +1,109 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using VehicleServiceApi.Dtos;
-using VehicleServiceApi.Interfaces;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using VehicleServiceApi.Dtos; 
+using VehicleServiceApi.Interfaces; 
  
 namespace VehicleServiceApi.Controllers
 {
     [Route("api/vehicles")]
     [ApiController] 
-    public class VehiclesController(IVehicleService vehicleService) : ControllerBase
+    public class VehiclesController(IVehicleService vehicleService, IMapper mapper) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetVechiles()
-        {
-            return Ok();
+        {  
+            var result = await vehicleService.GetVehiclesAsync();
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpGet("filtered")]
         public async Task<IActionResult> GetVechilesByFilter(
-            [FromQuery] string? vechileType, [FromQuery] string? fuelType, [FromQuery] string? transmissionType
+            [FromQuery] string vechileType = "", 
+            [FromQuery] string fuelType="", 
+            [FromQuery] string transmissionType = ""
         )
-        {
-            return Ok();
+        { 
+            var result = await vehicleService.GetVehiclesByFilterAsync(fuelType, vechileType, transmissionType);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpGet("{vehicleid}")]
         public async Task<IActionResult> GetVechileById([FromRoute] string vehicleid)
         {
-            return Ok();
+            if (Guid.TryParse(vehicleid, out Guid id))
+                return BadRequest(new { message = "Invalid id" });
+
+            var result = await vehicleService.GetVehiclesByConditionAsync(
+                vehicle => vehicle.Id == id);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpGet("recommendation")]
-        public async Task<IActionResult> GetVechilesByRecommendation([FromRoute] string vehicleid)
+        public async Task<IActionResult> GetVechilesByRecommendation([FromRoute] string vehicleid, [FromBody] RecommendationDto dto)
         {
-            return Ok();
+            var result = await vehicleService.RecommendRelevantVehiclesAsync(dto); 
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpPost]
         public async Task<IActionResult> RegisterVehicle([FromBody] CreateVehicleDto dto)
         {
-            return Ok();
-        }
+            var result = await vehicleService.RegisterVehicleAsync(dto);
 
-        [HttpPut("{vehicleid}")]
-        public async Task<IActionResult> UpdateVehicle([FromRoute] string vehicleid, [FromBody] UpdateVehicleStatusDto dto)
-        {
-            return Ok();
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                BadRequest(new { message = result.Message });
         }
 
         [HttpPut("status/{vehicleid}")]
-        public async Task<IActionResult> UpdateVehicleStatus([FromRoute] string vehicleid, [FromBody] UpdateVehicleDto dto)
+        public async Task<IActionResult> UpdateVehicleStatus([FromRoute] string vehicleid, [FromBody] string status)
         {
-            return Ok();
+            if (Guid.TryParse(vehicleid, out Guid id))
+                return BadRequest(new { message = "Invalid id" });
+
+            var result = await vehicleService.UpdateVehicleStatusAsync(id, status);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message }) :
+                BadRequest(new { message = result.Message });
+        }
+
+        [HttpDelete("deactivate/{vehicleid}")]
+        public async Task<IActionResult> DeactivateVehicleStatus([FromRoute] string vehicleid)
+        {
+            if (Guid.TryParse(vehicleid, out Guid id))
+                return BadRequest(new { message = "Invalid id" });
+
+            var result = await vehicleService.DeactivateVehicleAsync(id);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message }) :
+                BadRequest(new { message = result.Message });
+        }
+
+        [HttpPut("activate/{vehicleid}")]
+        public async Task<IActionResult> ActivateVehicleStatus([FromRoute] string vehicleid)
+        {
+            if (Guid.TryParse(vehicleid, out Guid id))
+                return BadRequest(new { message = "Invalid id" });
+
+            var result = await vehicleService.ActivateVehicleAsync(id);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message }) :
+                BadRequest(new { message = result.Message });
         }
     }
 }

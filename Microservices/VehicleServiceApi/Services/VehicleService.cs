@@ -1,6 +1,8 @@
-﻿using Common.Interfaces;
+﻿using Common.Dtos;
+using Common.Interfaces;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+using static VehicleServiceApi.Helpers.EnumHelper;
+using System.Linq.Expressions;
 using System.Text.Json;
 using VehicleServiceApi.Dtos;
 using VehicleServiceApi.Enums;
@@ -17,7 +19,6 @@ namespace VehicleServiceApi.Services
         private readonly ICreateRepository<Vehicle> _createRepository; 
         private readonly IUpdateRepository<Vehicle> _updateRepository;
         private readonly IDeleteRepository<Vehicle> _deleteRepository; 
-
         public VehicleService(
             IGetAllRepository<Vehicle> getAllRepository, 
             IGetRepository<Vehicle> getRepository,
@@ -33,9 +34,145 @@ namespace VehicleServiceApi.Services
             _createRepository = createRepository; 
             _updateRepository = updateRepository;
             _deleteRepository = deleteRepository; 
-        } 
+        }
 
-        public async Task<IEnumerable<Vehicle>> RecommendRelevantVehiclesAsync(RecommendationDto data, string headerToken)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync()
+        {
+            var vehicles = await _getAllRepository.GetAll();
+
+            return vehicles.Any() ?
+                ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
+                ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
+        }
+
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByFilterAsync(string fuelType, string vehicleType, string transmissionType)
+        {
+            bool fuelState = fuelType.Length > 0;
+            bool vehicleState = vehicleType.Length > 0;
+            bool transmissionState = transmissionType.Length > 0;
+
+            if ((fuelState && !ValidateEnumValue<FuelType>(fuelType)) ||
+                (vehicleState && !ValidateEnumValue<VehicleType>(vehicleType)) ||
+                (transmissionState && !ValidateEnumValue<TransmissionType>(transmissionType))
+            )
+            {
+                return ServiceResult<List<Vehicle>>.Failure("Invalid enum type/s");
+            } 
+
+            var vehicles = await _getAllRepository.GetAll();
+
+            if (!vehicles.Any()) 
+            {
+                ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
+            }
+            
+            vehicles = fuelState ? vehicles.Where(vehicle => vehicle.FuelType == Enum.Parse<FuelType>(fuelType)) : vehicles ;
+            
+            vehicles = vehicleState ? vehicles.Where(vehicle => vehicle.VehicleType == Enum.Parse<VehicleType>(vehicleType)) : vehicles;
+     
+            vehicles = transmissionState ? vehicles.Where(vehicle => vehicle.Transmission == Enum.Parse<TransmissionType>(transmissionType)) : vehicles;
+
+            return ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList());
+        }
+
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, bool>> condition)
+        {
+            var vehicles = await _getAllRepository.GetAll(condition);
+
+            return vehicles.Any() ?
+                ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
+                ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
+        }
+
+        public async Task<ServiceResult<bool>> RegisterVehicleAsync(CreateVehicleDto dto)
+        {
+            //TODO : CHECK OWNER BY RABBITMQ
+            if(Guid.TryParse(dto.OwnerId, out Guid ownerId))
+            {
+                ServiceResult<bool>.Failure("Invalid owner id");
+            }
+
+            Guid.TryParse(dto.CurrentLocationId, out Guid currentLocationId);
+
+            var location = await _getLocationRepository.Get(currentLocationId);
+
+            if (location is null)
+            {
+                ServiceResult<bool>.Failure("Invalid location");
+            }
+
+            var now = DateTime.UtcNow;
+
+            if (dto.InsuranceExpiryDate <= now || dto.RegistrationExpiryDate <= now || dto.LastServiceDate > now)
+            {
+                ServiceResult<List<Vehicle>>.Failure("Invalid date/s and time/s");
+            }
+
+            if (!ValidateEnumValue<FuelType>(dto.FuelType)||
+               !ValidateEnumValue<VehicleType>(dto.VehicleType)||
+               !ValidateEnumValue<TransmissionType>(dto.Transmission)
+            )
+            {
+                return ServiceResult<bool>.Failure("Invalid enum type/s");
+            }
+
+            var vehicleExists = await _getRepository.Get(
+                vehicle => 
+                    vehicle.OwnerId == ownerId &&
+                    vehicle.LicensePlate == dto.LicensePlate &&
+                    vehicle.Make == dto.Make &&
+                    vehicle.Year == dto.Year &&
+                    vehicle.VIN == dto.VIN);
+
+            if (vehicleExists is not null)
+            {
+                ServiceResult<List<Vehicle>>.Failure("Vehicle already exists");
+            }
+
+            var fuelType = Enum.Parse<FuelType>(dto.FuelType);
+
+            var vehicleType = Enum.Parse<VehicleType>(dto.VehicleType);
+
+            var transmissionType = Enum.Parse<TransmissionType>(dto.Transmission);
+
+            var newVehicle = Vehicle.Factory(ownerId, currentLocationId, dto.LicensePlate, dto.VIN,
+                dto.Make, dto.Model, dto.Year, vehicleType, dto.RegistrationExpiryDate, dto.InsurancePolicyNumber,
+                dto.InsuranceExpiryDate, dto.DailyRate, dto.Mileage, fuelType, transmissionType, dto.IsGpsEnabled,
+                dto.IsElectric, dto.LastServiceDate, dto.ServiceIntervalKm);
+
+            var result = await _createRepository.CreateAsync(newVehicle);
+
+            return result ?
+               ServiceResult<bool>.Success("Vehicles was created successfully") :
+               ServiceResult<bool>.Failure("Failed to create a new vehicle");
+        }
+         
+        public async Task<ServiceResult<bool>> UpdateVehicleStatusAsync(Guid id, string status)
+        {
+            if (!ValidateEnumValue<VehicleStatus>(status))
+            {
+                return ServiceResult<bool>.Failure("Invalid enum type");
+            }
+
+            var vehicle = await _getRepository.Get(id);
+
+            if (vehicle is null)
+            {
+                return ServiceResult<bool>.Failure("Vehicle was not found");
+            }
+
+            var newStatus = Enum.Parse<VehicleStatus>(status);
+
+            vehicle.UpdateStatus(newStatus);
+
+            var result = await _updateRepository.UpdateAsync(vehicle);
+
+            return result ?
+               ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
+               ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+        }
+
+        public async Task<ServiceResult<List<Vehicle>>> RecommendRelevantVehiclesAsync(RecommendationDto data)
         {
             await PopularityScoreCalculation(data.bookingRecords);
             await DailyRentalRateCalculation();
@@ -44,16 +181,16 @@ namespace VehicleServiceApi.Services
 
             if (location == null)
             {
-                return null;
+                return ServiceResult<List<Vehicle>>.Failure("Location was not found");
             }
-
+              
             var targetVehicles = await _getAllRepository.GetAll(vehicle =>
                                 vehicle.CurrentLocationId == location.Id
                                 && vehicle.VehicleStatus == VehicleStatus.Available);
 
             if (!targetVehicles.Any())
             {
-                return null;
+                return ServiceResult<List<Vehicle>>.Failure("Vehicle was not found");
             }
 
             List<(Guid vehicleId, Guid userId)> viewedBookings = new();
@@ -63,7 +200,7 @@ namespace VehicleServiceApi.Services
                 viewedBookings.Add((vehicle.Id, data.userId));
             }
 
-            RabbitMqMessageToBookingsService(viewedBookings);
+            await RabbitMqMessageToBookingsService(viewedBookings);
 
             List<Vehicle> recommendedVehicles = new();
 
@@ -79,19 +216,22 @@ namespace VehicleServiceApi.Services
 
                     recommendedVehicles.Add(vehicle);
                 }
-                return recommendedVehicles
-                        .OrderBy(x => x.DailyRate)
-                        .Take(3)
-                        .ToList();
+                recommendedVehicles = recommendedVehicles
+                                        .OrderBy(x => x.DailyRate)
+                                        .Take(3)
+                                        .ToList();
+
+                return ServiceResult<List<Vehicle>>.Success("Recommended vehicles was found!", recommendedVehicles);
             }
 
-            return recommendedVehicles
+            recommendedVehicles = recommendedVehicles
                 .OrderByDescending(x => x.PopularityScore)
                 .Take(10)
                 .ToList();
+
+            return ServiceResult<List<Vehicle>>.Success("Recommended vehicles was found!", recommendedVehicles);
         }
 
-       
         private async Task PopularityScoreCalculation(List<UserBookingRecordDto> bookingRecords)
         {
             var vehicles = await _getAllRepository.GetAll();
@@ -153,6 +293,42 @@ namespace VehicleServiceApi.Services
             );
 
             Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
+        }
+
+        public async Task<ServiceResult<bool>> DeactivateVehicleAsync(Guid id)
+        {
+            var vehicle = await _getRepository.Get(id);
+
+            if (vehicle is null)
+            {
+                return ServiceResult<bool>.Failure("Vehicle was not found");
+            }
+
+            vehicle.Deactivate();
+
+            var result = await _updateRepository.UpdateAsync(vehicle);
+
+            return result ?
+               ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
+               ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+        }
+
+        public async Task<ServiceResult<bool>> ActivateVehicleAsync(Guid id)
+        {
+            var vehicle = await _getRepository.Get(id);
+
+            if (vehicle is null)
+            {
+                return ServiceResult<bool>.Failure("Vehicle was not found");
+            }
+
+            vehicle.Activate();
+
+            var result = await _updateRepository.UpdateAsync(vehicle);
+
+            return result ?
+               ServiceResult<bool>.Success("Vehicle status was activated successfully") :
+               ServiceResult<bool>.Failure("Failed to activate vehicle");
         }
 
     }
