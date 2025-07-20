@@ -35,7 +35,9 @@ builder.Services.AddScoped<IMaintenanceRecordsService, MaintenanceRecordsService
 
 //Mappers
 builder.Services.AddAutoMapper(typeof(VehicleProfiles)); 
-builder.Services.AddAutoMapper(typeof(VehicleImageProfile));
+builder.Services.AddAutoMapper(typeof(VehicleImageProfile)); 
+builder.Services.AddAutoMapper(typeof(LocationProfile));
+builder.Services.AddAutoMapper(typeof(MaintenanceCenterProfile));
 
 var app = builder.Build();
  

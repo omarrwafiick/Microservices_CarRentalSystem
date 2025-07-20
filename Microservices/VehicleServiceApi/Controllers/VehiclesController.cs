@@ -86,7 +86,7 @@ namespace VehicleServiceApi.Controllers
             if (Guid.TryParse(vehicleid, out Guid id))
                 return BadRequest(new { message = "Invalid id" });
 
-            var result = await vehicleService.DeactivateVehicleAsync(id);
+            var result = await vehicleService.ChangeVehicleStatusAsync(id, false);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :
@@ -99,7 +99,7 @@ namespace VehicleServiceApi.Controllers
             if (Guid.TryParse(vehicleid, out Guid id))
                 return BadRequest(new { message = "Invalid id" });
 
-            var result = await vehicleService.ActivateVehicleAsync(id);
+            var result = await vehicleService.ChangeVehicleStatusAsync(id, true);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :

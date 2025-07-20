@@ -35,14 +35,30 @@ namespace VehicleServiceApi.Models
         public double Latitude { get; private set; }
         public bool IsActive { get; private set; }
 
+        public List<MaintenanceCenter> MaintenanceCenters { get; private set; } = new();
+
+        public List<Vehicle> LocationVehicles { get; private set; } = new();
         public void DeactivateLocation()
         {
-            IsActive = false;   
+            IsActive = false;  
         }
 
         public void ActivateLocation()
         {
             IsActive = true;
+        }
+
+        public void UpdateAddress(string newDistrict, string newCity, string newCountry)
+        {
+            District = newDistrict;
+            City = newCity;
+            Country = newCountry;
+        }
+
+        public void Updatecoordinates(double newLongitude, double newLatitude)
+        {
+            Longitude = newLongitude; 
+            Latitude = newLatitude;
         }
 
         public List<Vehicle> Vehicles { get; private set; } = new();  

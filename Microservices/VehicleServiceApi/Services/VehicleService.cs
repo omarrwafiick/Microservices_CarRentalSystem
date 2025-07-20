@@ -280,7 +280,7 @@ namespace VehicleServiceApi.Services
             Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
         }
 
-        public async Task<ServiceResult<bool>> DeactivateVehicleAsync(Guid id)
+        public async Task<ServiceResult<bool>> ChangeVehicleStatusAsync(Guid id, bool activate)
         {
             var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
 
@@ -289,7 +289,15 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Vehicle was not found");
             }
 
-            vehicle.Deactivate();
+            if (activate)
+            { 
+                vehicle.Activate();
+            }
+            else
+            {
+                vehicle.Deactivate();
+
+            }
 
             var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
@@ -297,24 +305,7 @@ namespace VehicleServiceApi.Services
                ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
                ServiceResult<bool>.Failure("Failed to deactivate vehicle");
         }
-
-        public async Task<ServiceResult<bool>> ActivateVehicleAsync(Guid id)
-        {
-            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
-
-            if (vehicle is null)
-            {
-                return ServiceResult<bool>.Failure("Vehicle was not found");
-            }
-
-            vehicle.Activate();
-
-            var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
-
-            return result ?
-               ServiceResult<bool>.Success("Vehicle status was activated successfully") :
-               ServiceResult<bool>.Failure("Failed to activate vehicle");
-        }
+         
 
     }
 }

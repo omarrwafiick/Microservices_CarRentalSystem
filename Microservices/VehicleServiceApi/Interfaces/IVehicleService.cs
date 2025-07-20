@@ -12,8 +12,7 @@ namespace VehicleServiceApi.Interfaces
         Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, bool>> condition);
         Task<ServiceResult<bool>> RegisterVehicleAsync(CreateVehicleDto dto); 
         Task<ServiceResult<bool>> UpdateVehicleStatusAsync(Guid id, string status);
-        Task<ServiceResult<bool>> ActivateVehicleAsync(Guid id);
-        Task<ServiceResult<List<Vehicle>>> RecommendRelevantVehiclesAsync(RecommendationDto data);
-        Task<ServiceResult<bool>>  DeactivateVehicleAsync(Guid id); 
+        Task<ServiceResult<bool>> ChangeVehicleStatusAsync(Guid id, bool activate);
+        Task<ServiceResult<List<Vehicle>>> RecommendRelevantVehiclesAsync(RecommendationDto data); 
     }
 }
