@@ -7,23 +7,7 @@ namespace VehicleServiceApi.Models
     {
         private Location()
         { 
-        }
-        private Location(
-            string name, 
-            string district, 
-            string city, 
-            string country, 
-            double longitude, 
-            double latitude)
-        { 
-            Name = name;
-            District = district;
-            City = city;
-            Country = country;
-            Longitude = longitude;
-            Latitude = latitude;
-            IsActive = true;
-        }
+        } 
         public static Location Factory(
             string name, 
             string district, 
@@ -31,13 +15,17 @@ namespace VehicleServiceApi.Models
             string country, 
             double longitude, 
             double latitude) =>
-             new Location(
-                 name, 
-                 district, 
-                 city, 
-                 country, 
-                 longitude, 
-                 latitude);
+             new Location
+             {
+
+                 Name = name,
+                 District = district,
+                 City = city,
+                 Country = country,
+                 Longitude = longitude,
+                 Latitude = latitude,
+                 IsActive = true
+             };
 
         public string Name { get; private set; }  
         public string District { get; private set;  }

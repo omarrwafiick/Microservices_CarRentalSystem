@@ -7,6 +7,36 @@ namespace BookingServiceApi.Models
 {
     public class Booking : BaseEntity
     {
+        private Booking() { }
+
+        public static Booking Create(
+            Guid vehicleId,
+            Guid renterId,
+            DateTime startDate,
+            DateTime endDate,
+            InteractionType interactionType,
+            decimal totalPrice,
+            string pickupLocation,
+            string dropoffLocation,
+            string notes)
+        {
+            return new Booking
+            {
+                Id = Guid.NewGuid(),
+                VehicleId = vehicleId,
+                RenterId = renterId,
+                StartDate = startDate,
+                EndDate = endDate,
+                InteractionType = interactionType,
+                TotalPrice = totalPrice,
+                PickupLocation = pickupLocation,
+                DropoffLocation = dropoffLocation,
+                Notes = notes,
+                RecordedAt = DateTime.UtcNow,
+                IsCancelled = false
+            };
+        }
+
         public Guid VehicleId { get; private set; }
         public Guid RenterId { get; private set; }
 
@@ -28,36 +58,6 @@ namespace BookingServiceApi.Models
         public bool IsCancelled { get; private set; }
         public DateTime? CancelledAt { get; private set; }
         public DateTime? CompletedAt { get; private set; }
-
-        private Booking() { }
-
-        public static Booking Create(
-            Guid vehicleId,
-            Guid renterId,
-            DateTime startDate,
-            DateTime endDate,
-            InteractionType interactionType,
-            decimal totalPrice,
-            string pickupLocation,
-            string dropoffLocation,
-            string notes)
-        {   
-            return new Booking
-            {
-                Id = Guid.NewGuid(),
-                VehicleId = vehicleId,
-                RenterId = renterId,
-                StartDate = startDate,
-                EndDate = endDate,
-                InteractionType = interactionType,
-                TotalPrice = totalPrice,
-                PickupLocation = pickupLocation,
-                DropoffLocation = dropoffLocation,
-                Notes = notes,
-                RecordedAt = DateTime.UtcNow,
-                IsCancelled = false
-            };
-        }
 
         public void MarkAsUpdated()
         {

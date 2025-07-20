@@ -8,53 +8,7 @@ namespace VehicleServiceApi.Models
         private Vehicle()
         {
         }
-         
-        private Vehicle(
-            Guid ownerId,
-            Guid currentLocationId,
-            string licensePlate,
-            string vin,
-            string make,
-            string model,
-            int year,
-            VehicleType vehicleType,
-            DateTime registrationExpiryDate,
-            string insurancePolicyNumber,
-            DateTime insuranceExpiryDate,
-            decimal dailyRate,
-            decimal mileage,
-            FuelType fuelType,
-            TransmissionType transmission,
-            bool isGpsEnabled,
-            bool isElectric, 
-            DateTime lastServiceDate,
-            int serviceIntervalKm)
-        {
-            Id = Guid.NewGuid();
-            OwnerId = ownerId;
-            CurrentLocationId = currentLocationId;
-            LicensePlate = licensePlate;
-            VIN = vin;
-            Make = make;
-            Model = model;
-            Year = year;
-            VehicleType = vehicleType;
-            VehicleStatus = VehicleStatus.Available;
-            RegistrationExpiryDate = registrationExpiryDate;
-            InsurancePolicyNumber = insurancePolicyNumber;
-            InsuranceExpiryDate = insuranceExpiryDate;
-            DailyRate = dailyRate;
-            Mileage = mileage;
-            FuelType = fuelType;
-            Transmission = transmission;
-            IsGpsEnabled = isGpsEnabled;
-            IsElectric = isElectric;
-            IsActive = true;
-            LastServiceDate = lastServiceDate;
-            ServiceIntervalKm = serviceIntervalKm;
-            CreatedAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
-        } 
+          
         public static Vehicle Factory(
             Guid ownerId,
             Guid currentLocationId,
@@ -75,26 +29,34 @@ namespace VehicleServiceApi.Models
             bool isElectric, 
             DateTime lastServiceDate,
             int serviceIntervalKm) =>
-            new Vehicle(
-                ownerId,
-                currentLocationId,
-                licensePlate,
-                vin,
-                make,
-                model,
-                year,
-                vehicleType,
-                registrationExpiryDate,
-                insurancePolicyNumber,
-                insuranceExpiryDate,
-                dailyRate,
-                mileage,
-                fuelType,
-                transmission,
-                isGpsEnabled,
-                isElectric, 
-                lastServiceDate,
-                serviceIntervalKm); 
+            new Vehicle
+            {
+                Id = Guid.NewGuid(),
+                OwnerId = ownerId,
+                CurrentLocationId = currentLocationId,
+                LicensePlate = licensePlate,
+                VIN = vin,
+                Make = make,
+                Model = model,
+                Year = year,
+                VehicleType = vehicleType,
+                VehicleStatus = VehicleStatus.Available,
+                RegistrationExpiryDate = registrationExpiryDate,
+                InsurancePolicyNumber = insurancePolicyNumber,
+                InsuranceExpiryDate = insuranceExpiryDate,
+                DailyRate = dailyRate,
+                Mileage = mileage,
+                FuelType = fuelType,
+                Transmission = transmission,
+                IsGpsEnabled = isGpsEnabled,
+                IsElectric = isElectric,
+                IsActive = true,
+                LastServiceDate = lastServiceDate,
+                ServiceIntervalKm = serviceIntervalKm,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            }; 
+
         public Guid OwnerId { get; private set; }
         public Guid CurrentLocationId { get; private set; }
         public Location Location { get; private set; } 

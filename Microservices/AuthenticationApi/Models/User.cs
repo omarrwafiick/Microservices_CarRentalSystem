@@ -5,26 +5,7 @@ namespace AuthenticationApi.Models
 {
     public class User : BaseEntity
     {
-        private User() { }
-        private User(
-            string fullName,
-            string email,
-            string phoneNumber, 
-            string hashedPassword, 
-            Role role,
-            string hashedSSN
-        )
-        {
-            FullName = fullName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            HashedPassword = hashedPassword;
-            Role = role;
-            ResetToken = string.Empty;
-            ResetTokenExpiresAt = DateTime.UtcNow;
-            CreatedAt = DateTime.UtcNow;
-            HashedSSN = hashedSSN;
-        }
+        private User() { } 
 
         public static User Factory(
             string fullName,
@@ -34,14 +15,18 @@ namespace AuthenticationApi.Models
             Role role,
             string hashedSSN
         )
-        => new User(
-             fullName,
-             email,
-             phoneNumber,
-             hashedPassword,
-             role,
-             hashedSSN
-        );
+        => new User
+        { 
+            FullName = fullName,
+            Email = email,
+            PhoneNumber = phoneNumber,
+            HashedPassword = hashedPassword,
+            Role = role,
+            ResetToken = string.Empty,
+            ResetTokenExpiresAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            HashedSSN = hashedSSN
+        };
 
         public void UpdateUser(string fullName, string phoneNumber)
         {
