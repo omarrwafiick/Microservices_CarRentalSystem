@@ -1,5 +1,4 @@
-﻿using Common.Dtos;
-using Common.Interfaces;
+﻿using Common.Dtos; 
 using PaymentService.Models;
 using PaymentServiceApi.Dtos;
 using PaymentServiceApi.Enums;
@@ -13,25 +12,16 @@ namespace PaymentServiceApi.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly IGetAllRepository<PaymentRecord> _getAllRepository;
-        private readonly IGetRepository<PaymentRecord> _getRepository;
-        private readonly ICreateRepository<PaymentRecord> _createRepository;
-        private readonly IUpdateRepository<PaymentRecord> _updateRepository; 
-        public PaymentService(
-            IGetAllRepository<PaymentRecord> getAllRepository, 
-            IGetRepository<PaymentRecord> getRepository, 
-            ICreateRepository<PaymentRecord> createRepository, 
-            IUpdateRepository<PaymentRecord> updateRepository)
+        private readonly IPaymentUnitOfWork _paymentUnitOfWork;
+
+        public PaymentService(IPaymentUnitOfWork paymentUnitOfWork)
         {
-            _getAllRepository = getAllRepository;
-            _getRepository = getRepository;
-            _createRepository = createRepository;
-            _updateRepository = updateRepository; 
+            _paymentUnitOfWork = paymentUnitOfWork;
         }
 
         public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync()
         {
-            var result = await _getAllRepository.GetAll(); 
+            var result = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll(); 
 
             return result.Any() ?
                 ServiceResult<List<PaymentRecord>>.Success("Payment records was found!", result.ToList()) :
@@ -40,7 +30,7 @@ namespace PaymentServiceApi.Services
 
         public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(Expression<Func<PaymentRecord, bool>> condition)
         {
-            var result = await _getAllRepository.GetAll(condition);
+            var result = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll(condition);
 
             return result.Any() ?
                 ServiceResult<List<PaymentRecord>>.Success("Payment records was found!", result.ToList()) :
@@ -49,7 +39,7 @@ namespace PaymentServiceApi.Services
 
         public async Task<List<PaymentSummaryDto>> GetPaymentSummary()
         {
-            var paymentRecords = await _getAllRepository.GetAll();
+            var paymentRecords = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll();
 
             var recordsGroupedByUserId = paymentRecords.GroupBy(x => x.UserId).ToList();
 
@@ -98,7 +88,7 @@ namespace PaymentServiceApi.Services
 
             await ValidateEntityViaMediator(bookingId, "validate-booking");
 
-            var paymentRecordExists = await _getRepository.Get(record =>
+            var paymentRecordExists = await _paymentUnitOfWork.GetPaymentRepository.Get(record =>
                 record.UserId == userId && record.BookingId == bookingId && record.PaidAt == dto.PaidAt);
 
             if (paymentRecordExists is not null)
@@ -125,7 +115,7 @@ namespace PaymentServiceApi.Services
                 dto.Notes
             );
 
-            var result = await _createRepository.CreateAsync(newRecord);
+            var result = await _paymentUnitOfWork.CreatePaymentRepository.CreateAsync(newRecord);
 
             return result ?
                 ServiceResult<bool>.Success("Payment record was created successfully") :
@@ -134,7 +124,7 @@ namespace PaymentServiceApi.Services
 
         public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(Guid id, UpdatePaymentStatusDto dto)
         {
-            var paymentRecord = await _getRepository.Get(id);
+            var paymentRecord = await _paymentUnitOfWork.GetPaymentRepository.Get(id);
 
             if (paymentRecord is null)
             {
@@ -148,7 +138,7 @@ namespace PaymentServiceApi.Services
 
             paymentRecord.UpdatePayment(Enum.Parse<PaymentStatus>(dto.NewStatus), dto.AdminNote);
 
-            var result = await _updateRepository.UpdateAsync(paymentRecord);
+            var result = await _paymentUnitOfWork.UpdatePaymentRepository.UpdateAsync(paymentRecord);
 
             return result ?
                 ServiceResult<bool>.Success("Payment record was updated successfully") :

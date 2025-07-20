@@ -1,11 +1,9 @@
 using ChatSupportApi.Data;
 using ChatSupportApi.Hubs;
 using ChatSupportApi.Interfaces;
-using ChatSupportApi.Models;
-using ChatSupportApi.Services;
-using Common.Interfaces;
-using Common.Middleware;
-using Common.Repositories;
+using ChatSupportApi.Repositiories;
+using ChatSupportApi.Services; 
+using Common.Middleware; 
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,17 +19,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddScoped<IGetRepository<ChatMessage>, GetRepository<ApplicationDbContext, ChatMessage>>();
-builder.Services.AddScoped<IGetAllRepository<ChatMessage>, GetAllRepository<ApplicationDbContext, ChatMessage>>();
-builder.Services.AddScoped<ICreateRepository<ChatMessage>, CreateRepository<ApplicationDbContext, ChatMessage>>();
-builder.Services.AddScoped<ICreateRepository<Chat>, CreateRepository<ApplicationDbContext, Chat>>();
-builder.Services.AddScoped<IGetRepository<Chat>, GetRepository<ApplicationDbContext, Chat>>();
-builder.Services.AddScoped<IGetAllRepository<Chat>, GetAllRepository<ApplicationDbContext, Chat>>();
+//Repositories
+builder.Services.AddScoped<IChatUnitOfWork, ChatUnitOfWork>();
+//Servides
 builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
-
 builder.Services.AddSignalR();
-
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 var app = builder.Build();

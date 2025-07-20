@@ -3,9 +3,7 @@ using AuthenticationApi.Enums;
 using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
 using AuthenticationApi.Utilities;
-using Common.Dtos;
-using Common.Interfaces;
-using Microsoft.AspNetCore.Connections;
+using Common.Dtos; 
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
@@ -14,25 +12,15 @@ namespace AuthenticationApi.Services
 {
     public class UserService : IUserService
     {
-        private readonly IGetAllRepository<User> _getAllRepository;
-        private readonly IGetRepository<User> _getRepository;
-        private readonly ICreateRepository<User> _createRepository;
-        private readonly IUpdateRepository<User> _updateRepository;
-        public UserService(
-            IGetAllRepository<User> getAllRepository, 
-            IGetRepository<User> getRepository, 
-            ICreateRepository<User> createRepository, 
-            IUpdateRepository<User> updateRepository)
+        private readonly IAuthUnitOfWork _unitOfWorkRepository;  
+        public UserService(IAuthUnitOfWork unitOfWorkRepository)
         {
-            _getAllRepository = getAllRepository;
-            _getRepository = getRepository;
-            _createRepository = createRepository;
-            _updateRepository = updateRepository;
+            _unitOfWorkRepository = unitOfWorkRepository;
         }
 
         public async Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync() 
         { 
-            var result = await _getAllRepository.GetAll();
+            var result = await _unitOfWorkRepository.GetAllUserRepository.GetAll();
 
             return result.Any() ?
                 ServiceResult<IEnumerable<User>>.Success("Users exists!", result) :
@@ -41,7 +29,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<User>> GetUserByIdAsync(Guid id)
         {
-            var result = await _getRepository.Get(id);
+            var result = await _unitOfWorkRepository.GetUserRepository.Get(id);
 
             return result is not null ?
                 ServiceResult<User>.Success("User was found!", result) :
@@ -50,7 +38,7 @@ namespace AuthenticationApi.Services
        
         public async Task<ServiceResult<User>> LoginAsync(LoginDto dto)
         {
-            var exists = await _getRepository.Get(x=>x.Email == dto.Email);
+            var exists = await _unitOfWorkRepository.GetUserRepository.Get(x=>x.Email == dto.Email);
 
             if(exists is null) 
                 return ServiceResult<User>.Failure(
@@ -66,7 +54,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<bool>> RegisterAsync(RegisterDto dto)
         {
-            var exists = await _getRepository.Get(x => x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
+            var exists = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
 
             if (exists is not null) 
                 return ServiceResult<bool>.Failure(
@@ -87,7 +75,7 @@ namespace AuthenticationApi.Services
                 role, 
                 SSNHashing.ComputeSHA256(dto.SSN.ToString()));
 
-            var result = await _createRepository.CreateAsync(newUser);
+            var result = await _unitOfWorkRepository.CreateUserRepository.CreateAsync(newUser);
 
             return result ?
                 ServiceResult<bool>.Success("New account was created successfully") :
@@ -96,13 +84,13 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<string>> ForgetPasswordAsync(string email)
         {
-            var user = await _getRepository.Get(x => x.Email == email);
+            var user = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Email == email);
 
             var genertatedToken = UserSecurityService.GenerateResetToken(16);
 
             user.ResetUserPasswordToken(genertatedToken, DateTime.UtcNow.AddHours(1)); 
 
-            var result = await _updateRepository.UpdateAsync(user);
+            var result = await _unitOfWorkRepository.UpdateUserRepository.UpdateAsync(user);
 
             return result ?
                 ServiceResult<string>.Success("Reset token was set successfully", genertatedToken) :
@@ -111,14 +99,14 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<bool>> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
-            var user = await _getRepository.Get(x => x.ResetToken == dto.ResetToken);
+            var user = await _unitOfWorkRepository.GetUserRepository.Get(x => x.ResetToken == dto.ResetToken);
 
             if (user.ResetToken != token || user.ResetTokenExpiresAt < DateTime.UtcNow) 
                 return ServiceResult<bool>.Failure("Incorrect or expired reset token");
 
             user.ResetUserHashedPassword(dto.NewPassword);
 
-            var result = await _updateRepository.UpdateAsync(user);
+            var result = await _unitOfWorkRepository.UpdateUserRepository.UpdateAsync(user);
 
             return result ?
                 ServiceResult<bool>.Success("Password was updated successfully") :
@@ -127,7 +115,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<bool>> UpdateUserAsync(UpdateUserDto dto)
         {
-            var exists = await _getRepository.Get(x => x.Id == dto.Id);
+            var exists = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Id == dto.Id);
 
             var failMessage = "Failed to update user info";
 
@@ -136,7 +124,7 @@ namespace AuthenticationApi.Services
 
             exists.UpdateUser(dto.FullName, dto.PhoneNumber);
 
-            var result = await _updateRepository.UpdateAsync(exists);  
+            var result = await _unitOfWorkRepository.UpdateUserRepository.UpdateAsync(exists);  
 
             return result ?
                ServiceResult<bool>.Success("User was updated successfully") :
@@ -181,7 +169,7 @@ namespace AuthenticationApi.Services
                 {
                     var userId = JsonSerializer.Deserialize<Guid>(ea.Body.ToArray());
                      
-                    bool isValidUser = await _getRepository.Get(userId) is not null;
+                    bool isValidUser = await _unitOfWorkRepository.GetUserRepository.Get(userId) is not null;
                      
                     var responseBytes = JsonSerializer.SerializeToUtf8Bytes(isValidUser);
 

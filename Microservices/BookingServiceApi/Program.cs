@@ -1,11 +1,9 @@
 using BookingServiceApi.Data;
 using BookingServiceApi.Interfaces;
-using BookingServiceApi.Mappers;
-using BookingServiceApi.Models;
-using BookingServiceApi.Services;
-using Common.Interfaces;
-using Common.Middleware;
-using Common.Repositories;
+using BookingServiceApi.Mappers; 
+using BookingServiceApi.Repositories;
+using BookingServiceApi.Services; 
+using Common.Middleware; 
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,14 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddScoped<IGetRepository<Booking>, GetRepository<ApplicationDbContext, Booking>>(); 
-builder.Services.AddScoped<IGetAllRepository<Booking>, GetAllRepository<ApplicationDbContext, Booking>>();
-builder.Services.AddScoped<IDeleteRepository<Booking>, DeleteRepository<ApplicationDbContext, Booking>>();
-builder.Services.AddScoped<ICreateRepository<Booking>, CreateRepository<ApplicationDbContext, Booking>>();
-builder.Services.AddScoped<IUpdateRepository<Booking>, UpdateRepository<ApplicationDbContext, Booking>>();
+//Repositories
+builder.Services.AddScoped<IBookingUnitOfWork, BookingUnitOfWork>();
+//Services
 builder.Services.AddScoped<IBookingService, BookingService>();
-
 builder.Services.AddAutoMapper(typeof(BookingProfile));
 
 var app = builder.Build();

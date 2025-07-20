@@ -1,12 +1,11 @@
-using VehicleServiceApi.Mappers;
-using Common.Interfaces;
-using Common.Middleware;
-using Common.Repositories;
+using VehicleServiceApi.Mappers; 
+using Common.Middleware; 
 using Microsoft.EntityFrameworkCore;
 using VehicleServiceApi.Data;
-using VehicleServiceApi.Interfaces;
-using VehicleServiceApi.Models;
+using VehicleServiceApi.Interfaces; 
 using VehicleServiceApi.Services;
+using VehicleServiceApi.Interfaces.UnitOfWork;
+using VehicleServiceApi.Repositiories;
 
 var builder = WebApplication.CreateBuilder(args);
   
@@ -18,24 +17,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-//Repositories
 
-//Vehicle
-builder.Services.AddScoped<IGetRepository<Vehicle>, GetRepository<ApplicationDbContext, Vehicle>>();
-builder.Services.AddScoped<IGetAllRepository<Vehicle>, GetAllRepository<ApplicationDbContext, Vehicle>>();
-builder.Services.AddScoped<IDeleteRepository<Vehicle>, DeleteRepository<ApplicationDbContext, Vehicle>>();
-builder.Services.AddScoped<ICreateRepository<Vehicle>, CreateRepository<ApplicationDbContext, Vehicle>>();
-builder.Services.AddScoped<IUpdateRepository<Vehicle>, UpdateRepository<ApplicationDbContext, Vehicle>>();
-
-//VehicleImages
-builder.Services.AddScoped<IGetAllRepository<VehicleImages>, GetAllRepository<ApplicationDbContext, VehicleImages>>();
-builder.Services.AddScoped<IDeleteRepository<VehicleImages>, DeleteRepository<ApplicationDbContext, VehicleImages>>();
-builder.Services.AddScoped<ICreateRepository<VehicleImages>, CreateRepository<ApplicationDbContext, VehicleImages>>();
-
-//Location
-builder.Services.AddScoped<IGetRepository<Location>, GetRepository<ApplicationDbContext, Location>>();
-builder.Services.AddScoped<ICreateRepository<Location>, CreateRepository<ApplicationDbContext, Location>>();
-builder.Services.AddScoped<IDeleteRepository<Location>, DeleteRepository<ApplicationDbContext, Location>>();
+//Repositories 
+//Vehicle 
+builder.Services.AddScoped<IVehicleUnitOfWork, VehicleUnitOfWork>(); 
+//Vehicle images 
+builder.Services.AddScoped<IVehicleImagesUnitOfWork, VehicleImagesUnitOfWork>(); 
+//Location 
+builder.Services.AddScoped<ILocationUnitOfWork, LocationUnitOfWork>();
 
 //Services
 builder.Services.AddScoped<ILocationService, LocationService>();

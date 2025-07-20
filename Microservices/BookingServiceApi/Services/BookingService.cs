@@ -1,10 +1,8 @@
-﻿
-using BookingServiceApi.Dtos;
+﻿using BookingServiceApi.Dtos;
 using BookingServiceApi.Enums;
 using BookingServiceApi.Interfaces;
 using BookingServiceApi.Models;
-using Common.Dtos;
-using Common.Interfaces;
+using Common.Dtos; 
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events; 
 using System.Linq.Expressions;
@@ -14,25 +12,16 @@ namespace BookingServiceApi.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IGetAllRepository<Booking> _getAllRepository;
-        private readonly IGetRepository<Booking> _getRepository;
-        private readonly ICreateRepository<Booking> _createRepository;
-        private readonly IUpdateRepository<Booking> _updateRepository;
-        public BookingService(
-            IGetAllRepository<Booking> getAllRepository,
-            IGetRepository<Booking> getRepository,
-            ICreateRepository<Booking> createRepository,
-            IUpdateRepository<Booking> updateRepository)
+        private readonly IBookingUnitOfWork _bookingUnitOfWork;
+
+        public BookingService(IBookingUnitOfWork bookingUnitOfWork)
         {
-            _getAllRepository = getAllRepository;
-            _getRepository = getRepository;
-            _createRepository = createRepository;
-            _updateRepository = updateRepository;
+            _bookingUnitOfWork = bookingUnitOfWork;
         }
 
         public async Task<ServiceResult<List<Booking>>> GetBookingsAsync()
         {
-            var result = await _getAllRepository.GetAll();
+            var result = await _bookingUnitOfWork.GetAllBookingsRepository.GetAll();
 
             return result.Any() ?
                 ServiceResult<List<Booking>>.Success("Booking was found!", result.ToList()) :
@@ -41,7 +30,7 @@ namespace BookingServiceApi.Services
 
         public async Task<ServiceResult<List<Booking>>> GetBookingsByConditionAsync(Expression<Func<Booking, bool>> condition)
         {
-            var result = await _getAllRepository.GetAll(condition);
+            var result = await _bookingUnitOfWork.GetAllBookingsRepository.GetAll(condition);
 
             return result is not null ?
                 ServiceResult<List<Booking>>.Success("Booking was found!", result.ToList()) :
@@ -63,7 +52,7 @@ namespace BookingServiceApi.Services
                 return ServiceResult<bool>.Failure("Invalid interaction type"); 
             }
             
-            var booking = await _getRepository.Get(
+            var booking = await _bookingUnitOfWork.GetBookingRepository.Get(
                 booking =>
                         booking.DropoffLocation == dto.DropoffLocation &&
                         booking.PickupLocation == dto.PickupLocation &&
@@ -75,7 +64,7 @@ namespace BookingServiceApi.Services
                 return ServiceResult<bool>.Failure("Can't book vehicle during activation of another one");
             }
 
-            var result = await _createRepository.CreateAsync(
+            var result = await _bookingUnitOfWork.CreateBookingRepository.CreateAsync(
                 Booking.Create(
                     dto.VehicleId, dto.RenterId, dto.StartDate, dto.EndDate, Enum.Parse<InteractionType>(dto.InteractionType),
                     dto.TotalPrice, dto.PickupLocation, dto.DropoffLocation, dto.Notes
@@ -89,7 +78,7 @@ namespace BookingServiceApi.Services
 
         public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(Guid id)
         {
-            var booking = await _getRepository.Get(booking => booking.Id == id);
+            var booking = await _bookingUnitOfWork.GetBookingRepository.Get(booking => booking.Id == id);
 
             if (booking is null)
                 return ServiceResult<bool>.Failure($"No booking was found using this id: {id}");
@@ -103,7 +92,7 @@ namespace BookingServiceApi.Services
                 booking.Cancel();
             }
 
-            var result = await _updateRepository.UpdateAsync(booking);
+            var result = await _bookingUnitOfWork.UpdateBookingRepository.UpdateAsync(booking);
 
             return result ?
                 ServiceResult<bool>.Success("Booking was updated!") :
@@ -177,7 +166,7 @@ namespace BookingServiceApi.Services
                 {
                     var bookingId = JsonSerializer.Deserialize<Guid>(ea.Body.ToArray());
 
-                    bool isValidUser = await _getRepository.Get(bookingId) is not null;
+                    bool isValidUser = await _bookingUnitOfWork.GetBookingRepository.Get(bookingId) is not null;
 
                     var responseBytes = JsonSerializer.SerializeToUtf8Bytes(isValidUser);
 

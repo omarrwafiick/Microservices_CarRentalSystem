@@ -1,5 +1,4 @@
-﻿using Common.Dtos;
-using Common.Interfaces;
+﻿using Common.Dtos; 
 using RabbitMQ.Client;
 using static VehicleServiceApi.Helpers.EnumHelper;
 using System.Linq.Expressions;
@@ -7,38 +6,24 @@ using System.Text.Json;
 using VehicleServiceApi.Dtos;
 using VehicleServiceApi.Enums;
 using VehicleServiceApi.Interfaces;
-using VehicleServiceApi.Models;  
+using VehicleServiceApi.Models;
+using VehicleServiceApi.Interfaces.UnitOfWork;
 
 namespace VehicleServiceApi.Services
 {
     public class VehicleService : IVehicleService
     {
-        private readonly IGetAllRepository<Vehicle> _getAllRepository;
-        private readonly IGetRepository<Vehicle> _getRepository;
-        private readonly IGetRepository<Location> _getLocationRepository;
-        private readonly ICreateRepository<Vehicle> _createRepository; 
-        private readonly IUpdateRepository<Vehicle> _updateRepository;
-        private readonly IDeleteRepository<Vehicle> _deleteRepository; 
-        public VehicleService(
-            IGetAllRepository<Vehicle> getAllRepository, 
-            IGetRepository<Vehicle> getRepository,
-            IGetRepository<Location> getLocationRepository,
-            ICreateRepository<Vehicle> createRepository, 
-            IUpdateRepository<Vehicle> updateRepository, 
-            IDeleteRepository<Vehicle> deleteRepository
-            )
+        private readonly IVehicleUnitOfWork _vehicleUnitOfWork;
+        private readonly ILocationUnitOfWork _locationUnitOfWork;
+        public VehicleService(IVehicleUnitOfWork vehicleUnitOfWork, ILocationUnitOfWork locationUnitOfWork)
         {
-            _getAllRepository = getAllRepository;
-            _getRepository = getRepository;
-            _getLocationRepository = getLocationRepository;
-            _createRepository = createRepository; 
-            _updateRepository = updateRepository;
-            _deleteRepository = deleteRepository; 
+            _vehicleUnitOfWork = vehicleUnitOfWork;
+            _locationUnitOfWork = locationUnitOfWork;
         }
 
         public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync()
         {
-            var vehicles = await _getAllRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
 
             return vehicles.Any() ?
                 ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
@@ -59,7 +44,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<List<Vehicle>>.Failure("Invalid enum type/s");
             } 
 
-            var vehicles = await _getAllRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
 
             if (!vehicles.Any()) 
             {
@@ -77,7 +62,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, bool>> condition)
         {
-            var vehicles = await _getAllRepository.GetAll(condition);
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(condition);
 
             return vehicles.Any() ?
                 ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
@@ -94,7 +79,7 @@ namespace VehicleServiceApi.Services
 
             Guid.TryParse(dto.CurrentLocationId, out Guid currentLocationId);
 
-            var location = await _getLocationRepository.Get(currentLocationId);
+            var location = await _locationUnitOfWork.GetLocationRepository.Get(currentLocationId);
 
             if (location is null)
             {
@@ -116,7 +101,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Invalid enum type/s");
             }
 
-            var vehicleExists = await _getRepository.Get(
+            var vehicleExists = await _vehicleUnitOfWork.GetVehicleRepository.Get(
                 vehicle => 
                     vehicle.OwnerId == ownerId &&
                     vehicle.LicensePlate == dto.LicensePlate &&
@@ -140,7 +125,7 @@ namespace VehicleServiceApi.Services
                 dto.InsuranceExpiryDate, dto.DailyRate, dto.Mileage, fuelType, transmissionType, dto.IsGpsEnabled,
                 dto.IsElectric, dto.LastServiceDate, dto.ServiceIntervalKm);
 
-            var result = await _createRepository.CreateAsync(newVehicle);
+            var result = await _vehicleUnitOfWork.CreateVehicleRepository.CreateAsync(newVehicle);
 
             return result ?
                ServiceResult<bool>.Success("Vehicles was created successfully") :
@@ -154,7 +139,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Invalid enum type");
             }
 
-            var vehicle = await _getRepository.Get(id);
+            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
 
             if (vehicle is null)
             {
@@ -165,7 +150,7 @@ namespace VehicleServiceApi.Services
 
             vehicle.UpdateStatus(newStatus);
 
-            var result = await _updateRepository.UpdateAsync(vehicle);
+            var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
             return result ?
                ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
@@ -177,14 +162,14 @@ namespace VehicleServiceApi.Services
             await PopularityScoreCalculation(data.bookingRecords);
             await DailyRentalRateCalculation();
 
-            var location = await _getLocationRepository.Get(l => l.City == data.city && l.District == data.district);
+            var location = await _locationUnitOfWork.GetLocationRepository.Get(l => l.City == data.city && l.District == data.district);
 
             if (location == null)
             {
                 return ServiceResult<List<Vehicle>>.Failure("Location was not found");
             }
               
-            var targetVehicles = await _getAllRepository.GetAll(vehicle =>
+            var targetVehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(vehicle =>
                                 vehicle.CurrentLocationId == location.Id
                                 && vehicle.VehicleStatus == VehicleStatus.Available);
 
@@ -234,7 +219,7 @@ namespace VehicleServiceApi.Services
 
         private async Task PopularityScoreCalculation(List<UserBookingRecordDto> bookingRecords)
         {
-            var vehicles = await _getAllRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
 
             foreach (var vehicle in vehicles)
             {
@@ -252,7 +237,7 @@ namespace VehicleServiceApi.Services
 
         private async Task DailyRentalRateCalculation()
         {
-            var vehicles = await _getAllRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
 
             foreach (var vehicle in vehicles)
             {
@@ -297,7 +282,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<bool>> DeactivateVehicleAsync(Guid id)
         {
-            var vehicle = await _getRepository.Get(id);
+            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
 
             if (vehicle is null)
             {
@@ -306,7 +291,7 @@ namespace VehicleServiceApi.Services
 
             vehicle.Deactivate();
 
-            var result = await _updateRepository.UpdateAsync(vehicle);
+            var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
             return result ?
                ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
@@ -315,7 +300,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<bool>> ActivateVehicleAsync(Guid id)
         {
-            var vehicle = await _getRepository.Get(id);
+            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
 
             if (vehicle is null)
             {
@@ -324,7 +309,7 @@ namespace VehicleServiceApi.Services
 
             vehicle.Activate();
 
-            var result = await _updateRepository.UpdateAsync(vehicle);
+            var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
             return result ?
                ServiceResult<bool>.Success("Vehicle status was activated successfully") :

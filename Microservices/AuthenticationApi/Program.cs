@@ -1,6 +1,7 @@
 using AuthenticationApi.Data;
 using AuthenticationApi.Interfaces;
 using AuthenticationApi.Models;
+using AuthenticationApi.Repositories;
 using AuthenticationApi.Services;
 using Common.Interfaces;
 using Common.Middleware;
@@ -41,12 +42,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddScoped<IGetRepository<User >, GetRepository<ApplicationDbContext, User>>();
-builder.Services.AddScoped<IGetAllRepository<User>, GetAllRepository<ApplicationDbContext, User>>();
-builder.Services.AddScoped<IDeleteRepository<User>, DeleteRepository<ApplicationDbContext, User>>();
-builder.Services.AddScoped<ICreateRepository<User>, CreateRepository<ApplicationDbContext, User>>();
-builder.Services.AddScoped<IUpdateRepository<User>, UpdateRepository<ApplicationDbContext, User>>();
+//Repositories
+builder.Services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
+//Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
