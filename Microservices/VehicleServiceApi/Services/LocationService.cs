@@ -19,7 +19,7 @@ namespace VehicleServiceApi.Services
         {
             var result = await _locationUnitOfWork.GetAllLocationRepository.GetAll();
 
-            return !result.Any() ?
+            return result.Any() ?
                 ServiceResult<List<Location>>.Success("Location was found!", result.ToList()) :
                 ServiceResult<List<Location>>.Failure("Location was not found");
         } 
