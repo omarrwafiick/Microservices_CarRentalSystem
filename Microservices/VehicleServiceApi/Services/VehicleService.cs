@@ -13,24 +13,22 @@ namespace VehicleServiceApi.Services
 {
     public class VehicleService : IVehicleService
     {
-        private readonly IVehicleUnitOfWork _vehicleUnitOfWork;
-        private readonly ILocationUnitOfWork _locationUnitOfWork;
-        public VehicleService(IVehicleUnitOfWork vehicleUnitOfWork, ILocationUnitOfWork locationUnitOfWork)
+        private readonly IVehicleUnitOfWork _vehicleUnitOfWork; 
+        public VehicleService(IVehicleUnitOfWork vehicleUnitOfWork)
         {
-            _vehicleUnitOfWork = vehicleUnitOfWork;
-            _locationUnitOfWork = locationUnitOfWork;
+            _vehicleUnitOfWork = vehicleUnitOfWork; 
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync()
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync(Expression<Func<Vehicle, object>> include)
         {
-            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(include);
 
             return vehicles.Any() ?
                 ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
                 ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByFilterAsync(string fuelType, string vehicleType, string transmissionType)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByFilterAsync(Expression<Func<Vehicle, object>> include, string fuelType, string vehicleType, string transmissionType)
         {
             bool fuelState = fuelType.Length > 0;
             bool vehicleState = vehicleType.Length > 0;
@@ -60,9 +58,9 @@ namespace VehicleServiceApi.Services
             return ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList());
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, bool>> condition)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, object>> include, Expression<Func<Vehicle, bool>> condition)
         {
-            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(condition);
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(condition, include);
 
             return vehicles.Any() ?
                 ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
@@ -77,13 +75,25 @@ namespace VehicleServiceApi.Services
                 ServiceResult<bool>.Failure("Invalid owner id");
             }
 
+            if (Guid.TryParse(dto.ModelId, out Guid modelId))
+            {
+                ServiceResult<bool>.Failure("Invalid model id");
+            }
+
             Guid.TryParse(dto.CurrentLocationId, out Guid currentLocationId);
 
-            var location = await _locationUnitOfWork.GetLocationRepository.Get(currentLocationId);
+            var model = await _vehicleUnitOfWork.GetVehicleRepository.Get(modelId);
+
+            if (model is null)
+            {
+                ServiceResult<bool>.Failure("Model was not found");
+            }
+
+            var location = await _vehicleUnitOfWork.GetLocationRepository.Get(currentLocationId);
 
             if (location is null)
             {
-                ServiceResult<bool>.Failure("Invalid location");
+                ServiceResult<bool>.Failure("Location was not found");
             }
 
             var now = DateTime.UtcNow;
@@ -105,7 +115,7 @@ namespace VehicleServiceApi.Services
                 vehicle => 
                     vehicle.OwnerId == ownerId &&
                     vehicle.LicensePlate == dto.LicensePlate &&
-                    vehicle.Make == dto.Make &&
+                    vehicle.ModelId == modelId &&
                     vehicle.Year == dto.Year &&
                     vehicle.VIN == dto.VIN);
 
@@ -121,7 +131,7 @@ namespace VehicleServiceApi.Services
             var transmissionType = Enum.Parse<TransmissionType>(dto.Transmission);
 
             var newVehicle = Vehicle.Factory(ownerId, currentLocationId, dto.LicensePlate, dto.VIN,
-                dto.Make, dto.Model, dto.Year, vehicleType, dto.RegistrationExpiryDate, dto.InsurancePolicyNumber,
+                modelId, dto.Year, vehicleType, dto.RegistrationExpiryDate, dto.InsurancePolicyNumber,
                 dto.InsuranceExpiryDate, dto.DailyRate, dto.Mileage, fuelType, transmissionType, dto.IsGpsEnabled,
                 dto.IsElectric, dto.LastServiceDate, dto.ServiceIntervalKm);
 
@@ -162,7 +172,7 @@ namespace VehicleServiceApi.Services
             await PopularityScoreCalculation(data.bookingRecords);
             await DailyRentalRateCalculation();
 
-            var location = await _locationUnitOfWork.GetLocationRepository.Get(l => l.City == data.city && l.District == data.district);
+            var location = await _vehicleUnitOfWork.GetLocationRepository.Get(l => l.City == data.city && l.District == data.district);
 
             if (location == null)
             {
@@ -306,6 +316,5 @@ namespace VehicleServiceApi.Services
                ServiceResult<bool>.Failure("Failed to deactivate vehicle");
         }
          
-
     }
 }

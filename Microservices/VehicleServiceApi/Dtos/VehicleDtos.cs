@@ -6,8 +6,7 @@ namespace VehicleServiceApi.Dtos
     public record GetVehicleDto
     {
         public Guid Id { get; set; } 
-        public string LicensePlate { get; set; }
-        public string Make { get; set; }
+        public string LicensePlate { get; set; } 
         public string Model { get; set; }
         public int Year { get; set; } 
         public string VehicleType { get; set; }
@@ -41,14 +40,10 @@ namespace VehicleServiceApi.Dtos
         [Required]
         [StringLength(17, MinimumLength = 11, ErrorMessage = "VIN must be between 11 and 17 characters.")]
         public string VIN { get; set; }
+         
 
-        [Required]
-        [StringLength(50)]
-        public string Make { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Model { get; set; }
+        [Required] 
+        public string ModelId { get; set; }
 
         [Range(1900, 2100)]
         public int Year { get; set; }

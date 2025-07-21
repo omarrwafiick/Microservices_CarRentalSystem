@@ -9,5 +9,6 @@ namespace Common.Interfaces
         Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> condition);
         Task<IEnumerable<T>> GetAll(Expression<Func<T, object>> include);
         Task<IEnumerable<T>> GetAll(Expression<Func<T, object>> include1, Expression<Func<T, object>> include2);
+        Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> condition, Expression<Func<T, object>> include);
     }
 }

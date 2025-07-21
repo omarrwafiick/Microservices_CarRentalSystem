@@ -12,7 +12,7 @@ namespace VehicleServiceApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVechiles()
         {  
-            var result = await vehicleService.GetVehiclesAsync();
+            var result = await vehicleService.GetVehiclesAsync(vehicle => vehicle.Model);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
@@ -26,7 +26,7 @@ namespace VehicleServiceApi.Controllers
             [FromQuery] string transmissionType = ""
         )
         { 
-            var result = await vehicleService.GetVehiclesByFilterAsync(fuelType, vechileType, transmissionType);
+            var result = await vehicleService.GetVehiclesByFilterAsync(vehicle => vehicle.Model, fuelType, vechileType, transmissionType);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
@@ -40,7 +40,7 @@ namespace VehicleServiceApi.Controllers
                 return BadRequest(new { message = "Invalid id" });
 
             var result = await vehicleService.GetVehiclesByConditionAsync(
-                vehicle => vehicle.Id == id);
+                 vehicle => vehicle.Model, vehicle => vehicle.Id == id);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :

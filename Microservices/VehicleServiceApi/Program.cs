@@ -33,13 +33,14 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IVehicleImagesService, VehicleImagesService>();
 builder.Services.AddScoped<IMaintenanceCenterService, MaintenanceCenterService>();
-builder.Services.AddScoped<IMaintenanceRecordsService, MaintenanceRecordsService>();
+builder.Services.AddScoped<IMaintenanceRecordsService, MaintenanceRecordsService>(); 
 
 //Mappers
 builder.Services.AddAutoMapper(typeof(VehicleProfiles)); 
 builder.Services.AddAutoMapper(typeof(VehicleImageProfile)); 
 builder.Services.AddAutoMapper(typeof(LocationProfile));
 builder.Services.AddAutoMapper(typeof(MaintenanceCenterProfile));
+builder.Services.AddAutoMapper(typeof(MaintenanceRecordProfile));
 
 var app = builder.Build();
  

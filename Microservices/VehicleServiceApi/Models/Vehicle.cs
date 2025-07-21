@@ -14,8 +14,7 @@ namespace VehicleServiceApi.Models
             Guid currentLocationId,
             string licensePlate,
             string vin,
-            string make,
-            string model,
+            Guid ModelId,
             int year,
             VehicleType vehicleType,
             DateTime registrationExpiryDate,
@@ -35,9 +34,8 @@ namespace VehicleServiceApi.Models
                 OwnerId = ownerId,
                 CurrentLocationId = currentLocationId,
                 LicensePlate = licensePlate,
-                VIN = vin,
-                Make = make,
-                Model = model,
+                VIN = vin, 
+                ModelId = ModelId,
                 Year = year,
                 VehicleType = vehicleType,
                 VehicleStatus = VehicleStatus.Available,
@@ -61,9 +59,9 @@ namespace VehicleServiceApi.Models
         public Guid CurrentLocationId { get; private set; }
         public Location Location { get; private set; } 
         public string LicensePlate { get; private set; }
-        public string VIN { get; private set; }
-        public string Make { get; private set; }
-        public string Model { get; private set; }
+        public string VIN { get; private set; } 
+        public Guid ModelId { get; private set; }
+        public VehicleModel Model { get; private set; }
         public int Year { get; private set; } 
         public VehicleType VehicleType { get; private set; }
         public VehicleStatus VehicleStatus { get; private set; } 
