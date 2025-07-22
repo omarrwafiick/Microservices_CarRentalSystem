@@ -304,3 +304,6 @@ C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Ch
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\obj\Debug\net8.0\ChatSupportApi.pdb
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\obj\Debug\net8.0\ChatSupportApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\obj\Debug\net8.0\ref\ChatSupportApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\ChatSupport\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll

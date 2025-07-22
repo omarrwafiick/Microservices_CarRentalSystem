@@ -13,9 +13,9 @@ namespace Common.Repositories
         {
             _context = context;
         }
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync<TID>(TID id) 
         {
-            var entity = await _context.Set<T>().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _context.Set<T>().SingleOrDefaultAsync(e => EF.Property<TID>(e, "Id").Equals(e));
             await Task.Run(() => _context.Set<T>().Remove(entity));
             var result = await _context.SaveChangesAsync();
             if (result > 0) return true;

@@ -7,10 +7,10 @@ namespace PaymentServiceApi.Dtos
     public record CreatePaymentDto
     {
         [Required]
-        public string BookingId { get; set; }
+        public int BookingId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [Range(0.01, 1_000_000)]
@@ -24,7 +24,7 @@ namespace PaymentServiceApi.Dtos
 
         [Required]
         [StringLength(100)]
-        public string TransactionId { get; set; } 
+        public int TransactionId { get; set; } 
 
         [Required]
         [StringLength(3, MinimumLength = 3)]
@@ -39,9 +39,9 @@ namespace PaymentServiceApi.Dtos
 
     public record GetPaymentDto
     {
-        public Guid Id { get; set; }
-        public Guid BookingId { get; set; }
-        public Guid UserId { get; set; }
+        public int Id { get; set; }
+        public int BookingId { get; set; }
+        public int UserId { get; set; }
 
         public decimal Amount { get; set; }
         public string Method { get; set; }
@@ -70,7 +70,7 @@ namespace PaymentServiceApi.Dtos
 
     public record PaymentSummaryDto
     {
-        public Guid UserId { get; set; } 
+        public int UserId { get; set; } 
         public int TotalBookings { get; set; }
         public decimal TotalAmountPaid { get; set; } 
         public decimal PendingAmount { get; set; }

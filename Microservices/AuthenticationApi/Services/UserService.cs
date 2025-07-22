@@ -27,7 +27,7 @@ namespace AuthenticationApi.Services
                 ServiceResult<IEnumerable<User>>.Failure("No user exists inside the server");
         }
 
-        public async Task<ServiceResult<User>> GetUserByIdAsync(Guid id)
+        public async Task<ServiceResult<User>> GetUserByIdAsync(int id)
         {
             var result = await _unitOfWorkRepository.GetUserRepository.Get(id);
 

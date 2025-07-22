@@ -16,8 +16,7 @@ namespace VehicleServiceApi.Models
             double longitude, 
             double latitude) =>
              new Location
-             {
-
+             { 
                  Name = name,
                  District = district,
                  City = city,

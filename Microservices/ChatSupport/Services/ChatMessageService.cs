@@ -12,14 +12,14 @@ namespace ChatSupportApi.Services
             _chatUnitOfWork = chatUnitOfWork;
         }
 
-        public async Task<List<ChatMessage>> GetMessages(Guid userId)
+        public async Task<List<ChatMessage>> GetMessages(int userId)
         {
             var chatId = _chatUnitOfWork.GetChatRepository.Get(x => x.UserId == userId).Result.Id;
             var result = await _chatUnitOfWork.GetAllChatMessagesRepository.GetAll(x => x.ChatId == chatId);
             return result.ToList(); 
         } 
 
-        public async Task<bool> StoreMessage(ChatMessage message, Guid userId, Guid supportId)
+        public async Task<bool> StoreMessage(ChatMessage message, int userId, int supportId)
         {
             var chat = await _chatUnitOfWork.GetChatRepository.Get(x => x.Id == message.ChatId);
             if(chat is null)
@@ -31,7 +31,7 @@ namespace ChatSupportApi.Services
             return await _chatUnitOfWork.CreateChatMessageRepository.CreateAsync(message);
         }
 
-        public async Task<Chat> GetUserChatId(Guid userId)
+        public async Task<Chat> GetUserChatId(int userId)
             => await _chatUnitOfWork.GetChatRepository.Get(x => x.UserId == userId);   
     }
 }

@@ -76,7 +76,7 @@ namespace BookingServiceApi.Services
                 ServiceResult<bool>.Failure("Couldn't create a new booking");
         }
 
-        public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(Guid id)
+        public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(int id)
         {
             var booking = await _bookingUnitOfWork.GetBookingRepository.Get(booking => booking.Id == id);
 
@@ -128,8 +128,8 @@ namespace BookingServiceApi.Services
                 {
                     byte[] body = eventArgs.Body.ToArray();
 
-                    List<(Guid vehicleId, Guid userId)> viewedBookings =
-                            JsonSerializer.Deserialize<List<(Guid vehicleId, Guid userId)>>(body);
+                    List<(int vehicleId, int userId)> viewedBookings =
+                            JsonSerializer.Deserialize<List<(int vehicleId, int userId)>>(body);
 
                     await ((AsyncEventingBasicConsumer)sender).Channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false);
                 };

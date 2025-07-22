@@ -15,10 +15,10 @@ namespace AuthenticationApi.Dtos
     
     public record ResetPasswordDto([Required] string ResetToken, [Required] string NewPassword);
     
-    public record GetUserDto(Guid Id, string FullName, string Email, string PhoneNumber, string Role);
+    public record GetUserDto(int Id, string FullName, string Email, string PhoneNumber, string Role);
     
     public record UpdateUserDto(
-        [Required] Guid Id, 
+        [Required] int Id, 
         [Required] string FullName,  
         [Required] string PhoneNumber
     );

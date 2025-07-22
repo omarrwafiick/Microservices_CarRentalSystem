@@ -10,8 +10,8 @@ namespace BookingServiceApi.Models
         private Booking() { }
 
         public static Booking Create(
-            Guid vehicleId,
-            Guid renterId,
+            int vehicleId,
+            int renterId,
             DateTime startDate,
             DateTime endDate,
             InteractionType interactionType,
@@ -21,8 +21,7 @@ namespace BookingServiceApi.Models
             string notes)
         {
             return new Booking
-            {
-                Id = Guid.NewGuid(),
+            { 
                 VehicleId = vehicleId,
                 RenterId = renterId,
                 StartDate = startDate,
@@ -37,8 +36,8 @@ namespace BookingServiceApi.Models
             };
         }
 
-        public Guid VehicleId { get; private set; }
-        public Guid RenterId { get; private set; }
+        public int VehicleId { get; private set; }
+        public int RenterId { get; private set; }
 
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }

@@ -12,7 +12,7 @@ namespace BookingServiceApi.Interfaces
         Task<ServiceResult<List<Booking>>> GetBookingsAsync();
         Task<ServiceResult<List<Booking>>> GetBookingsByConditionAsync(Expression<Func<Booking, bool>> condition); 
         Task<ServiceResult<bool>> RegisterBookingAsync(CreateBookingDto dto);
-        Task<ServiceResult<bool>> UpdateBookingStatusAsync(Guid id);
+        Task<ServiceResult<bool>> UpdateBookingStatusAsync(int id);
         Task ConsumeBookingsUpdateFromVehicleService();
     }
 }

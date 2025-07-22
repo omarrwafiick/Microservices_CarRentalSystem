@@ -19,16 +19,16 @@ namespace VehicleServiceApi.Services
             _vehicleUnitOfWork = vehicleUnitOfWork; 
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync(Expression<Func<Vehicle, object>> include)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync(Expression<Func<Vehicle, object>> include1, Expression<Func<Vehicle, object>> include2, Expression<Func<Vehicle, object>> include3)
         {
-            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(include);
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(include1, include2, include3);
 
             return vehicles.Any() ?
                 ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
                 ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByFilterAsync(Expression<Func<Vehicle, object>> include, string fuelType, string vehicleType, string transmissionType)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByFilterAsync(Expression<Func<Vehicle, object>> include1, Expression<Func<Vehicle, object>> include2, Expression<Func<Vehicle, object>> include3,string fuelType, string vehicleType, string transmissionType)
         {
             bool fuelState = fuelType.Length > 0;
             bool vehicleState = vehicleType.Length > 0;
@@ -42,7 +42,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<List<Vehicle>>.Failure("Invalid enum type/s");
             } 
 
-            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll();
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(include1, include2, include3);
 
             if (!vehicles.Any()) 
             {
@@ -58,29 +58,22 @@ namespace VehicleServiceApi.Services
             return ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList());
         }
 
-        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, object>> include, Expression<Func<Vehicle, bool>> condition)
+        public async Task<ServiceResult<List<Vehicle>>> GetVehiclesByConditionAsync(Expression<Func<Vehicle, object>> include1, Expression<Func<Vehicle, object>> include2, Expression<Func<Vehicle, object>> include3, Func<Vehicle, bool> condition)
         {
-            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(condition, include);
+            var vehicles = await _vehicleUnitOfWork.GetAllVehicleRepository.GetAll(include1, include2, include3);
 
             return vehicles.Any() ?
-                ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.ToList()) :
+                ServiceResult<List<Vehicle>>.Success("Vehicles was found!", vehicles.Where(condition).ToList()) :
                 ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
         }
 
         public async Task<ServiceResult<bool>> RegisterVehicleAsync(CreateVehicleDto dto)
         {
-            //TODO : CHECK OWNER BY RABBITMQ
-            if(Guid.TryParse(dto.OwnerId, out Guid ownerId))
-            {
-                ServiceResult<bool>.Failure("Invalid owner id");
-            }
+            //TODO : CHECK OWNER BY RABBITMQ 
 
-            if (Guid.TryParse(dto.ModelId, out Guid modelId))
-            {
-                ServiceResult<bool>.Failure("Invalid model id");
-            }
-
-            Guid.TryParse(dto.CurrentLocationId, out Guid currentLocationId);
+            var ownerId = dto.OwnerId;
+            var currentLocationId = dto.CurrentLocationId;
+            var modelId = dto.ModelId;
 
             var model = await _vehicleUnitOfWork.GetVehicleRepository.Get(modelId);
 
@@ -142,7 +135,7 @@ namespace VehicleServiceApi.Services
                ServiceResult<bool>.Failure("Failed to create a new vehicle");
         }
          
-        public async Task<ServiceResult<bool>> UpdateVehicleStatusAsync(Guid id, string status)
+        public async Task<ServiceResult<bool>> UpdateVehicleStatusAsync(int id, string status)
         {
             if (!ValidateEnumValue<VehicleStatus>(status))
             {
@@ -188,7 +181,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<List<Vehicle>>.Failure("Vehicle was not found");
             }
 
-            List<(Guid vehicleId, Guid userId)> viewedBookings = new();
+            List<(int vehicleId, int userId)> viewedBookings = new();
 
             foreach (var vehicle in targetVehicles)
             {
@@ -257,7 +250,7 @@ namespace VehicleServiceApi.Services
             }
         }
 
-        private async Task RabbitMqMessageToBookingsService(List<(Guid vehicleId, Guid userId)> viewedBookings)
+        private async Task RabbitMqMessageToBookingsService(List<(int vehicleId, int userId)> viewedBookings)
         {
             Console.WriteLine($"Start Pushing Message by RabbitMq at : {DateTime.UtcNow}");
 
@@ -290,7 +283,7 @@ namespace VehicleServiceApi.Services
             Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
         }
 
-        public async Task<ServiceResult<bool>> ChangeVehicleStatusAsync(Guid id, bool activate)
+        public async Task<ServiceResult<bool>> ChangeVehicleStatusAsync(int id, bool activate)
         {
             var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
 

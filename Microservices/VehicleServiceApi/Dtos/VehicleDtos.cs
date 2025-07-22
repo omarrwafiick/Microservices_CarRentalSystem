@@ -5,7 +5,7 @@ namespace VehicleServiceApi.Dtos
 {
     public record GetVehicleDto
     {
-        public Guid Id { get; set; } 
+        public int Id { get; set; } 
         public string LicensePlate { get; set; } 
         public string Model { get; set; }
         public int Year { get; set; } 
@@ -28,10 +28,10 @@ namespace VehicleServiceApi.Dtos
     public record CreateVehicleDto
     {
         [Required]
-        public string OwnerId { get; set; }
+        public int OwnerId { get; set; }
 
         [Required]
-        public string CurrentLocationId { get; set; }
+        public int CurrentLocationId { get; set; }
 
         [Required]
         [StringLength(10, MinimumLength = 3)]
@@ -43,7 +43,7 @@ namespace VehicleServiceApi.Dtos
          
 
         [Required] 
-        public string ModelId { get; set; }
+        public int ModelId { get; set; }
 
         [Range(1900, 2100)]
         public int Year { get; set; }
@@ -54,9 +54,8 @@ namespace VehicleServiceApi.Dtos
         [Required]
         public DateTime RegistrationExpiryDate { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string InsurancePolicyNumber { get; set; }
+        [Required] 
+        public long InsurancePolicyNumber { get; set; }
 
         [Required]
         public DateTime InsuranceExpiryDate { get; set; }
@@ -89,7 +88,7 @@ namespace VehicleServiceApi.Dtos
   
     public record RecommendationDto(
         [Required]
-        Guid userId,
+        int userId,
         [Required]
         string vehicleType,
         [Required]
@@ -104,8 +103,7 @@ namespace VehicleServiceApi.Dtos
         List<UserBookingRecordDto> bookingRecords,
         List<GetMaintenanceRecordDto> maintenanceRecords
     );
- 
-
+  
     public enum InteractionType
     {
         VIEWED,

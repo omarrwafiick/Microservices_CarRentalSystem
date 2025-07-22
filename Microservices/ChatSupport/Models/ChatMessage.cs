@@ -7,7 +7,7 @@ namespace ChatSupportApi.Models
         private ChatMessage()
         {
         }
-        public static ChatMessage Factory(string message, string connectionID, Guid chatId) =>
+        public static ChatMessage Factory(string message, string connectionID, int chatId) =>
             new ChatMessage
             {
                 Message = message,
@@ -19,7 +19,7 @@ namespace ChatSupportApi.Models
         public string Message { get; set; }
         public string ConnectionID { get; set; }
         public DateTime SentAt { get; set; } 
-        public Guid ChatId { get; set; }
+        public int ChatId { get; set; }
         public Chat Chat { get; set; }
       
     }

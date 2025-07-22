@@ -12,7 +12,7 @@ namespace ChatSupportApi.Hubs
             _chatService = chatService;
         }
 
-        public async Task SendMessage(Guid chatId, Guid userId, Guid supportId, string message)
+        public async Task SendMessage(int chatId, int userId, int supportId, string message)
         {
             var senderId = Context.UserIdentifier!;
             var receiverId = senderId == userId.ToString() ? supportId.ToString() : userId.ToString();

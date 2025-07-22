@@ -20,39 +20,31 @@ namespace VehicleServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("{locationid}")]
-        public async Task<IActionResult> GetLocation([FromRoute] string locationid)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
+        [HttpGet("{locationid:int}")]
+        public async Task<IActionResult> GetLocation([FromRoute] int locationid)
+        { 
 
-            var result = await locationService.GetLocationAsync(id);
+            var result = await locationService.GetLocationAsync(locationid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<GetLocationDto>(result.Data) }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("maintenance-centers/{locationid}")]
-        public async Task<IActionResult> GetLocationMaintenanceCenters([FromRoute] string locationid)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await locationService.GetLocationAsync(id, location => location.MaintenanceCenters);
+        [HttpGet("maintenance-centers/{locationid:int}")]
+        public async Task<IActionResult> GetLocationMaintenanceCenters([FromRoute] int locationid)
+        {   
+            var result = await locationService.GetLocationAsync(locationid, location => location.MaintenanceCenters);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetMaintenanceCenterDto>>(result.Data.MaintenanceCenters) }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("available-vehicles/{locationid}")]
-        public async Task<IActionResult> GetLocationAvailableVehicles([FromRoute] string locationid)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await locationService.GetLocationAsync(id, location => location.LocationVehicles);
+        [HttpGet("available-vehicles/{locationid:int}")]
+        public async Task<IActionResult> GetLocationAvailableVehicles([FromRoute] int locationid)
+        { 
+            var result = await locationService.GetLocationAsync(locationid, location => location.LocationVehicles);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data.LocationVehicles) }) :
@@ -69,39 +61,30 @@ namespace VehicleServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpPut("{locationid}")]
-        public async Task<IActionResult> UpdateLocation([FromRoute] string locationid, [FromBody] UpdateLocationDto dto)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await locationService.UpdateLocationAsync(id, dto);
+        [HttpPut("{locationid:int}")]
+        public async Task<IActionResult> UpdateLocation([FromRoute] int locationid, [FromBody] UpdateLocationDto dto)
+        {  
+            var result = await locationService.UpdateLocationAsync(locationid, dto);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpPut("activate/{locationid}")]
-        public async Task<IActionResult> ActivateLocation([FromRoute] string locationid)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await locationService.ChangeLocationStatusAsync(id, true);
+        [HttpPut("activate/{locationid:int}")]
+        public async Task<IActionResult> ActivateLocation([FromRoute] int locationid)
+        {  
+            var result = await locationService.ChangeLocationStatusAsync(locationid, true);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpDelete("deactivate/{locationid}")]
-        public async Task<IActionResult> DeactivateLocation([FromRoute] string locationid)
-        {
-            if (Guid.TryParse(locationid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await locationService.ChangeLocationStatusAsync(id, false);
+        [HttpDelete("deactivate/{locationid:int}")]
+        public async Task<IActionResult> DeactivateLocation([FromRoute] int locationid)
+        {  
+            var result = await locationService.ChangeLocationStatusAsync(locationid, false);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :

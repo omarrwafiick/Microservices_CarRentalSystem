@@ -8,15 +8,15 @@ namespace ChatSupportApi.Models
         private Chat()
         {  
         }
-        public static Chat Factory(Guid userId, Guid supportId) => new Chat
+        public static Chat Factory(int userId, int supportId) => new Chat
         {
             UserId = userId,
             SupportId = supportId,
             CreatedAt = DateTime.UtcNow
         };
 
-        public Guid UserId { get; set; }
-        public Guid SupportId { get; set; }
+        public int UserId { get; set; }
+        public int SupportId { get; set; }
         public DateTime CreatedAt { get; set; }  
         public List<ChatMessage> ChatMessages { get; set; }
         

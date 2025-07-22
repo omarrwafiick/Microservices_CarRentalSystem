@@ -24,7 +24,7 @@ namespace VehicleServiceApi.Services
                 ServiceResult<List<Location>>.Failure("Location was not found");
         } 
 
-        public async Task<ServiceResult<Location>> GetLocationAsync(Guid id)
+        public async Task<ServiceResult<Location>> GetLocationAsync(int id)
         {
             var result = await _locationUnitOfWork.GetLocationRepository.Get(id);
 
@@ -33,7 +33,7 @@ namespace VehicleServiceApi.Services
                 ServiceResult<Location>.Failure("Location was not found");
         }
          
-        public async Task<ServiceResult<Location>> GetLocationAsync(Guid id, Expression<Func<Location, object>> include)
+        public async Task<ServiceResult<Location>> GetLocationAsync(int id, Expression<Func<Location, object>> include)
         {
             var result = await _locationUnitOfWork.GetLocationRepository.Get(id, include);
 
@@ -78,7 +78,7 @@ namespace VehicleServiceApi.Services
                ServiceResult<bool>.Failure("Failed to create a new location");
         }
 
-        public async Task<ServiceResult<bool>> UpdateLocationAsync(Guid id, UpdateLocationDto dto)
+        public async Task<ServiceResult<bool>> UpdateLocationAsync(int id, UpdateLocationDto dto)
         {
             var location = await _locationUnitOfWork.GetLocationRepository.Get(id);
 
@@ -96,7 +96,7 @@ namespace VehicleServiceApi.Services
                 ServiceResult<bool>.Failure("Failed to update location");
         }
 
-        public async Task<ServiceResult<bool>> ChangeLocationStatusAsync(Guid id, bool activate)
+        public async Task<ServiceResult<bool>> ChangeLocationStatusAsync(int id, bool activate)
         {
             var location = await _locationUnitOfWork.GetLocationRepository.Get(id);
 

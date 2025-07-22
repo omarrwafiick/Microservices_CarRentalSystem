@@ -20,8 +20,8 @@ namespace AuthenticationApi.Controllers
                BadRequest(new { message = result.Message });  
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById([FromRoute] Guid id) {
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int id) {
             var result = await userService.GetUserByIdAsync(id);
 
             return result.SuccessOrNot ?

@@ -31,28 +31,22 @@ namespace PaymentService.Controllers
             return Ok(new { data = result });
         }
 
-        [HttpGet("user/{userid}")]
-        public async Task<IActionResult> GetUserPayments([FromRoute] string userid)
-        {
-            if (Guid.TryParse(userid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
+        [HttpGet("user/{userid:int}")]
+        public async Task<IActionResult> GetUserPayments([FromRoute] int userid)
+        {  
             var result = await paymentService.GetPaymentRecordsByConditionAsync(
-                paymentRecord => paymentRecord.UserId == id);
+                paymentRecord => paymentRecord.UserId == userid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetPaymentDto>>(result.Data) }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("booking/{bookingid}")]
-        public async Task<IActionResult> GetBookingPayment([FromRoute] string bookingid)
-        {
-            if (Guid.TryParse(bookingid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
+        [HttpGet("booking/{bookingid:int}")]
+        public async Task<IActionResult> GetBookingPayment([FromRoute] int bookingid)
+        {  
             var result = await paymentService.GetPaymentRecordsByConditionAsync(
-                paymentRecord => paymentRecord.BookingId == id);
+                paymentRecord => paymentRecord.BookingId == bookingid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetPaymentDto>>(result.Data) }) :
@@ -69,13 +63,10 @@ namespace PaymentService.Controllers
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpPut("status/{paymentid}")]
-        public async Task<IActionResult> UpdatePaymentStatus([FromRoute] string paymentid, [FromBody] UpdatePaymentStatusDto dto)
-        {
-            if (Guid.TryParse(paymentid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await paymentService.UpdatePaymentRecordsAsync(id, dto);
+        [HttpPut("status/{paymentid:int}")]
+        public async Task<IActionResult> UpdatePaymentStatus([FromRoute] int paymentid, [FromBody] UpdatePaymentStatusDto dto)
+        {  
+            var result = await paymentService.UpdatePaymentRecordsAsync(paymentid, dto);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :

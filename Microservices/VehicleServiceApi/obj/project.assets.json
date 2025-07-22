@@ -78,7 +78,7 @@
           }
         }
       },
-      "Common/2.0.5": {
+      "Common/2.0.8": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Abstractions": "2.3.0",
@@ -2065,13 +2065,13 @@
         "lib/netstandard2.0/Azure.Identity.xml"
       ]
     },
-    "Common/2.0.5": {
-      "sha512": "qwRwrriDOvcCZ8f8F8Mh00OpISI+lTAq+kKSbuvD4KEqJ+wxeVjasW31OaItYRVxphLA8bPrOZIcIiO+LeiGBQ==",
+    "Common/2.0.8": {
+      "sha512": "/JkOt0TpG2UURZJPHkPn0OpJAHXUS5EOyQjGrFQo82CQSbFYuBWzC8Ud+s83fWH92A8KTP3zCsA4yrGKpRILmQ==",
       "type": "package",
-      "path": "common/2.0.5",
+      "path": "common/2.0.8",
       "files": [
         ".nupkg.metadata",
-        "common.2.0.5.nupkg.sha512",
+        "common.2.0.8.nupkg.sha512",
         "common.nuspec",
         "lib/net8.0/Common.dll"
       ]
@@ -5007,7 +5007,7 @@
     "net8.0": [
       "AutoMapper >= 15.0.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.0",
-      "Common >= 2.0.5",
+      "Common >= 2.0.8",
       "Microsoft.EntityFrameworkCore >= 8.0.11",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.11",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.11",
@@ -5076,7 +5076,7 @@
           },
           "Common": {
             "target": "Package",
-            "version": "[2.0.5, )"
+            "version": "[2.0.8, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",

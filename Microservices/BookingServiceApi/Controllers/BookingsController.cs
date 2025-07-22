@@ -23,52 +23,40 @@ namespace BookingServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         } 
 
-        [HttpGet("{bookingid}")]
-        public async Task<IActionResult> GetBookingById([FromRoute] string bookingid)
-        {
-           if(Guid.TryParse(bookingid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await bookingService.GetBookingsByConditionAsync(b => b.Id == id);
+        [HttpGet("{bookingid:int}")]
+        public async Task<IActionResult> GetBookingById([FromRoute] int bookingid)
+        {   
+            var result = await bookingService.GetBookingsByConditionAsync(b => b.Id == bookingid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetBookingDto>>(result.Data) }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("user/{userid}")]
-        public async Task<IActionResult> GetBookingsByUserId([FromRoute] string userid)
-        { 
-            if (Guid.TryParse(userid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await bookingService.GetBookingsByConditionAsync(b => b.RenterId == id);
+        [HttpGet("user/{userid:int}")]
+        public async Task<IActionResult> GetBookingsByUserId([FromRoute] int userid)
+        {   
+            var result = await bookingService.GetBookingsByConditionAsync(b => b.RenterId == userid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetBookingDto>>(result.Data) }) :
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpGet("vehicle/{vehicleid}")]
-        public async Task<IActionResult> GetBookingsByVehicleId([FromRoute] string vehicleid)
-        {
-            if (Guid.TryParse(vehicleid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await bookingService.GetBookingsByConditionAsync(b => b.VehicleId == id);
+        [HttpGet("vehicle/{vehicleid:int}")]
+        public async Task<IActionResult> GetBookingsByVehicleId([FromRoute] int vehicleid)
+        {  
+            var result = await bookingService.GetBookingsByConditionAsync(b => b.VehicleId == vehicleid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetBookingDto>>(result.Data) }) :
                 BadRequest(new { message = result });
         }
 
-        [HttpGet("status/{bookingid}")]
-        public async Task<IActionResult> GetBookingStatus([FromRoute] string bookingid)
-        {
-            if (Guid.TryParse(bookingid, out Guid id))
-                return BadRequest(new { message = "Invalid id" });
-
-            var result = await bookingService.GetBookingsByConditionAsync(b => b.Id == id);
+        [HttpGet("status/{bookingid:int}")]
+        public async Task<IActionResult> GetBookingStatus([FromRoute] int bookingid)
+        { 
+            var result = await bookingService.GetBookingsByConditionAsync(b => b.Id == bookingid);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = new { isCancelled = result.Data[0].IsCancelled } }) :
@@ -85,8 +73,8 @@ namespace BookingServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpPut("complete/{bookingid}")]
-        public async Task<IActionResult> CompleteBooking([FromBody] string bookingid)
+        [HttpPut("complete/{bookingid:int}")]
+        public async Task<IActionResult> CompleteBooking([FromBody] int bookingid)
         { 
             var result = await UpdateBookingStatusCommon(bookingid);
 
@@ -95,8 +83,8 @@ namespace BookingServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         }
 
-        [HttpPut("cancel/{bookingid}")]
-        public async Task<IActionResult> CancelBooking([FromBody] string bookingid)
+        [HttpPut("cancel/{bookingid:int}")]
+        public async Task<IActionResult> CancelBooking([FromBody] int bookingid)
         {
             var result = await UpdateBookingStatusCommon(bookingid);
 
@@ -105,12 +93,9 @@ namespace BookingServiceApi.Controllers
                 BadRequest(new { message = result.Message });
         } 
 
-        private async Task<ServiceResult<bool>> UpdateBookingStatusCommon(string bookingid)
-        { 
-            if (Guid.TryParse(bookingid, out Guid id))
-                return ServiceResult<bool>.Failure("Invalid id");
-
-            var result = await bookingService.UpdateBookingStatusAsync(id);
+        private async Task<ServiceResult<bool>> UpdateBookingStatusCommon(int bookingid)
+        {  
+            var result = await bookingService.UpdateBookingStatusAsync(bookingid);
 
             return result;
         }

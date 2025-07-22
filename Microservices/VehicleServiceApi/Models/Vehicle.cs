@@ -10,15 +10,15 @@ namespace VehicleServiceApi.Models
         }
           
         public static Vehicle Factory(
-            Guid ownerId,
-            Guid currentLocationId,
+            int ownerId,
+            int currentLocationId,
             string licensePlate,
             string vin,
-            Guid ModelId,
+            int ModelId,
             int year,
             VehicleType vehicleType,
             DateTime registrationExpiryDate,
-            string insurancePolicyNumber,
+            long insurancePolicyNumber,
             DateTime insuranceExpiryDate,
             decimal dailyRate,
             decimal mileage,
@@ -29,8 +29,7 @@ namespace VehicleServiceApi.Models
             DateTime lastServiceDate,
             int serviceIntervalKm) =>
             new Vehicle
-            {
-                Id = Guid.NewGuid(),
+            { 
                 OwnerId = ownerId,
                 CurrentLocationId = currentLocationId,
                 LicensePlate = licensePlate,
@@ -55,18 +54,18 @@ namespace VehicleServiceApi.Models
                 UpdatedAt = DateTime.UtcNow
             }; 
 
-        public Guid OwnerId { get; private set; }
-        public Guid CurrentLocationId { get; private set; }
+        public int OwnerId { get; private set; }
+        public int CurrentLocationId { get; private set; }
         public Location Location { get; private set; } 
         public string LicensePlate { get; private set; }
         public string VIN { get; private set; } 
-        public Guid ModelId { get; private set; }
+        public int ModelId { get; private set; }
         public VehicleModel Model { get; private set; }
         public int Year { get; private set; } 
         public VehicleType VehicleType { get; private set; }
         public VehicleStatus VehicleStatus { get; private set; } 
         public DateTime RegistrationExpiryDate { get; private set; }
-        public string InsurancePolicyNumber { get; private set; }
+        public long InsurancePolicyNumber { get; private set; }
         public DateTime InsuranceExpiryDate { get; private set; } 
         public decimal DailyRate { get; private set; }
         public decimal Mileage { get; private set; }

@@ -22,6 +22,9 @@ namespace Common.Repositories
         public async Task<IEnumerable<T>> GetAll(Expression<Func<T, object>> include1, Expression<Func<T, object>> include2)
             => await _context.Set<T>().AsNoTracking().Include(include1).Include(include2).ToListAsync();
 
+        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, object>> include1, Expression<Func<T, object>> include2, Expression<Func<T, object>> include3)
+            => await _context.Set<T>().AsNoTracking().Include(include1).Include(include2).Include(include3).ToListAsync();
+
         public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> condition, Expression<Func<T, object>> include)
             => await _context.Set<T>().AsNoTracking().Include(include).Where(condition).ToListAsync();
     }

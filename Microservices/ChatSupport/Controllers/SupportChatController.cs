@@ -13,15 +13,15 @@ namespace ChatSupportApi.Controllers
             _chatService = chatService;
         }
 
-        [HttpGet("history/{userId}")]
-        public async Task<IActionResult> GetMessages(Guid userId)
+        [HttpGet("history/{userId:int}")]
+        public async Task<IActionResult> GetMessages([FromRoute] int userId)
         { 
             var messages = await _chatService.GetMessages(userId);
             return Ok(messages.Select(x => new { Messages = x.Message, ChatId = x.ChatId}));
         }
 
-        [HttpGet("chat/{userId}")]
-        public async Task<IActionResult> GetChatId(Guid userId)
+        [HttpGet("chat/{userId:int}")]
+        public async Task<IActionResult> GetChatId([FromRoute] int userId)
         {
             var chat = await _chatService.GetUserChatId(userId);
             return Ok(chat.Id);

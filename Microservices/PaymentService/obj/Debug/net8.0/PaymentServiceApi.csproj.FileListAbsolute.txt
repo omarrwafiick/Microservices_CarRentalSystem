@@ -436,3 +436,6 @@ C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\Pa
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentS.85025701.Up2Date
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\PaymentServiceApi.genruntimeconfig.cache
 C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\obj\Debug\net8.0\ref\PaymentServiceApi.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
+C:\Users\sphinx\Documents\My Projects\Systems\MicroservicesApis\Microservices\PaymentService\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll

@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}|VehicleServiceApi\\VehicleServiceApi.csproj|c:\\users\\sphinx\\documents\\my projects\\systems\\microservicesapis\\microservices\\vehicleserviceapi\\services\\maintenancerecordsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1B5A4D3-A4D0-433D-A74A-D8DBC59B73BD}|VehicleServiceApi\\VehicleServiceApi.csproj|solutionrelative:vehicleserviceapi\\services\\maintenancerecordsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,23 +26,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MaintenanceRecordsService.cs",
-              "DocumentMoniker": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\VehicleServiceApi\\Services\\MaintenanceRecordsService.cs",
-              "RelativeDocumentMoniker": "VehicleServiceApi\\Services\\MaintenanceRecordsService.cs",
-              "ToolTip": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\VehicleServiceApi\\Services\\MaintenanceRecordsService.cs",
-              "RelativeToolTip": "VehicleServiceApi\\Services\\MaintenanceRecordsService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-21T19:16:26.812Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

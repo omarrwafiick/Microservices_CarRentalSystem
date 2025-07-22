@@ -72,17 +72,14 @@ namespace PaymentServiceApi.Services
         }
 
         public async Task<ServiceResult<bool>> RegisterPaymentRecordsAsync(CreatePaymentDto dto)
-        {
-            if (Guid.TryParse(dto.UserId, out Guid userId) || 
-                Guid.TryParse(dto.BookingId, out Guid bookingId))
-            {
-                return ServiceResult<bool>.Failure("Invalid ids");
-            }
-
+        {  
             if(dto.PaidAt > DateTime.UtcNow)
             {
                 return ServiceResult<bool>.Failure("Invalid paid at date and time");
             }
+            
+            var userId = dto.UserId;
+            var bookingId = dto.BookingId;
 
             await ValidateEntityViaMediator(userId, "validate-user");
 
@@ -122,7 +119,7 @@ namespace PaymentServiceApi.Services
                 ServiceResult<bool>.Failure("Failed to create new payment record");
         }
 
-        public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(Guid id, UpdatePaymentStatusDto dto)
+        public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto)
         {
             var paymentRecord = await _paymentUnitOfWork.GetPaymentRepository.Get(id);
 
@@ -152,7 +149,7 @@ namespace PaymentServiceApi.Services
             return names.Contains(value);
         }
 
-        public async Task<ServiceResult<bool>> ValidateEntityViaMediator(Guid Id, string routingKey)
+        public async Task<ServiceResult<bool>> ValidateEntityViaMediator(int Id, string routingKey)
         { 
             var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection = await factory.CreateConnectionAsync();

@@ -6,10 +6,10 @@ namespace BookingServiceApi.Dtos
     public record CreateBookingDto
     {
         [Required]
-        public Guid VehicleId { get; set; }
+        public int VehicleId { get; set; }
 
         [Required]
-        public Guid RenterId { get; set; }
+        public int RenterId { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }
@@ -38,11 +38,11 @@ namespace BookingServiceApi.Dtos
 
     public record GetBookingDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid VehicleId { get; set; } 
+        public int VehicleId { get; set; } 
 
-        public Guid RenterId { get; set; } 
+        public int RenterId { get; set; } 
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
