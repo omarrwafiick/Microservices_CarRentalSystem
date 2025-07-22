@@ -78,7 +78,7 @@ namespace BookingServiceApi.Services
 
         public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(int id)
         {
-            var booking = await _bookingUnitOfWork.GetBookingRepository.Get(booking => booking.Id == id);
+            var booking = await _bookingUnitOfWork.GetBookingRepository.GetWithTracking(booking => booking.Id == id);
 
             if (booking is null)
                 return ServiceResult<bool>.Failure($"No booking was found using this id: {id}");

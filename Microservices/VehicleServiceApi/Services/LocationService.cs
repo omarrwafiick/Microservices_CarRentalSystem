@@ -80,7 +80,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<bool>> UpdateLocationAsync(int id, UpdateLocationDto dto)
         {
-            var location = await _locationUnitOfWork.GetLocationRepository.Get(id);
+            var location = await _locationUnitOfWork.GetLocationRepository.GetWithTracking(id);
 
             if (location is null)
             {
@@ -98,7 +98,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<bool>> ChangeLocationStatusAsync(int id, bool activate)
         {
-            var location = await _locationUnitOfWork.GetLocationRepository.Get(id);
+            var location = await _locationUnitOfWork.GetLocationRepository.GetWithTracking(id);
 
             if(location is null)
             {

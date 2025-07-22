@@ -143,7 +143,7 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Invalid enum type");
             }
 
-            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
+            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.GetWithTracking(id);
 
             if (vehicle is null)
             {
@@ -286,7 +286,7 @@ namespace VehicleServiceApi.Services
 
         public async Task<ServiceResult<bool>> ChangeVehicleStatusAsync(int id, bool activate)
         {
-            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.Get(id);
+            var vehicle = await _vehicleUnitOfWork.GetVehicleRepository.GetWithTracking(id);
 
             if (vehicle is null)
             {

@@ -84,7 +84,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<string>> ForgetPasswordAsync(string email)
         {
-            var user = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Email == email);
+            var user = await _unitOfWorkRepository.GetUserRepository.GetWithTracking(x => x.Email == email);
 
             var genertatedToken = UserSecurityService.GenerateResetToken(16);
 
@@ -99,7 +99,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<bool>> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
-            var user = await _unitOfWorkRepository.GetUserRepository.Get(x => x.ResetToken == dto.ResetToken);
+            var user = await _unitOfWorkRepository.GetUserRepository.GetWithTracking(x => x.ResetToken == dto.ResetToken);
 
             if (user.ResetToken != token || user.ResetTokenExpiresAt < DateTime.UtcNow) 
                 return ServiceResult<bool>.Failure("Incorrect or expired reset token");
@@ -115,7 +115,7 @@ namespace AuthenticationApi.Services
 
         public async Task<ServiceResult<bool>> UpdateUserAsync(UpdateUserDto dto)
         {
-            var exists = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Id == dto.Id);
+            var exists = await _unitOfWorkRepository.GetUserRepository.GetWithTracking(x => x.Id == dto.Id);
 
             var failMessage = "Failed to update user info";
 

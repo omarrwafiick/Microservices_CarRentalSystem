@@ -121,7 +121,7 @@ namespace PaymentServiceApi.Services
 
         public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto)
         {
-            var paymentRecord = await _paymentUnitOfWork.GetPaymentRepository.Get(id);
+            var paymentRecord = await _paymentUnitOfWork.GetPaymentRepository.GetWithTracking(id);
 
             if (paymentRecord is null)
             {
