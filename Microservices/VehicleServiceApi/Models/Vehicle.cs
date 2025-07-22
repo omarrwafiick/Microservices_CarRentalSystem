@@ -77,7 +77,8 @@ namespace VehicleServiceApi.Models
         public bool IsActive { get; private set; }  
         public DateTime LastServiceDate { get; private set; }
         public int ServiceIntervalKm { get; private set; } 
-        public List<VehicleImages> VehicleImages { get; private set; } = new(); 
+        public List<VehicleImages> VehicleImages { get; private set; } = new();
+        public List<MaintenanceCenter> MaintenanceCenters { get; private set; } = new();
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 

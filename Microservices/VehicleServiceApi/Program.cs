@@ -27,7 +27,9 @@ builder.Services.AddScoped<IVehicleImagesUnitOfWork, VehicleImagesUnitOfWork>();
 builder.Services.AddScoped<ILocationUnitOfWork, LocationUnitOfWork>();
 //Centers
 builder.Services.AddScoped<ICenterUnitOfWork, CenterUnitOfWork>();
- 
+//Records
+builder.Services.AddScoped<IRecordUnitOfWork, RecordUnitOfWork>();
+
 //Services
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();

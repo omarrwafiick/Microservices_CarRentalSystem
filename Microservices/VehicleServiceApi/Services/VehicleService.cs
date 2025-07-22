@@ -70,10 +70,11 @@ namespace VehicleServiceApi.Services
         public async Task<ServiceResult<bool>> RegisterVehicleAsync(CreateVehicleDto dto)
         {
             //TODO : CHECK OWNER BY RABBITMQ 
-
+            #region Variables
             var ownerId = dto.OwnerId;
             var currentLocationId = dto.CurrentLocationId;
             var modelId = dto.ModelId;
+            #endregion
 
             var model = await _vehicleUnitOfWork.GetVehicleRepository.Get(modelId);
 
