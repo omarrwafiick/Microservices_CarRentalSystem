@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Common.Helpers;
 using AutoMapper; 
 using Common.Dtos;
+using BookingServiceApi.Models;
 
 namespace BookingServiceApi.Controllers
 {
@@ -21,7 +22,17 @@ namespace BookingServiceApi.Controllers
             return result.SuccessOrNot ?
                 Ok( new { message = result.Message, data = mapper.Map<GetBookingDto>(result.Data) } ): 
                 BadRequest(new { message = result.Message });
-        } 
+        }
+
+        [HttpGet("current/{bookingid:int}")]
+        public async Task<IActionResult> GetCurrentBooking([FromRoute] int bookingid)
+        {
+            var result = await bookingService.GetCurrentBookingLocationsAsync(bookingid);
+
+            return result.SuccessOrNot ?
+                Ok(new { message = result.Message, data = mapper.Map<GetPickUpDto>(result.Data) }) :
+                BadRequest(new { message = result.Message });
+        }
 
         [HttpGet("{bookingid:int}")]
         public async Task<IActionResult> GetBookingById([FromRoute] int bookingid)

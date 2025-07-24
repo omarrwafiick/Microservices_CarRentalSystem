@@ -58,6 +58,13 @@ namespace BookingServiceApi.Dtos
         public DateTime RecordedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public DateTime? CancelledAt { get; set; }
-    } 
-   
+    }
+
+    public record GetPickUpDto
+    { 
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }   
+        public string PickupLocation { get; set; }
+        public string DropoffLocation { get; set; } 
+    }
 }

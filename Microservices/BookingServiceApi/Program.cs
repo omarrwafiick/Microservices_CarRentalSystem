@@ -12,18 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen();  
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 //Repositories
 builder.Services.AddScoped<IBookingUnitOfWork, BookingUnitOfWork>();
 //Services
 builder.Services.AddScoped<IBookingService, BookingService>();
-builder.Services.AddAutoMapper(typeof(BookingProfile));
+builder.Services.AddAutoMapper(typeof(BookingProfile)); 
+builder.Services.AddSingleton<ConsumeServicesViaBroker>();
+builder.Services.AddHostedService<RabbitMqBackgroundService>();
 
 var app = builder.Build();
  
@@ -41,7 +43,4 @@ app.UseMiddleware<RestrictAccessMiddleware>();
 
 app.MapControllers();
 
-app.Run();
-
-//TODO
-//connect to rabbit mq 
+app.Run(); 

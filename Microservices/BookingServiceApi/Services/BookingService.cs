@@ -2,9 +2,9 @@
 using BookingServiceApi.Enums;
 using BookingServiceApi.Interfaces;
 using BookingServiceApi.Models;
-using Common.Dtos; 
+using Common.Dtos;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events; 
+using RabbitMQ.Client.Events;
 using System.Linq.Expressions;
 using System.Text.Json;
 
@@ -37,8 +37,23 @@ namespace BookingServiceApi.Services
                 ServiceResult<List<Booking>>.Failure("Booking was not found");
         }
 
-        public async Task<ServiceResult<bool>> RegisterBookingAsync(CreateBookingDto dto)
+        public async Task<ServiceResult<GetPickUpDto>> GetCurrentBookingLocationsAsync(int bookingId)
         {
+            var result = await _bookingUnitOfWork.GetBookingRepository.Get(booking => booking.Id == bookingId); 
+
+            return result is not null ?
+                ServiceResult<GetPickUpDto>.Success("Booking was found!", 
+                    new GetPickUpDto{ DropoffLocation = result.DropoffLocation, 
+                        PickupLocation = result.PickupLocation, 
+                        EndDate = result.EndDate, 
+                        StartDate = result.StartDate
+                    }
+                ) :
+                ServiceResult<GetPickUpDto>.Failure("No booking was found");
+        }
+
+        public async Task<ServiceResult<bool>> RegisterBookingAsync(CreateBookingDto dto)
+        { 
             var now = DateTime.UtcNow;
             var interactions = Enum.GetNames<InteractionType>().ToList();
 
@@ -62,6 +77,22 @@ namespace BookingServiceApi.Services
             if (booking is not null)
             { 
                 return ServiceResult<bool>.Failure("Can't book vehicle during activation of another one");
+            }
+
+            var validateUser = await ValidateEntityViaMediator(dto.RenterId, "validate-user");
+
+
+            if (!validateUser.SuccessOrNot)
+            {
+                return ServiceResult<bool>.Failure("Invalid user id was sent");
+            }
+
+            var validateVehicle = await ValidateEntityViaMediator(dto.VehicleId, "validate-vehicle");
+
+
+            if (!validateVehicle.SuccessOrNot)
+            {
+                return ServiceResult<bool>.Failure("Invalid vehicle id was sent");
             }
 
             var result = await _bookingUnitOfWork.CreateBookingRepository.CreateAsync(
@@ -98,50 +129,59 @@ namespace BookingServiceApi.Services
                 ServiceResult<bool>.Success("Booking was updated!") :
                 ServiceResult<bool>.Failure("Couldn't update booking");
         }
-         
-        public async Task ConsumeBookingsUpdateFromVehicleService()
+       
+        private async Task<ServiceResult<bool>> ValidateEntityViaMediator(int Id, string routingKey)
         {
-            Console.WriteLine($"Start Prepare for Messages from RabbitMq at : {DateTime.UtcNow}");
-
-            //RabbitMq connection
-            //Port : 5672
             var factory = new ConnectionFactory { HostName = "localhost" };
-
             using var connection = await factory.CreateConnectionAsync();
-
             using var channel = await connection.CreateChannelAsync();
 
-            await channel.QueueDeclareAsync(
-                queue: "messages",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null
+            var replyQueue = await channel.QueueDeclareAsync(queue: routingKey, exclusive: true);
+            var replyQueueName = replyQueue.QueueName;
+
+            var correlationId = Guid.NewGuid().ToString();
+
+            var props = new BasicProperties
+            {
+                CorrelationId = correlationId,
+                ReplyTo = replyQueueName,
+                Persistent = true
+            };
+
+            byte[] messageBody = JsonSerializer.SerializeToUtf8Bytes(Id);
+
+            await channel.BasicPublishAsync(
+                exchange: "",
+                routingKey: routingKey,
+                mandatory: true,
+                basicProperties: props,
+                body: messageBody
             );
 
-            Console.WriteLine($"Waiting for messages from RabbitMq at : {DateTime.UtcNow}");
+            var tcs = new TaskCompletionSource<bool>();
 
             var consumer = new AsyncEventingBasicConsumer(channel);
-            try
+            consumer.ReceivedAsync += async (sender, ea) =>
             {
-                consumer.ReceivedAsync += async (sender, eventArgs) =>
+                if (ea.BasicProperties?.CorrelationId == correlationId)
                 {
-                    byte[] body = eventArgs.Body.ToArray();
+                    var response = JsonSerializer.Deserialize<bool>(ea.Body.ToArray());
+                    tcs.SetResult(response);
+                    await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
+                }
+            };
 
-                    List<(int vehicleId, int userId)> viewedBookings =
-                            JsonSerializer.Deserialize<List<(int vehicleId, int userId)>>(body);
+            await channel.BasicConsumeAsync(
+                queue: replyQueueName,
+                autoAck: false,
+                consumer: consumer
+            );
 
-                    await ((AsyncEventingBasicConsumer)sender).Channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false);
-                };
-            }
-            catch (Exception ex)
-            {
+            var isValidUser = await tcs.Task;
 
-                Console.WriteLine($"Error while getting messages at : {DateTime.UtcNow} - exception : {ex.Message}");
-            }
-            await channel.BasicConsumeAsync("messages", autoAck: false, consumer);
-
-            Console.WriteLine($"Messages was received from RabbitMq at : {DateTime.UtcNow}");
+            return isValidUser
+                ? ServiceResult<bool>.Success("", isValidUser)
+                : ServiceResult<bool>.Failure("");
         }
 
         public async Task ResponseToValidationRequest()
@@ -200,5 +240,6 @@ namespace BookingServiceApi.Services
 
             Console.WriteLine("Response was sent to consumer successfully");
         }
+
     }
 }

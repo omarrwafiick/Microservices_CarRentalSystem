@@ -1,11 +1,8 @@
 using AuthenticationApi.Data;
-using AuthenticationApi.Interfaces;
-using AuthenticationApi.Models;
+using AuthenticationApi.Interfaces; 
 using AuthenticationApi.Repositories;
-using AuthenticationApi.Services;
-using Common.Interfaces;
-using Common.Middleware;
-using Common.Repositories;
+using AuthenticationApi.Services; 
+using Common.Middleware; 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -36,17 +33,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = issuer,
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
-    });
- 
+    }); 
+  
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 //Repositories
 builder.Services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+builder.Services.AddSingleton<ConsumeServicesViaBroker>();
+builder.Services.AddHostedService<RabbitMqBackgroundService>(); 
 
 var app = builder.Build();
  
@@ -65,3 +65,4 @@ app.UseMiddleware<RestrictAccessMiddleware>();
 app.MapControllers();
 
 app.Run();
+ 
