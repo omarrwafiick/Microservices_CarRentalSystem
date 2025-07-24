@@ -67,7 +67,7 @@ namespace VehicleServiceApi.Services
                 ServiceResult<List<Vehicle>>.Failure("No vehicle was found!");
         }
 
-        public async Task<ServiceResult<bool>> RegisterVehicleAsync(CreateVehicleDto dto)
+        public async Task<ServiceResult<int>> RegisterVehicleAsync(CreateVehicleDto dto)
         {
             //TODO : CHECK OWNER BY RABBITMQ 
             #region Variables
@@ -80,21 +80,21 @@ namespace VehicleServiceApi.Services
 
             if (model is null)
             {
-                ServiceResult<bool>.Failure("Model was not found");
+                ServiceResult<int>.Failure("Model was not found");
             }
 
             var location = await _vehicleUnitOfWork.GetLocationRepository.Get(currentLocationId);
 
             if (location is null)
             {
-                ServiceResult<bool>.Failure("Location was not found");
+                ServiceResult<int>.Failure("Location was not found");
             }
 
             var now = DateTime.UtcNow;
 
             if (dto.InsuranceExpiryDate <= now || dto.RegistrationExpiryDate <= now || dto.LastServiceDate > now)
             {
-                ServiceResult<List<Vehicle>>.Failure("Invalid date/s and time/s");
+                return ServiceResult<int>.Failure("Invalid date/s and time/s");
             }
 
             if (!ValidateEnumValue<FuelType>(dto.FuelType)||
@@ -102,7 +102,7 @@ namespace VehicleServiceApi.Services
                !ValidateEnumValue<TransmissionType>(dto.Transmission)
             )
             {
-                return ServiceResult<bool>.Failure("Invalid enum type/s");
+                return ServiceResult<int>.Failure("Invalid enum type/s");
             }
 
             var vehicleExists = await _vehicleUnitOfWork.GetVehicleRepository.Get(
@@ -115,7 +115,7 @@ namespace VehicleServiceApi.Services
 
             if (vehicleExists is not null)
             {
-                ServiceResult<List<Vehicle>>.Failure("Vehicle already exists");
+                ServiceResult<int>.Failure("Vehicle already exists");
             }
 
             var fuelType = Enum.Parse<FuelType>(dto.FuelType);
@@ -132,8 +132,8 @@ namespace VehicleServiceApi.Services
             var result = await _vehicleUnitOfWork.CreateVehicleRepository.CreateAsync(newVehicle);
 
             return result ?
-               ServiceResult<bool>.Success("Vehicles was created successfully") :
-               ServiceResult<bool>.Failure("Failed to create a new vehicle");
+               ServiceResult<int>.Success("Vehicles was created successfully", newVehicle.Id) :
+               ServiceResult<int>.Failure("Failed to create a new vehicle");
         }
          
         public async Task<ServiceResult<bool>> UpdateVehicleStatusAsync(int id, string status)

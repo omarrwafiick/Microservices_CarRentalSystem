@@ -14,7 +14,7 @@ namespace AuthenticationApi.Controllers
             var register = await userService.RegisterAsync(registerDto);
 
             return register.SuccessOrNot ? 
-                Ok(new { message = register.Message, data = register.Data }) : 
+                Ok(new { message = register.Message, id = register.Data }) : 
                 BadRequest(new { message = register.Message });
         }
 

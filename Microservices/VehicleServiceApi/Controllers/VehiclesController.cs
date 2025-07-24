@@ -64,7 +64,7 @@ namespace VehicleServiceApi.Controllers
             var result = await vehicleService.RegisterVehicleAsync(dto);
 
             return result.SuccessOrNot ?
-                Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :
+                Ok(new { message = result.Message, id = result.Data }) :
                 BadRequest(new { message = result.Message });
         }
 

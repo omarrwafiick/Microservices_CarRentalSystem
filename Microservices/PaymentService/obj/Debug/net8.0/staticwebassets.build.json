@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "zusoxS/U7ENHxyfZgvxR1W+g0HzVvQAs15YzbwBTVS0=",
+  "Hash": "+0/9R5JgwMTg1QgIZnltGjc9gMYPa296n8OlXt0T1mE=",
   "Source": "PaymentServiceApi",
   "BasePath": "_content/PaymentServiceApi",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\sphinx\\Documents\\My Projects\\Systems\\MicroservicesApis\\Microservices\\GatewayPoint\\GatewayPoint.csproj",
+      "Version": 2,
+      "Source": "GatewayPoint",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [],
   "Assets": []
 }

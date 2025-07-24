@@ -56,19 +56,19 @@ namespace BookingServiceApi.Services
                 ServiceResult<GetPickUpDto>.Failure("No booking was found");
         }
 
-        public async Task<ServiceResult<bool>> RegisterBookingAsync(CreateBookingDto dto)
+        public async Task<ServiceResult<int>> RegisterBookingAsync(CreateBookingDto dto)
         { 
             var now = DateTime.UtcNow;
             var interactions = Enum.GetNames<InteractionType>().ToList();
 
             if (dto.StartDate < now || dto.EndDate < now)
             {
-                return ServiceResult<bool>.Failure("Can't book vehicle due to invalid time"); 
+                return ServiceResult<int>.Failure("Can't book vehicle due to invalid time"); 
             }
 
             if (!interactions.Any(interaction => interaction == dto.InteractionType))
             {
-                return ServiceResult<bool>.Failure("Invalid interaction type"); 
+                return ServiceResult<int>.Failure("Invalid interaction type"); 
             }
             
             var booking = await _bookingUnitOfWork.GetBookingRepository.Get(
@@ -80,7 +80,7 @@ namespace BookingServiceApi.Services
 
             if (booking is not null)
             { 
-                return ServiceResult<bool>.Failure("Can't book vehicle during activation of another one");
+                return ServiceResult<int>.Failure("Can't book vehicle during activation of another one");
             }
 
             var validateUser = await ValidateEntityViaMediator(dto.RenterId, "validate-user");
@@ -88,7 +88,7 @@ namespace BookingServiceApi.Services
 
             if (!validateUser.SuccessOrNot)
             {
-                return ServiceResult<bool>.Failure("Invalid user id was sent");
+                return ServiceResult<int>.Failure("Invalid user id was sent");
             }
 
             var validateVehicle = await ValidateEntityViaMediator(dto.VehicleId, "validate-vehicle");
@@ -96,28 +96,28 @@ namespace BookingServiceApi.Services
 
             if (!validateVehicle.SuccessOrNot)
             {
-                return ServiceResult<bool>.Failure("Invalid vehicle id was sent");
+                return ServiceResult<int>.Failure("Invalid vehicle id was sent");
             }
 
-            var result = await _bookingUnitOfWork.CreateBookingRepository.CreateAsync(
-                Booking.Create(
+            var newBooking = Booking.Create(
                     dto.VehicleId, dto.RenterId, dto.StartDate, dto.EndDate, Enum.Parse<InteractionType>(dto.InteractionType),
                     dto.TotalPrice, dto.PickupLocation, dto.DropoffLocation, dto.Notes
-                )
-            );
+                );
+
+            var result = await _bookingUnitOfWork.CreateBookingRepository.CreateAsync(newBooking);
 
             if (result)
             {
                 var failMessage = "Couldn't create a new booking";
                 _cache.Remove(Globals.CACHEKEY);
                 _logger.LogError(failMessage + $"at: {DateTime.UtcNow}");
-                return ServiceResult<bool>.Failure(failMessage);
+                return ServiceResult<int>.Failure(failMessage);
             }
 
             var successMessage = "Booking was created successfully";
             _logger.LogInformation(successMessage + $"at: {DateTime.UtcNow}");
 
-            return ServiceResult<bool>.Success(successMessage); 
+            return ServiceResult<int>.Success(successMessage, newBooking.Id); 
         }
 
         public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(int id)

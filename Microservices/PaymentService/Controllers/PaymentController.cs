@@ -59,7 +59,7 @@ namespace PaymentService.Controllers
             var result = await paymentService.RegisterPaymentRecordsAsync(dto);
 
             return result.SuccessOrNot ?
-                Ok(new { message = result.Message }) :
+                Ok(new { message = result.Message, id = result.Data }) :
                 BadRequest(new { message = result.Message });
         }
 

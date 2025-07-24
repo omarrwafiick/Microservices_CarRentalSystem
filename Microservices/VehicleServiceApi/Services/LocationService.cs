@@ -42,7 +42,7 @@ namespace VehicleServiceApi.Services
                 ServiceResult<Location>.Failure("Location was not found");
         }
 
-        public async Task<ServiceResult<bool>> AddLocationAsync(CreateLocationDto dto)
+        public async Task<ServiceResult<int>> AddLocationAsync(CreateLocationDto dto)
         {
             #region variable
             var nameMatches = dto.Name.ToLower();
@@ -66,7 +66,7 @@ namespace VehicleServiceApi.Services
 
             if (locationExists is not null)
             {
-                return ServiceResult<bool>.Failure("Location already exists with same data");
+                return ServiceResult<int>.Failure("Location already exists with same data");
             }
 
             var newLocation = Location.Factory(dto.Name, dto.District, dto.City, dto.Country, dto.Longitude, dto.Latitude);
@@ -74,8 +74,8 @@ namespace VehicleServiceApi.Services
             var result = await _locationUnitOfWork.CreateLocationRepository.CreateAsync(newLocation);
 
             return result ?
-               ServiceResult<bool>.Success("Location was created successfully") :
-               ServiceResult<bool>.Failure("Failed to create a new location");
+               ServiceResult<int>.Success("Location was created successfully", newLocation.Id) :
+               ServiceResult<int>.Failure("Failed to create a new location");
         }
 
         public async Task<ServiceResult<bool>> UpdateLocationAsync(int id, UpdateLocationDto dto)

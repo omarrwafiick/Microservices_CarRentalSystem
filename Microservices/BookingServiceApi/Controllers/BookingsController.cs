@@ -88,7 +88,7 @@ namespace BookingServiceApi.Controllers
             var result = await bookingService.RegisterBookingAsync(dto);
 
             return result.SuccessOrNot ?
-                Ok(new { message = result.Message }) :
+                Ok(new { message = result.Message, id = result.Data }) :
                 BadRequest(new { message = result.Message });
         }
 

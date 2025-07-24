@@ -59,8 +59,7 @@ namespace PaymentServiceApi.Dtos
     }
 
     public record UpdatePaymentStatusDto
-    { 
-
+    {  
         [Required]
         public string NewStatus { get; set; }
 

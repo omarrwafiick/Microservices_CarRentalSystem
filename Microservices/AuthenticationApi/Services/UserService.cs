@@ -52,12 +52,12 @@ namespace AuthenticationApi.Services
             return ServiceResult<User>.Success("Logged in successfully", exists);
         }
 
-        public async Task<ServiceResult<bool>> RegisterAsync(RegisterDto dto)
+        public async Task<ServiceResult<int>> RegisterAsync(RegisterDto dto)
         {
             var exists = await _unitOfWorkRepository.GetUserRepository.Get(x => x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
 
             if (exists is not null) 
-                return ServiceResult<bool>.Failure(
+                return ServiceResult<int>.Failure(
                     "User already exists with same email or phone please enter a unique valued");
 
             var hashedPassword = UserSecurityService.HashPassword(dto.Password);
@@ -65,7 +65,7 @@ namespace AuthenticationApi.Services
             var role = CheckRole(dto.Role);
 
             if (role == Role.NONE) 
-                return ServiceResult<bool>.Failure("Role sent was not found");
+                return ServiceResult<int>.Failure("Role sent was not found");
 
             var newUser = User.Factory(
                 dto.FullName, 
@@ -78,8 +78,8 @@ namespace AuthenticationApi.Services
             var result = await _unitOfWorkRepository.CreateUserRepository.CreateAsync(newUser);
 
             return result ?
-                ServiceResult<bool>.Success("New account was created successfully") :
-                ServiceResult<bool>.Failure("Failed to create new user"); 
+                ServiceResult<int>.Success("New account was created successfully", newUser.Id) :
+                ServiceResult<int>.Failure("Failed to create new user"); 
         }
 
         public async Task<ServiceResult<string>> ForgetPasswordAsync(string email)

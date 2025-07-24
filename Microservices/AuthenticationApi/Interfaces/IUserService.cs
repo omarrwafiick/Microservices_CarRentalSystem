@@ -7,7 +7,7 @@ namespace AuthenticationApi.Interfaces
     public interface IUserService
     {
         Task<ServiceResult<User>> LoginAsync(LoginDto dto);
-        Task<ServiceResult<bool>> RegisterAsync(RegisterDto dto);
+        Task<ServiceResult<int>> RegisterAsync(RegisterDto dto);
         Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync();
         Task<ServiceResult<User>> GetUserByIdAsync(int id);
         Task<ServiceResult<bool>> UpdateUserAsync(UpdateUserDto dto);

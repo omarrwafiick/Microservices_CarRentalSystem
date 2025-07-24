@@ -11,7 +11,7 @@ namespace PaymentServiceApi.Interfaces
         Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync();
         Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(Expression<Func<PaymentRecord, bool>> condition);
         Task<List<PaymentSummaryDto>> GetPaymentSummary();
-        Task<ServiceResult<bool>> RegisterPaymentRecordsAsync(CreatePaymentDto dto);
+        Task<ServiceResult<int>> RegisterPaymentRecordsAsync(CreatePaymentDto dto);
         Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto);
     }
 }

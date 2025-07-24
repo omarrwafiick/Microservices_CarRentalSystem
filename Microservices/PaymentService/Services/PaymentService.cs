@@ -71,11 +71,11 @@ namespace PaymentServiceApi.Services
             return PaymentSummaryList;
         }
 
-        public async Task<ServiceResult<bool>> RegisterPaymentRecordsAsync(CreatePaymentDto dto)
+        public async Task<ServiceResult<int>> RegisterPaymentRecordsAsync(CreatePaymentDto dto)
         {  
             if(dto.PaidAt > DateTime.UtcNow)
             {
-                return ServiceResult<bool>.Failure("Invalid paid at date and time");
+                return ServiceResult<int>.Failure("Invalid paid at date and time");
             }
             
             var userId = dto.UserId;
@@ -90,14 +90,14 @@ namespace PaymentServiceApi.Services
 
             if (paymentRecordExists is not null)
             {
-                return ServiceResult<bool>.Failure("Payment record already exists");
+                return ServiceResult<int>.Failure("Payment record already exists");
             }
 
             if (!ValidateEnumValue<PaymentMethod>(dto.Method) ||
                 !ValidateEnumValue<CurrencyType>(dto.Currency) ||
                 !ValidateEnumValue<PaymentStatus>(dto.Status) )
             {
-                return ServiceResult<bool>.Failure("Invalid enum values");
+                return ServiceResult<int>.Failure("Invalid enum values");
             }
 
             var newRecord = PaymentRecord.Create(
@@ -115,8 +115,8 @@ namespace PaymentServiceApi.Services
             var result = await _paymentUnitOfWork.CreatePaymentRepository.CreateAsync(newRecord);
 
             return result ?
-                ServiceResult<bool>.Success("Payment record was created successfully") :
-                ServiceResult<bool>.Failure("Failed to create new payment record");
+                ServiceResult<int>.Success("Payment record was created successfully", newRecord.Id) :
+                ServiceResult<int>.Failure("Failed to create new payment record");
         }
 
         public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto)
