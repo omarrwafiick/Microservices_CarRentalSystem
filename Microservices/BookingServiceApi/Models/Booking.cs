@@ -63,6 +63,12 @@ namespace BookingServiceApi.Models
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void MarkAsViewed()
+        {
+            InteractionType = InteractionType.VIEWED;
+            MarkAsUpdated();
+        }
+
         public void MarkAsCompleted()
         {
             CompletedAt = DateTime.UtcNow;

@@ -5,19 +5,27 @@ using Common.Helpers;
 using AutoMapper; 
 using Common.Dtos;
 using BookingServiceApi.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BookingServiceApi.Controllers
 {
     //[AuthorizeRoles("RENTER")]
     [Route("api/bookings")]
     [ApiController]
-    public class BookingsController(IBookingService bookingService, IMapper mapper) : ControllerBase
+    public class BookingsController(IBookingService bookingService, IMapper mapper, IMemoryCache cache) : ControllerBase
     {
         //[AuthorizeRoles("ADMIN")]
         [HttpGet]
         public async Task<IActionResult> GetBookings()
-        { 
+        {
+            if (cache.TryGetValue(Globals.CACHEKEY, out List<Booking> cachedBookings))
+            {
+                return Ok(new { message = "Bookings was found!", data = mapper.Map<GetBookingDto>(cachedBookings) });
+            }
+
             var result = await bookingService.GetBookingsAsync();
+
+            cache.Set(Globals.CACHEKEY, result.Data, TimeSpan.FromMinutes(5));
 
             return result.SuccessOrNot ?
                 Ok( new { message = result.Message, data = mapper.Map<GetBookingDto>(result.Data) } ): 

@@ -3,9 +3,10 @@ using BookingServiceApi.Enums;
 using BookingServiceApi.Interfaces;
 using BookingServiceApi.Models;
 using Common.Dtos;
+using Microsoft.Extensions.Caching.Memory; 
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Linq.Expressions;
+using System.Linq.Expressions; 
 using System.Text.Json;
 
 namespace BookingServiceApi.Services
@@ -13,11 +14,14 @@ namespace BookingServiceApi.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingUnitOfWork _bookingUnitOfWork;
-
-        public BookingService(IBookingUnitOfWork bookingUnitOfWork)
+        private readonly IMemoryCache _cache;
+        private readonly ILogger<BookingService> _logger;
+        public BookingService(IBookingUnitOfWork bookingUnitOfWork, IMemoryCache cache, ILogger<BookingService> logger)
         {
             _bookingUnitOfWork = bookingUnitOfWork;
-        }
+            _cache = cache;
+            _logger = logger;
+        } 
 
         public async Task<ServiceResult<List<Booking>>> GetBookingsAsync()
         {
@@ -102,9 +106,18 @@ namespace BookingServiceApi.Services
                 )
             );
 
-            return result ?
-                ServiceResult<bool>.Success("Booking was created successfully") :
-                ServiceResult<bool>.Failure("Couldn't create a new booking");
+            if (result)
+            {
+                var failMessage = "Couldn't create a new booking";
+                _cache.Remove(Globals.CACHEKEY);
+                _logger.LogError(failMessage + $"at: {DateTime.UtcNow}");
+                return ServiceResult<bool>.Failure(failMessage);
+            }
+
+            var successMessage = "Booking was created successfully";
+            _logger.LogInformation(successMessage + $"at: {DateTime.UtcNow}");
+
+            return ServiceResult<bool>.Success(successMessage); 
         }
 
         public async Task<ServiceResult<bool>> UpdateBookingStatusAsync(int id)
@@ -125,13 +138,24 @@ namespace BookingServiceApi.Services
 
             var result = await _bookingUnitOfWork.UpdateBookingRepository.UpdateAsync(booking);
 
-            return result ?
-                ServiceResult<bool>.Success("Booking was updated!") :
-                ServiceResult<bool>.Failure("Couldn't update booking");
+            if(result)
+            {
+                var failMessage = "Couldn't update booking";
+                _logger.LogError(failMessage+ $"at: {DateTime.UtcNow}");
+                _cache.Remove(Globals.CACHEKEY);
+                return ServiceResult<bool>.Failure(failMessage);
+            }
+
+            var successMessage = "Booking was created successfully";
+            _logger.LogInformation(successMessage + $"at: {DateTime.UtcNow}");
+
+            return ServiceResult<bool>.Success(successMessage);
         }
        
         private async Task<ServiceResult<bool>> ValidateEntityViaMediator(int Id, string routingKey)
         {
+            _logger.LogInformation($"Start using mediator to validate entity at: {DateTime.UtcNow}");
+
             var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection = await factory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
@@ -179,67 +203,17 @@ namespace BookingServiceApi.Services
 
             var isValidUser = await tcs.Task;
 
-            return isValidUser
-                ? ServiceResult<bool>.Success("", isValidUser)
-                : ServiceResult<bool>.Failure("");
-        }
-
-        public async Task ResponseToValidationRequest()
-        {
-            var factory = new ConnectionFactory { HostName = "localhost" };
-
-            using var connection = await factory.CreateConnectionAsync();
-            using var channel = await connection.CreateChannelAsync();
-
-            await channel.QueueDeclareAsync(
-                queue: "validate-booking",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null
-            );
-
-            var consumer = new AsyncEventingBasicConsumer(channel);
-            consumer.ReceivedAsync += async (sender, ea) =>
+            if (isValidUser)
             {
-                try
-                {
-                    var bookingId = JsonSerializer.Deserialize<Guid>(ea.Body.ToArray());
+                _logger.LogError($"Failed to validate user via mediator at {DateTime.UtcNow}");
+                ServiceResult<bool>.Failure("");
+            }
 
-                    bool isValidUser = await _bookingUnitOfWork.GetBookingRepository.Get(bookingId) is not null;
+            _logger.LogInformation($"Successfully validate user at: {DateTime.UtcNow}");
 
-                    var responseBytes = JsonSerializer.SerializeToUtf8Bytes(isValidUser);
-
-                    var props = new BasicProperties
-                    {
-                        CorrelationId = ea.BasicProperties.CorrelationId
-                    };
-
-                    props.CorrelationId = ea.BasicProperties.CorrelationId;
-
-                    await channel.BasicPublishAsync(
-                        exchange: "",
-                        routingKey: ea.BasicProperties.ReplyTo,
-                        mandatory: false,
-                        basicProperties: props,
-                        body: responseBytes
-                    );
-                    await channel.BasicAckAsync(ea.DeliveryTag, false);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Validation response failed: {ex.Message}");
-                }
-            };
-
-            await channel.BasicConsumeAsync(
-                queue: "validate-booking",
-                autoAck: false,
-                consumer: consumer
-            );
-
-            Console.WriteLine("Response was sent to consumer successfully");
+            return ServiceResult<bool>.Success("", isValidUser);
         }
 
+       
     }
 }
