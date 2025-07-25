@@ -23,6 +23,12 @@ builder.Services.AddScoped<IPaymentUnitOfWork, PaymentUnitOfWork>();
 //Services
 builder.Services.AddScoped<IPaymentService, PaymentServiceApi.Services.PaymentService>();
 builder.Services.AddAutoMapper(typeof(PaymentRecordProfile));
+builder.Services.AddMemoryCache();
+
+//logger
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var app = builder.Build();
  

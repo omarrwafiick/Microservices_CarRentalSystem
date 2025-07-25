@@ -8,10 +8,10 @@ namespace PaymentServiceApi.Interfaces
 {
     public interface IPaymentService
     {
-        Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync();
-        Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(Expression<Func<PaymentRecord, bool>> condition);
-        Task<List<PaymentSummaryDto>> GetPaymentSummary();
-        Task<ServiceResult<int>> RegisterPaymentRecordsAsync(CreatePaymentDto dto);
-        Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto);
+        Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync(HttpContext context);
+        Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(HttpContext context, Expression<Func<PaymentRecord, bool>> condition);
+        Task<List<PaymentSummaryDto>> GetPaymentSummary(HttpContext context);
+        Task<ServiceResult<int>> RegisterPaymentRecordsAsync(HttpContext context, CreatePaymentDto dto);
+        Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(HttpContext context,int id, UpdatePaymentStatusDto dto);
     }
 }

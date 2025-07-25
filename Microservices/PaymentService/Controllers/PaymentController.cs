@@ -14,8 +14,8 @@ namespace PaymentService.Controllers
         //[AuthorizeRoles("ADMIN")]
         [HttpGet]
         public async Task<IActionResult> GetPayments()
-        {  
-            var result = await paymentService.GetPaymentRecordsAsync();
+        { 
+            var result = await paymentService.GetPaymentRecordsAsync(HttpContext);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetPaymentDto>>(result.Data) }) :
@@ -26,7 +26,7 @@ namespace PaymentService.Controllers
         [HttpGet("summary")]
         public async Task<IActionResult> GetPaymentSummary()
         {  
-            var result = await paymentService.GetPaymentSummary();
+            var result = await paymentService.GetPaymentSummary(HttpContext);
 
             return Ok(new { data = result });
         }
@@ -35,6 +35,7 @@ namespace PaymentService.Controllers
         public async Task<IActionResult> GetUserPayments([FromRoute] int userid)
         {  
             var result = await paymentService.GetPaymentRecordsByConditionAsync(
+                HttpContext,
                 paymentRecord => paymentRecord.UserId == userid);
 
             return result.SuccessOrNot ?
@@ -46,6 +47,7 @@ namespace PaymentService.Controllers
         public async Task<IActionResult> GetBookingPayment([FromRoute] int bookingid)
         {  
             var result = await paymentService.GetPaymentRecordsByConditionAsync(
+                HttpContext,
                 paymentRecord => paymentRecord.BookingId == bookingid);
 
             return result.SuccessOrNot ?
@@ -56,7 +58,7 @@ namespace PaymentService.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterPayment([FromBody] CreatePaymentDto dto)
         { 
-            var result = await paymentService.RegisterPaymentRecordsAsync(dto);
+            var result = await paymentService.RegisterPaymentRecordsAsync(HttpContext, dto);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, id = result.Data }) :
@@ -66,11 +68,12 @@ namespace PaymentService.Controllers
         [HttpPut("status/{paymentid:int}")]
         public async Task<IActionResult> UpdatePaymentStatus([FromRoute] int paymentid, [FromBody] UpdatePaymentStatusDto dto)
         {  
-            var result = await paymentService.UpdatePaymentRecordsAsync(paymentid, dto);
+            var result = await paymentService.UpdatePaymentRecordsAsync(HttpContext, paymentid, dto);
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message }) :
                 BadRequest(new { message = result.Message });
         }
+     
     }
 }

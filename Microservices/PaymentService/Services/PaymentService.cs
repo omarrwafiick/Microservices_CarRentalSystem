@@ -13,14 +13,17 @@ namespace PaymentServiceApi.Services
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentUnitOfWork _paymentUnitOfWork;
-
-        public PaymentService(IPaymentUnitOfWork paymentUnitOfWork)
+        private readonly ILogger _logger; 
+        public PaymentService(IPaymentUnitOfWork paymentUnitOfWork, ILogger logger)
         {
             _paymentUnitOfWork = paymentUnitOfWork;
+            _logger = logger;
         }
 
-        public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync()
+        public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync(HttpContext context)
         {
+            _logger.LogInformation($"Request to get all payment records with ip: {context.Connection.RemoteIpAddress} - at: {DateTime.UtcNow}");
+            
             var result = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll(); 
 
             return result.Any() ?
@@ -28,8 +31,10 @@ namespace PaymentServiceApi.Services
                 ServiceResult<List<PaymentRecord>>.Failure("Payment records was not found");
         }
 
-        public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(Expression<Func<PaymentRecord, bool>> condition)
+        public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsByConditionAsync(HttpContext context, Expression<Func<PaymentRecord, bool>> condition)
         {
+            _logger.LogInformation($"Request to get all payment records with ip: {context.Connection.RemoteIpAddress} - at: {DateTime.UtcNow}");
+
             var result = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll(condition);
 
             return result.Any() ?
@@ -37,8 +42,10 @@ namespace PaymentServiceApi.Services
                 ServiceResult<List<PaymentRecord>>.Failure("Payment records was not found");
         }
 
-        public async Task<List<PaymentSummaryDto>> GetPaymentSummary()
+        public async Task<List<PaymentSummaryDto>> GetPaymentSummary(HttpContext context)
         {
+            _logger.LogInformation($"Request to get payment summary records with ip: {context.Connection.RemoteIpAddress} - at: {DateTime.UtcNow}");
+
             var paymentRecords = await _paymentUnitOfWork.GetAllPaymentRepository.GetAll();
 
             var recordsGroupedByUserId = paymentRecords.GroupBy(x => x.UserId).ToList();
@@ -71,9 +78,11 @@ namespace PaymentServiceApi.Services
             return PaymentSummaryList;
         }
 
-        public async Task<ServiceResult<int>> RegisterPaymentRecordsAsync(CreatePaymentDto dto)
-        {  
-            if(dto.PaidAt > DateTime.UtcNow)
+        public async Task<ServiceResult<int>> RegisterPaymentRecordsAsync(HttpContext context, CreatePaymentDto dto)
+        {
+            _logger.LogInformation($"Request to add payment records with ip: {context.Connection.RemoteIpAddress} - at: {DateTime.UtcNow}");
+
+            if (dto.PaidAt > DateTime.UtcNow)
             {
                 return ServiceResult<int>.Failure("Invalid paid at date and time");
             }
@@ -114,12 +123,17 @@ namespace PaymentServiceApi.Services
 
             var result = await _paymentUnitOfWork.CreatePaymentRepository.CreateAsync(newRecord);
 
-            return result ?
-                ServiceResult<int>.Success("Payment record was created successfully", newRecord.Id) :
-                ServiceResult<int>.Failure("Failed to create new payment record");
+            if (!result)
+            {
+                _logger.LogError($"Failed to add new payment to system at: {DateTime.UtcNow}");
+                return ServiceResult<int>.Failure("Failed to create new payment record");
+            }
+            _logger.LogInformation($"Successfully added new payment to system at: {DateTime.UtcNow} with id: {newRecord.Id}");
+
+            return ServiceResult<int>.Success("Payment record was created successfully", newRecord.Id);
         }
 
-        public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(int id, UpdatePaymentStatusDto dto)
+        public async Task<ServiceResult<bool>> UpdatePaymentRecordsAsync(HttpContext context,int id, UpdatePaymentStatusDto dto)
         {
             var paymentRecord = await _paymentUnitOfWork.GetPaymentRepository.GetWithTracking(id);
 
@@ -137,9 +151,15 @@ namespace PaymentServiceApi.Services
 
             var result = await _paymentUnitOfWork.UpdatePaymentRepository.UpdateAsync(paymentRecord);
 
-            return result ?
-                ServiceResult<bool>.Success("Payment record was updated successfully") :
-                ServiceResult<bool>.Failure("Failed to update payment record");
+            if (!result)
+            {
+                _logger.LogError($"Failed to update payment to system at: {DateTime.UtcNow} - with id: {paymentRecord.Id}");
+                return ServiceResult<bool>.Failure("Failed to update payment record");
+            }
+
+            _logger.LogInformation($"Successfully updated payment to system at: {DateTime.UtcNow} with id: {paymentRecord.Id}");
+
+            return ServiceResult<bool>.Success("Payment record was updated successfully");
         }
 
         private bool ValidateEnumValue<T>(string value) where T : struct, Enum
@@ -150,7 +170,9 @@ namespace PaymentServiceApi.Services
         }
 
         public async Task<ServiceResult<bool>> ValidateEntityViaMediator(int Id, string routingKey)
-        { 
+        {
+            _logger.LogInformation($"Started to validate entity via mediator with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}");
+
             var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection = await factory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
@@ -198,9 +220,14 @@ namespace PaymentServiceApi.Services
              
             var isValidUser = await tcs.Task;
              
-            return isValidUser
-                ? ServiceResult<bool>.Success("", isValidUser)
-                : ServiceResult<bool>.Failure("");
+            if (!isValidUser)
+            {
+                _logger.LogError($"Failed to validate entity with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}"); 
+                ServiceResult<bool>.Failure("");
+            }
+            _logger.LogInformation($"Entity was validated successfully via mediator with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}");
+
+            return ServiceResult<bool>.Success("", isValidUser);
         }  
 
     }
