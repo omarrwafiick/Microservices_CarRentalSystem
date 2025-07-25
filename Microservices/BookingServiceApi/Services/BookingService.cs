@@ -109,12 +109,16 @@ namespace BookingServiceApi.Services
             if (result)
             {
                 var failMessage = "Couldn't create a new booking";
-                _cache.Remove(Globals.CACHEKEY);
+
                 _logger.LogError(failMessage + $"at: {DateTime.UtcNow}");
+
                 return ServiceResult<int>.Failure(failMessage);
             }
 
+            _cache.Remove(Globals.CACHEKEY);
+
             var successMessage = "Booking was created successfully";
+
             _logger.LogInformation(successMessage + $"at: {DateTime.UtcNow}");
 
             return ServiceResult<int>.Success(successMessage, newBooking.Id); 
@@ -125,7 +129,9 @@ namespace BookingServiceApi.Services
             var booking = await _bookingUnitOfWork.GetBookingRepository.GetWithTracking(booking => booking.Id == id);
 
             if (booking is null)
+            { 
                 return ServiceResult<bool>.Failure($"No booking was found using this id: {id}");
+            }    
 
             if (booking.IsCancelled)
             {
@@ -141,12 +147,16 @@ namespace BookingServiceApi.Services
             if(result)
             {
                 var failMessage = "Couldn't update booking";
+
                 _logger.LogError(failMessage+ $"at: {DateTime.UtcNow}");
-                _cache.Remove(Globals.CACHEKEY);
+
                 return ServiceResult<bool>.Failure(failMessage);
             }
 
+            _cache.Remove(Globals.CACHEKEY);
+
             var successMessage = "Booking was created successfully";
+
             _logger.LogInformation(successMessage + $"at: {DateTime.UtcNow}");
 
             return ServiceResult<bool>.Success(successMessage);
@@ -213,7 +223,6 @@ namespace BookingServiceApi.Services
 
             return ServiceResult<bool>.Success("", isValidUser);
         }
-
-       
+ 
     }
 }

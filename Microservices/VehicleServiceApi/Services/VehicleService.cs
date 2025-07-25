@@ -8,15 +8,21 @@ using VehicleServiceApi.Enums;
 using VehicleServiceApi.Interfaces;
 using VehicleServiceApi.Models;
 using VehicleServiceApi.Interfaces.UnitOfWork;
+using Microsoft.Extensions.Caching.Memory;
+using RabbitMQ.Client.Events;
 
 namespace VehicleServiceApi.Services
 {
     public class VehicleService : IVehicleService
     {
         private readonly IVehicleUnitOfWork _vehicleUnitOfWork; 
-        public VehicleService(IVehicleUnitOfWork vehicleUnitOfWork)
+        private readonly IMemoryCache _cache;
+        private readonly ILogger _logger;
+        public VehicleService(IVehicleUnitOfWork vehicleUnitOfWork, IMemoryCache cache, ILogger logger)
         {
             _vehicleUnitOfWork = vehicleUnitOfWork; 
+            _cache = cache;
+            _logger = logger;
         }
 
         public async Task<ServiceResult<List<Vehicle>>> GetVehiclesAsync(Expression<Func<Vehicle, object>> include1, Expression<Func<Vehicle, object>> include2, Expression<Func<Vehicle, object>> include3)
@@ -68,8 +74,7 @@ namespace VehicleServiceApi.Services
         }
 
         public async Task<ServiceResult<int>> RegisterVehicleAsync(CreateVehicleDto dto)
-        {
-            //TODO : CHECK OWNER BY RABBITMQ 
+        { 
             #region Variables
             var ownerId = dto.OwnerId;
             var currentLocationId = dto.CurrentLocationId;
@@ -105,6 +110,13 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<int>.Failure("Invalid enum type/s");
             }
 
+            var validateUser = await ValidateEntityViaMediator(dto.OwnerId, "validate-user");
+
+            if(!validateUser.SuccessOrNot)
+            {
+                return ServiceResult<int>.Failure($"Invalid user with id {dto.OwnerId}");
+            }
+
             var vehicleExists = await _vehicleUnitOfWork.GetVehicleRepository.Get(
                 vehicle => 
                     vehicle.OwnerId == ownerId &&
@@ -131,9 +143,13 @@ namespace VehicleServiceApi.Services
 
             var result = await _vehicleUnitOfWork.CreateVehicleRepository.CreateAsync(newVehicle);
 
-            return result ?
-               ServiceResult<int>.Success("Vehicles was created successfully", newVehicle.Id) :
-               ServiceResult<int>.Failure("Failed to create a new vehicle");
+            if(!result)
+            {
+                return ServiceResult<int>.Failure("Failed to create a new vehicle"); 
+            }
+            _cache.Remove(Globals.VEHICLES_CACHEKEY);
+
+            return ServiceResult<int>.Success("Vehicles was created successfully", newVehicle.Id);
         }
          
         public async Task<ServiceResult<bool>> UpdateVehicleStatusAsync(int id, string status)
@@ -156,9 +172,15 @@ namespace VehicleServiceApi.Services
 
             var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
-            return result ?
-               ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
-               ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+            if (!result)
+            {
+                return ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+            }
+
+            _cache.Remove(Globals.VEHICLES_CACHEKEY);
+
+            return ServiceResult<bool>.Success("Vehicle status was deactivated successfully") ;
+              
         }
 
         public async Task<ServiceResult<List<Vehicle>>> RecommendRelevantVehiclesAsync(RecommendationDto data)
@@ -252,8 +274,8 @@ namespace VehicleServiceApi.Services
         }
 
         private async Task RabbitMqMessageToBookingsService(List<(int vehicleId, int userId)> viewedBookings)
-        {
-            Console.WriteLine($"Start Pushing Message by RabbitMq at : {DateTime.UtcNow}");
+        { 
+            _logger.LogInformation($"Start Pushing Message by RabbitMq at : {DateTime.UtcNow}");
 
             //RabbitMq connection
             //Port : 5672
@@ -264,7 +286,7 @@ namespace VehicleServiceApi.Services
             using var channel = await connection.CreateChannelAsync();
 
             await channel.QueueDeclareAsync(
-                queue: "messages",
+                queue: "messages-bookings",
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -275,13 +297,74 @@ namespace VehicleServiceApi.Services
 
             await channel.BasicPublishAsync(
                 exchange: string.Empty,
-                routingKey: "messages",
+                routingKey: "messages-bookings",
                 mandatory: true,
                 basicProperties: new BasicProperties { Persistent = true },
                 body: body
             );
 
-            Console.WriteLine($"Message was sent by RabbitMq at : {DateTime.UtcNow}");
+            _logger.LogInformation($"Message was sent by RabbitMq at : {DateTime.UtcNow}"); 
+        }
+
+        private async Task<ServiceResult<bool>> ValidateEntityViaMediator(int Id, string routingKey)
+        {
+            _logger.LogInformation($"Started to validate entity via mediator with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}");
+
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            var replyQueue = await channel.QueueDeclareAsync(queue: routingKey, exclusive: true);
+            var replyQueueName = replyQueue.QueueName;
+
+            var correlationId = Guid.NewGuid().ToString();
+
+            var props = new BasicProperties
+            {
+                CorrelationId = correlationId,
+                ReplyTo = replyQueueName,
+                Persistent = true
+            };
+
+            byte[] messageBody = JsonSerializer.SerializeToUtf8Bytes(Id);
+
+            await channel.BasicPublishAsync(
+                exchange: "",
+                routingKey: routingKey,
+                mandatory: true,
+                basicProperties: props,
+                body: messageBody
+            );
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.ReceivedAsync += async (sender, ea) =>
+            {
+                if (ea.BasicProperties?.CorrelationId == correlationId)
+                {
+                    var response = JsonSerializer.Deserialize<bool>(ea.Body.ToArray());
+                    tcs.SetResult(response);
+                    await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
+                }
+            };
+
+            await channel.BasicConsumeAsync(
+                queue: replyQueueName,
+                autoAck: false,
+                consumer: consumer
+            );
+
+            var isValidUser = await tcs.Task;
+
+            if (!isValidUser)
+            {
+                _logger.LogError($"Failed to validate entity with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}");
+                ServiceResult<bool>.Failure("");
+            }
+            _logger.LogInformation($"Entity was validated successfully via mediator with id: {Id} - queue key: {routingKey} - at: {DateTime.UtcNow}");
+
+            return ServiceResult<bool>.Success("", isValidUser);
         }
 
         public async Task<ServiceResult<bool>> ChangeVehicleStatusAsync(int id, bool activate)
@@ -299,15 +382,20 @@ namespace VehicleServiceApi.Services
             }
             else
             {
-                vehicle.Deactivate();
-
+                vehicle.Deactivate(); 
             }
 
             var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
 
-            return result ?
-               ServiceResult<bool>.Success("Vehicle status was deactivated successfully") :
-               ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+            if (!result)
+            {
+                return ServiceResult<bool>.Failure("Failed to deactivate vehicle");
+            }
+
+            _cache.Remove(Globals.VEHICLES_CACHEKEY);
+
+            return ServiceResult<bool>.Success("Vehicle status was deactivated successfully");
+               
         }
          
     }

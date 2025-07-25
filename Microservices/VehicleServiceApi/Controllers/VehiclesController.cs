@@ -1,19 +1,28 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using VehicleServiceApi.Dtos; 
-using VehicleServiceApi.Interfaces; 
- 
+using VehicleServiceApi.Interfaces;
+using VehicleServiceApi.Models;
+
 namespace VehicleServiceApi.Controllers
 {
     [Route("api/vehicles")]
     [ApiController] 
-    public class VehiclesController(IVehicleService vehicleService, IMapper mapper) : ControllerBase
+    public class VehiclesController(IVehicleService vehicleService, IMapper mapper, IMemoryCache cache) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetVechiles()
-        {  
+        {
+            if (cache.TryGetValue(Globals.VEHICLES_CACHEKEY, out List<Vehicle> cachedVehicles))
+            {
+                return Ok(new { message = "Vehicles was found!", data = mapper.Map<List<GetVehicleDto>>(cachedVehicles) });
+            }
+
             var result = await vehicleService.GetVehiclesAsync(
                 vehicle => vehicle.Model, vehicle => vehicle.VehicleImages, vehicle => vehicle.Location);
+             
+            cache.Set(Globals.VEHICLES_CACHEKEY, result.Data, TimeSpan.FromMinutes(5));
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetVehicleDto>>(result.Data) }) :

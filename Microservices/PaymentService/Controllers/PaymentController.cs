@@ -3,19 +3,29 @@ using PaymentServiceApi.Dtos;
 using PaymentServiceApi.Interfaces;
 using Common.Helpers;
 using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
+using PaymentService.Models;
+using PaymentServiceApi;
 
 namespace PaymentService.Controllers
 {
     //[AuthorizeRoles("RENTER")]
     [Route("api/paymentrecords")]
     [ApiController]
-    public class PaymentController(IPaymentService paymentService, IMapper mapper) : ControllerBase
+    public class PaymentController(IPaymentService paymentService, IMapper mapper, IMemoryCache cache) : ControllerBase
     {
         //[AuthorizeRoles("ADMIN")]
         [HttpGet]
         public async Task<IActionResult> GetPayments()
-        { 
+        {
+            if (cache.TryGetValue(Globals.CACHEKEY, out List<PaymentRecord> cachedPayments))
+            {
+                return Ok(new { message = "Payments was found!", data = mapper.Map<List<GetPaymentDto>>(cachedPayments) });
+            }
+
             var result = await paymentService.GetPaymentRecordsAsync(HttpContext);
+
+            cache.Set(Globals.CACHEKEY, result.Data, TimeSpan.FromMinutes(5));
 
             return result.SuccessOrNot ?
                 Ok(new { message = result.Message, data = mapper.Map<List<GetPaymentDto>>(result.Data) }) :

@@ -37,7 +37,13 @@ builder.Services.AddScoped<IVehicleImagesService, VehicleImagesService>();
 builder.Services.AddScoped<IMaintenanceCenterService, MaintenanceCenterService>();
 builder.Services.AddScoped<IMaintenanceRecordsService, MaintenanceRecordsService>();
 builder.Services.AddSingleton<ConsumeServicesViaBroker>();
-builder.Services.AddHostedService<RabbitMqBackgroundService>();
+builder.Services.AddHostedService<RabbitMqBackgroundService>(); builder.Services.AddMemoryCache();
+builder.Services.AddMemoryCache();
+
+//logger
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 //Mappers
 builder.Services.AddAutoMapper(typeof(VehicleProfiles)); 

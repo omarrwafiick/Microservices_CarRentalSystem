@@ -1,4 +1,5 @@
-﻿using Common.Dtos; 
+﻿using Common.Dtos;
+using Microsoft.Extensions.Caching.Memory;
 using PaymentService.Models;
 using PaymentServiceApi.Dtos;
 using PaymentServiceApi.Enums;
@@ -13,11 +14,13 @@ namespace PaymentServiceApi.Services
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentUnitOfWork _paymentUnitOfWork;
-        private readonly ILogger _logger; 
-        public PaymentService(IPaymentUnitOfWork paymentUnitOfWork, ILogger logger)
+        private readonly ILogger _logger;
+        private readonly IMemoryCache _cache;
+        public PaymentService(IPaymentUnitOfWork paymentUnitOfWork, ILogger logger, IMemoryCache cache)
         {
             _paymentUnitOfWork = paymentUnitOfWork;
             _logger = logger;
+            _cache = cache;
         }
 
         public async Task<ServiceResult<List<PaymentRecord>>> GetPaymentRecordsAsync(HttpContext context)
@@ -128,6 +131,8 @@ namespace PaymentServiceApi.Services
                 _logger.LogError($"Failed to add new payment to system at: {DateTime.UtcNow}");
                 return ServiceResult<int>.Failure("Failed to create new payment record");
             }
+            _cache.Remove(Globals.CACHEKEY);
+
             _logger.LogInformation($"Successfully added new payment to system at: {DateTime.UtcNow} with id: {newRecord.Id}");
 
             return ServiceResult<int>.Success("Payment record was created successfully", newRecord.Id);
@@ -156,6 +161,7 @@ namespace PaymentServiceApi.Services
                 _logger.LogError($"Failed to update payment to system at: {DateTime.UtcNow} - with id: {paymentRecord.Id}");
                 return ServiceResult<bool>.Failure("Failed to update payment record");
             }
+            _cache.Remove(Globals.CACHEKEY);
 
             _logger.LogInformation($"Successfully updated payment to system at: {DateTime.UtcNow} with id: {paymentRecord.Id}");
 

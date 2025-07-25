@@ -1,6 +1,0 @@
-@GatewayPoint_HostAddress = http://localhost:5229
-
-GET {{GatewayPoint_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

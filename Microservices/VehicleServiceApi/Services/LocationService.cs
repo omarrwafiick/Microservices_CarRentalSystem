@@ -1,4 +1,5 @@
-﻿using Common.Dtos; 
+﻿using Common.Dtos;
+using Microsoft.Extensions.Caching.Memory;
 using System.Linq.Expressions;
 using VehicleServiceApi.Dtos;
 using VehicleServiceApi.Interfaces;
@@ -10,9 +11,11 @@ namespace VehicleServiceApi.Services
     public class LocationService : ILocationService
     {
         private readonly ILocationUnitOfWork _locationUnitOfWork;
-        public LocationService(IVehicleUnitOfWork vehicleUnitOfWork, ILocationUnitOfWork locationUnitOfWork)
+        private readonly IMemoryCache _cache;
+        public LocationService(IVehicleUnitOfWork vehicleUnitOfWork, ILocationUnitOfWork locationUnitOfWork, IMemoryCache cache)
         { 
             _locationUnitOfWork = locationUnitOfWork;
+            _cache = cache;
         }
 
         public async Task<ServiceResult<List<Location>>> GetLocationsAsync()
@@ -73,9 +76,14 @@ namespace VehicleServiceApi.Services
 
             var result = await _locationUnitOfWork.CreateLocationRepository.CreateAsync(newLocation);
 
-            return result ?
-               ServiceResult<int>.Success("Location was created successfully", newLocation.Id) :
-               ServiceResult<int>.Failure("Failed to create a new location");
+            if(!result)
+            { 
+                ServiceResult<int>.Failure("Failed to create a new location");
+            }
+            _cache.Remove(Globals.LOCATIONS_CACHEKEY);
+
+            return ServiceResult<int>.Success("Location was created successfully", newLocation.Id);
+               
         }
 
         public async Task<ServiceResult<bool>> UpdateLocationAsync(int id, UpdateLocationDto dto)
@@ -91,9 +99,13 @@ namespace VehicleServiceApi.Services
 
             var result = await _locationUnitOfWork.UpdateLocationRepository.UpdateAsync(location);
 
-            return result ?
-                ServiceResult<bool>.Success("Location was updated successfully") :
-                ServiceResult<bool>.Failure("Failed to update location");
+            if (!result)
+            {
+                return ServiceResult<bool>.Failure("Failed to update location");
+            }
+            _cache.Remove(Globals.LOCATIONS_CACHEKEY);
+
+            return ServiceResult<bool>.Success("Location was updated successfully") ;
         }
 
         public async Task<ServiceResult<bool>> ChangeLocationStatusAsync(int id, bool activate)
@@ -116,9 +128,14 @@ namespace VehicleServiceApi.Services
 
             var result = await _locationUnitOfWork.UpdateLocationRepository.UpdateAsync(location);
 
-            return result ?
-                ServiceResult<bool>.Success("Location status was updated successfully"):
-                ServiceResult<bool>.Failure("Failed to update location status");
+            if (!result)
+            {
+                return ServiceResult<bool>.Failure("Failed to update location status");
+            }
+
+            _cache.Remove(Globals.LOCATIONS_CACHEKEY);
+
+            return ServiceResult<bool>.Success("Location status was updated successfully"); 
         }
           
     }
