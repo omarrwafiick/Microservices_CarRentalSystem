@@ -131,7 +131,12 @@ namespace BookingServiceApi.Services
             if (booking is null)
             { 
                 return ServiceResult<bool>.Failure($"No booking was found using this id: {id}");
-            }    
+            }
+
+            if (booking.EndDate < DateTime.UtcNow)
+            {
+                return ServiceResult<bool>.Failure("Can't modify status of expired booking");
+            }
 
             if (booking.IsCancelled)
             {

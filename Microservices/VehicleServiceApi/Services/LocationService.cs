@@ -95,6 +95,11 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Location was not found");
             }
 
+            if (!location.IsActive)
+            {
+                return ServiceResult<bool>.Failure("Can't update deactivated location");
+            }
+
             location.UpdateAddress(dto.District, dto.City, dto.Country);
 
             var result = await _locationUnitOfWork.UpdateLocationRepository.UpdateAsync(location);
@@ -115,15 +120,19 @@ namespace VehicleServiceApi.Services
             if(location is null)
             {
                 return ServiceResult<bool>.Failure("Location was not found");
-            }
+            } 
 
-            if (activate)
+            if (activate && !location.IsActive)
             { 
                 location.ActivateLocation();
             }
+            else if (!activate && location.IsActive)
+            {
+                location.DeactivateLocation(); 
+            }
             else
             {
-                location.DeactivateLocation();
+                return ServiceResult<bool>.Failure("Failed to update location status");
             }
 
             var result = await _locationUnitOfWork.UpdateLocationRepository.UpdateAsync(location);

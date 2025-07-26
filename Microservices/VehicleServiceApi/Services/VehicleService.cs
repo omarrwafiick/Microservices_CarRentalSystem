@@ -376,13 +376,17 @@ namespace VehicleServiceApi.Services
                 return ServiceResult<bool>.Failure("Vehicle was not found");
             }
 
-            if (activate)
+            if (activate && !vehicle.IsActive)
             { 
                 vehicle.Activate();
             }
-            else
+            else if(!activate && vehicle.IsActive)
             {
                 vehicle.Deactivate(); 
+            }
+            else
+            { 
+                return ServiceResult<bool>.Failure("Failed to deactivate vehicle");
             }
 
             var result = await _vehicleUnitOfWork.UpdateVehicleRepository.UpdateAsync(vehicle);
